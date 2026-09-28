@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="ro">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Koreh Elod · site-uri și demo-uri interactive</title>
+<meta name="description" content="Portofoliul lui Koreh Elod: site-uri de prezentare, demo-uri 3D și prezentări interactive. Cinci proiecte din 2026.">
+<link rel="canonical" href="https://elod3.github.io/">
+<meta property="og:title" content="Koreh Elod · site-uri și demo-uri interactive">
+<meta property="og:description" content="Cinci proiecte din 2026: Inhabit Media, casa care se construiește, MedClyn, Secret sauce, Domino.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://elod3.github.io/">
+<meta property="og:image" content="https://elod3.github.io/og.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:locale" content="ro_RO">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#11111b">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="preload" href="fonts/jetbrains-mono-400-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/bricolage-grotesque-300_800-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="fonts.css?v=1">
+<link rel="stylesheet" href="style.css?v=1">
+<script>
+  // Loader-ul rulează o singură dată pe sesiune; decizia se ia înainte de primul paint.
+  document.documentElement.classList.add('js');
+  try { if (!sessionStorage.getItem('booted')) document.documentElement.classList.add('boot'); } catch (e) { document.documentElement.classList.add('boot'); }
+</script>
+</head>
+<body>
+
+<!-- LOADER: bootul unei mașini Arch. Logurile montează proiectele, apoi pornește Hyprland. -->
+<div class="loader" id="loader" aria-hidden="true">
+  <pre class="loader__log" id="log"></pre>
+  <div class="loader__mark" id="mark"><span>k</span><span>o</span><span>r</span><span>e</span><span>h</span></div>
+  <svg class="loader__frame" viewBox="0 0 100 100" preserveAspectRatio="none"><defs><linearGradient id="hg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#33ccff"/><stop offset="1" stop-color="#00ff99"/></linearGradient></defs><rect x=".6" y=".6" width="98.8" height="98.8" rx="1.2" fill="none" stroke="url(#hg)" stroke-width=".5" vector-effect="non-scaling-stroke" pathLength="100"/></svg>
+  <p class="loader__skip">click sau orice tastă ca să sari</p>
+</div>
+
+<header class="bar">
+  <svg class="bar__logo" viewBox="0 0 24 24" aria-hidden="true"><path fill="#1793d1" d="M11.39.605C10.376 3.092 9.764 4.72 8.635 7.132c.693.734 1.543 1.589 2.923 2.554-1.484-.61-2.496-1.224-3.252-1.86C6.86 10.842 4.596 15.138 0 23.395c3.612-2.085 6.412-3.37 9.021-3.862a6.61 6.61 0 01-.171-1.547l.003-.115c.058-2.315 1.261-4.095 2.687-3.973 1.426.12 2.534 2.096 2.478 4.409a6.52 6.52 0 01-.146 1.243c2.58.505 5.352 1.787 8.914 3.844-.702-1.293-1.33-2.459-1.929-3.57-.943-.73-1.926-1.682-3.933-2.713 1.38.359 2.367.772 3.137 1.234-6.09-11.334-6.582-12.84-8.67-17.74z"/></svg>
+  <nav class="ws" id="ws" aria-label="Proiecte"></nav>
+  <span class="bar__title" id="barTitle">firefox</span>
+  <span class="bar__right"><span class="bar__who">koreh@arch</span><span id="clock">--:--</span></span>
+</header>
+
+<main class="desk" id="desk">
+  <!-- terminalul: cine sunt și ce e proiectul ales -->
+  <section class="win term" aria-label="Despre">
+    <div class="win__cap"><span>kitty · ~</span></div>
+    <div class="term__body" id="term">
+      <p><span class="pr">~ ❯</span> whoami</p>
+      <h1 class="term__name">Koreh Elod</h1>
+      <p class="term__lead">Fac site-uri și demo-uri interactive pentru firme: de la prezentarea unui ansamblu rezidențial la un perete 3D pe care îl ștergi cu mâna.</p>
+      <p class="gap"><span class="pr">~ ❯</span> ls proiecte/</p>
+      <ol class="term__ls" id="ls"></ol>
+      <p class="gap"><span class="pr">~ ❯</span> cat proiecte/<b id="catName">…</b>/README</p>
+      <div class="term__readme" id="readme" aria-live="polite"></div>
+      <p class="gap term__prompt"><span class="pr">~ ❯</span> <span id="typed"></span><i class="caret"></i></p>
+    </div>
+  </section>
+
+  <!-- ferestrele: cea aleasă e mare (master), celelalte stau în stivă -->
+  <section class="tiles" id="tiles" aria-label="Previzualizări"></section>
+</main>
+
+<footer class="status">
+  <span><kbd>1</kbd>–<kbd>5</kbd> sau <kbd>↑</kbd><kbd>↓</kbd> alegi · <kbd>↵</kbd> deschizi · click pe o fereastră mică o aduce mare</span>
+  <span class="status__right">© 2026 Koreh Elod</span>
+</footer>
+
+<script src="app.js?v=1" defer></script>
+</body>
+</html>
