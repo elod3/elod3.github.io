@@ -159,13 +159,16 @@ em{font-style:italic;color:var(--acc)}
 .price th{text-align:left;font-weight:400;font-size:13px;color:var(--soft);padding:0 10px 8px 0;border-bottom:1px solid var(--ink)}
 .price td{padding:14px 10px 14px 0;border-bottom:1px solid var(--line)}
 .price td:first-child{font-weight:600}
-.price td:last-child{font-weight:600}
+.price td:nth-child(2){font-weight:600;font-size:17px}
+.price td:last-child{color:var(--soft)}
+.price tr.best td:last-child{color:var(--ink);font-weight:600}
 .price td small{display:block;font-weight:400;color:var(--soft);font-size:12px}
 .price tr{transition:background-color .3s}
 .price tr.best{background:var(--bg)}
 .price tr.best td:first-child{box-shadow:inset 3px 0 0 var(--acc);padding-left:12px}
 .price tr.best td:last-child::after{content:'cel mai ieftin';display:block;font-size:12px;font-weight:400;color:var(--acc)}
-.calc__per{margin:18px 0 0;font-size:15px;color:var(--soft)}
+.calc__why{margin:16px 0 0;font-size:15px;max-width:60ch}
+.calc__per{margin:12px 0 0;font-size:15px;color:var(--soft)}
 .calc__per b{color:var(--ink);font-weight:600}
 
 /* ——— limitele ——— */

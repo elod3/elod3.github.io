@@ -234,7 +234,7 @@
   const calls = $('#calls'), days = $('#days'), dur = $('#dur'), tbody = $('#plans');
   PLANS.forEach((p) => {
     const tr = document.createElement('tr');
-    tr.innerHTML = `<td>${p.name}</td><td>${p.inc.toLocaleString('ro-RO')} min</td><td>${lei(p.month)}</td><td>${String(p.over).replace('.', ',')} lei</td><td></td>`;
+    tr.innerHTML = `<td>${p.name}</td><td>${lei(p.month)}</td><td>${p.inc.toLocaleString('ro-RO')} min</td><td>${String(p.over).replace('.', ',')} lei</td><td></td>`;
     tbody.appendChild(tr);
     p.tr = tr;
   });
@@ -254,8 +254,13 @@
     PLANS.forEach((p) => {
       p.tr.classList.toggle('best', p === best);
       const extra = Math.max(0, mins - p.inc);
-      p.tr.lastChild.innerHTML = lei(p.total) + (extra ? `<small>cu ${extra.toLocaleString('ro-RO')} min în plus</small>` : '');
+      p.tr.lastChild.innerHTML = lei(p.total) + `<small>${extra ? `${lei(p.month)} + ${extra.toLocaleString('ro-RO')} min × ${String(p.over).replace('.', ',')} lei` : 'intră în minutele incluse'}</small>`;
     });
+    $('#totHead').textContent = `La ${mins.toLocaleString('ro-RO')} min plătești`;
+    const cheap = PLANS[0];
+    $('#why').textContent = best === cheap
+      ? `La volumul tău, cel mai mic pachet e și cel mai ieftin.`
+      : `BASIC e pachetul cel mai ieftin (${lei(cheap.month)} pe lună), dar include doar ${cheap.inc} de minute. La ${mins.toLocaleString('ro-RO')} de minute, cele în plus îl fac mai scump decât ${best.name}, așa că ți-l marcăm pe ${best.name}.`;
     $('#perCall').textContent = (best.total / (c * d)).toFixed(1).replace('.', ',') + ' lei';
     $('#setup').textContent = lei(best.setup);
     const msg = touched
