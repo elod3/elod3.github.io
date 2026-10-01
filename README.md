@@ -2,14 +2,11 @@
 
 Portofoliul lui Koreh Elod: https://elod3.github.io/
 
-Pagina arată ca desktopul pe care e făcută (Arch + Hyprland, tema Catppuccin Mocha). Fiecare
-proiect e o fereastră în layout-ul master: cea aleasă stă mare sus și rulează o înregistrare
-a site-ului, celelalte stau în rândul de jos. Terminalul din stânga scrie README-ul
-proiectului ales. La prima vizită pe sesiune pornește un boot: logurile montează
-proiectele, apare wordmark-ul, apoi ferestrele intră în tiling cu animația din Hyprland.
+Un catalog de lucrări: hârtie caldă, fișe numerotate, un index la final. Pe măsură ce derulezi,
+pagina ia culorile site-ului prezentat (fundal, text, accent, luate din fiecare proiect), iar
+ecranul fix din dreapta rulează înregistrarea lui. Pe telefon, fiecare fișă are clipul ei.
 
-- `index.html`, `style.css`, `app.js` — pagina; proiectele sunt în lista `P` din `app.js`
+- `index.html`, `style.css`, `app.js` — pagina; proiectele, cu textele și culorile lor, sunt în lista `P` din `app.js`
 - `media/` — câte un video (~7 s, fără sunet) și un poster WebP pentru fiecare proiect
-- `fonts/` — Bricolage Grotesque și JetBrains Mono, găzduite local
-
-Taste: `1`–`5` sau săgețile aleg proiectul, `Enter` îl deschide.
+- `fonts/` — Bricolage Grotesque (titluri și text) și JetBrains Mono (cifre, etichete), găzduite local
+- `og.jpg` — imaginea de share, captură a introducerii la 1200×630

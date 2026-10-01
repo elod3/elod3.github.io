@@ -1,168 +1,125 @@
-/* Portofoliu: bootul, ferestrele care își schimbă locul, terminalul care scrie README-ul. */
+/* Portofoliu: fișele lucrărilor, ecranul fix care schimbă clipul și culoarea paginii care urmează proiectul. */
 (() => {
   const $ = (s, r = document) => r.querySelector(s);
   const $$ = (s, r = document) => [...r.querySelectorAll(s)];
   const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const narrow = matchMedia('(max-width: 1000px)');
+  const wide = matchMedia('(min-width: 961px)');
 
+  // Culorile vin din site-ul fiecărui proiect: fundal, text, accent.
   const P = [
-    { id: 'casa-care-vinde', name: 'Inhabit Media', short: 'inhabit', acc: '#f9d65c',
-      who: 'client: arh. Alin Ionescu · 2026',
-      what: 'Site de parteneriate de brand pentru un arhitect urmărit de 93.000 de oameni. Cifre reale din Insights, campania NovingAIR, un calculator care îi arată firmei ce îi aduce.',
-      tags: 'HTML · CSS · JS · 7 pagini' },
-    { id: 'casa-care-vinde-mix', name: 'Casa care se construiește', short: 'casa-3d', acc: '#fab387',
-      who: 'client: arh. Alin Ionescu · varianta 3D',
+    { id: 'casa-care-vinde', name: 'Inhabit Media', who: 'arh. Alin Ionescu', year: '2026', kind: 'Site de parteneriate',
+      what: 'Site de parteneriate de brand pentru un arhitect urmărit de 93.000 de oameni. Cifre reale din Insights, campania NovingAIR și un calculator care îi arată firmei ce îi aduce colaborarea.',
+      fig: '93.000', figL: 'de oameni îl urmăresc; site-ul le vorbește firmelor care vor să ajungă la ei',
+      tech: 'HTML · CSS · JS · 7 pagini', bg: '#17140d', ink: '#f3ecd9', acc: '#f9d65c' },
+    { id: 'casa-care-vinde-mix', name: 'Casa care se construiește', who: 'arh. Alin Ionescu', year: '2026', kind: 'Variantă 3D',
       what: 'Aceeași poveste, altă formă: o casă pasivă în secțiune se ridică strat cu strat pe măsură ce derulezi. Fiecare strat e o categorie pe care o poate sponsoriza o firmă.',
-      tags: 'three.js · GSAP ScrollTrigger · Lenis' },
-    { id: 'medclyn-demo', name: 'MedClyn', short: 'medclyn', acc: '#24bfcd',
-      who: 'demo de concept pentru medclyn.com',
-      what: 'Un perete de faianță contaminat pe care îl ștergi cu mâna și dedesubt apare placa antibacteriană. Cerințele CE 852/2004 față în față cu fișa tehnică, șantiere reale, hala construită în 3D din trei numere.',
-      tags: 'three.js · texturi PBR · HDRI' },
-    { id: 'prezentari', name: 'Secret sauce', short: 'prezentari', acc: '#f38ba8',
-      who: 'prezentări interactive · 2 × 19 slide-uri',
-      what: 'Claude pe bune, apoi servere și agenți AI. Rulează în browser, cu taste ca un deck adevărat, note de prezentator pe telefon și gravuri SVG desenate pentru ele.',
-      tags: 'HTML · SVG · CSS' },
-    { id: 'domino', name: 'Domino', short: 'domino', acc: '#efe8da',
-      who: 'produsul meu · aplicație Android',
-      what: 'Site-ul aplicației mele de auto-control. Un lanț de 30 de piese care cade când îl împingi, un telefon care schimbă clipurile după funcția de pe ecran, română și engleză.',
-      tags: 'HTML · CSS · JS · video' }
+      fig: 'PHI', figL: 'casă pasivă, după standardul Passive House Institute din Darmstadt',
+      tech: 'three.js · GSAP ScrollTrigger · Lenis', bg: '#221b15', ink: '#f4e9dc', acc: '#fab387' },
+    { id: 'medclyn-demo', name: 'MedClyn', who: 'medclyn.com', year: '2026', kind: 'Demo de concept',
+      what: 'Un perete de faianță contaminat pe care îl ștergi cu mâna, iar dedesubt apare placa antibacteriană. Cerințele regulamentului față în față cu fișa tehnică, șantiere reale și hala construită în 3D din trei numere.',
+      fig: '852/2004', figL: 'regulamentul CE de igienă, citat rând cu rând lângă fișa tehnică a plăcii',
+      tech: 'three.js · texturi PBR · HDRI', bg: '#0e1c29', ink: '#e4edf2', acc: '#24bfcd' },
+    { id: 'prezentari', name: 'Secret sauce', who: 'prezentări proprii', year: '2026', kind: 'Prezentări interactive',
+      what: 'Două prezentări: Claude pe bune, apoi servere și agenți AI. Rulează în browser, se controlează din taste ca un deck adevărat, au note de prezentator pe telefon și gravuri SVG desenate pentru ele.',
+      fig: '2 × 19', figL: 'slide-uri, cu note de prezentator pe telefon',
+      tech: 'HTML · SVG · CSS', bg: '#f1ebe1', ink: '#1d1a16', acc: '#c9512f' },
+    { id: 'domino', name: 'Domino', who: 'produsul meu', year: '2026', kind: 'Site de aplicație',
+      what: 'Site-ul aplicației mele Android de auto-control. Un lanț de piese care cade când îl împingi, un telefon care schimbă clipurile după funcția despre care citești, în română și engleză.',
+      fig: '30', figL: 'de piese în lanțul care cade când îl împingi',
+      tech: 'HTML · CSS · JS · video', bg: '#0d0d0c', ink: '#efe8da', acc: '#ff5533' }
   ];
   const url = (p) => 'https://elod3.github.io/' + p.id + '/';
+  const nr = (i) => String(i + 1).padStart(2, '0');
+  const clip = (p) => `<video muted loop playsinline preload="none" poster="media/${p.id}.webp" width="960" height="600"><source src="media/${p.id}.mp4" type="video/mp4"></video>`;
 
-  /* ---------- construiește bara, lista și ferestrele ---------- */
-  const ws = $('#ws'), ls = $('#ls'), tiles = $('#tiles');
+  /* ---------- fișele, ecranul și indexul ---------- */
+  const cases = $('#cases'), screen = $('#screen'), rows = $('#rows');
   P.forEach((p, i) => {
-    const b = document.createElement('button');
-    b.type = 'button'; b.textContent = i + 1; b.dataset.k = p.id; b.setAttribute('aria-label', (i + 1) + ': ' + p.name);
-    ws.appendChild(b);
+    const a = document.createElement('article');
+    a.className = 'case'; a.dataset.i = i;
+    a.innerHTML = `
+      <p class="case__nr"><span>${nr(i)}</span>${p.kind}</p>
+      <h2 class="case__name">${p.name}</h2>
+      <figure class="case__clip">${clip(p)}</figure>
+      <p class="case__what">${p.what}</p>
+      <p class="case__fig"><b>${p.fig}</b><span>${p.figL}</span></p>
+      <dl class="case__meta">
+        <div><dt>Pentru</dt><dd>${p.who}</dd></div>
+        <div><dt>An</dt><dd>${p.year}</dd></div>
+        <div><dt>Tehnologie</dt><dd>${p.tech}</dd></div>
+      </dl>
+      <a class="case__go" href="${url(p)}" target="_blank" rel="noopener">Deschide site-ul<span class="sr"> ${p.name}</span></a>`;
+    cases.appendChild(a);
 
-    const li = document.createElement('li');
-    li.innerHTML = `<button type="button" data-k="${p.id}"><b>${i + 1}</b>${p.short}/</button>`;
-    ls.appendChild(li);
+    const f = document.createElement('div');
+    f.className = 'shot'; f.dataset.i = i;
+    f.innerHTML = clip(p);
+    screen.appendChild(f);
 
-    const a = document.createElement('a');
-    a.className = 'win'; a.href = url(p); a.target = '_blank'; a.rel = 'noopener'; a.dataset.k = p.id;
-    a.style.setProperty('--i', i + 2);
-    a.innerHTML = `<div class="win__in">
-        <div class="win__cap"><span class="url" style="--acc2:${p.acc}"><i></i><span>elod3.github.io/${p.id}</span></span><span class="open">↗ deschide</span></div>
-        <img class="shot" src="media/${p.id}.webp" alt="" width="960" height="600" decoding="async">
-        <video class="shot" muted loop playsinline preload="none" poster="media/${p.id}.webp" aria-hidden="true"><source src="media/${p.id}.mp4" type="video/mp4"></video>
-        <div class="label"><b>${p.name}</b><small>${p.tags}</small></div>
-      </div>`;
-    a.setAttribute('aria-label', p.name + ', deschide site-ul');
-    tiles.appendChild(a);
-  });
-  const wins = $$('.tiles .win');
-
-  /* ---------- terminalul scrie README-ul proiectului ales ---------- */
-  let typeTimer = null;
-  function typeInto(el, text, cb){
-    clearTimeout(typeTimer);
-    if (reduced){ el.textContent = text; cb && cb(); return; }
-    let i = 0;
-    const step = () => { el.textContent = text.slice(0, ++i); if (i < text.length) typeTimer = setTimeout(step, 14); else cb && cb(); };
-    step();
-  }
-
-  let cur = null;
-  function focus(k, fromUser){
-    const i = P.findIndex((p) => p.id === k);
-    if (i < 0 || k === cur) return;
-    cur = k;
-    const p = P[i];
-    document.documentElement.style.setProperty('--acc', p.acc);
-    const rest = P.filter((x) => x.id !== k).map((x) => x.id);
-    wins.forEach((w) => {
-      const on = w.dataset.k === k;
-      w.dataset.slot = on ? 'm' : 's' + rest.indexOf(w.dataset.k);
-      w.classList.toggle('on', on);
-      const v = $('video', w);
-      if (!narrow.matches){
-        if (on && !reduced){ v.preload = 'auto'; v.currentTime = 0; v.play().catch(() => {}); } else v.pause();
-      }
-    });
-    $$('.ws button, .term__ls button').forEach((b) => b.classList.toggle('on', b.dataset.k === k));
-    $('#barTitle').textContent = 'firefox — ' + p.name;
-    $('#catName').textContent = p.short;
-    const r = $('#readme');
-    r.innerHTML = `<h2></h2><p class="who">${p.who}</p><p class="what"></p><p class="tags">${p.tags}</p>`;
-    typeInto($('h2', r), p.name, () => typeInto($('.what', r), p.what));
-    $('#typed').textContent = 'xdg-open ' + url(p).replace('https://', '');
-    if (fromUser) try { sessionStorage.setItem('ales', k); } catch (e) {}
-  }
-
-  // În stivă, click aduce fereastra în master; pe master, linkul deschide site-ul.
-  wins.forEach((w) => w.addEventListener('click', (e) => {
-    if (narrow.matches || w.dataset.slot === 'm') return;
-    e.preventDefault(); focus(w.dataset.k, true);
-  }));
-  $$('.ws button, .term__ls button').forEach((b) => b.addEventListener('click', () => focus(b.dataset.k, true)));
-  addEventListener('keydown', (e) => {
-    if (e.metaKey || e.ctrlKey || e.altKey || document.documentElement.classList.contains('booting')) return;
-    const i = P.findIndex((p) => p.id === cur);
-    if (/^[1-5]$/.test(e.key)) focus(P[+e.key - 1].id, true);
-    else if (['ArrowDown', 'ArrowRight', 'j', 'l'].includes(e.key)){ e.preventDefault(); focus(P[(i + 1) % P.length].id, true); }
-    else if (['ArrowUp', 'ArrowLeft', 'k', 'h'].includes(e.key)){ e.preventDefault(); focus(P[(i + P.length - 1) % P.length].id, true); }
-    else if (e.key === 'Enter' && !e.target.closest('a, button')) open(url(P[i]), '_blank', 'noopener');
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td class="m">${nr(i)}</td><td><a href="${url(p)}" target="_blank" rel="noopener">${p.name}</a></td><td>${p.who}</td><td>${p.kind}</td><td class="m">${p.tech}</td><td class="go" aria-hidden="true">↗</td>`;
+    tr.addEventListener('click', (e) => { if (!e.target.closest('a')) $('a', tr).click(); });
+    rows.appendChild(tr);
   });
 
-  /* pe telefon, fiecare fereastră își rulează clipul doar cât e pe ecran */
-  if ('IntersectionObserver' in window){
-    const vio = new IntersectionObserver((es) => es.forEach((e) => {
-      if (!narrow.matches) return;
-      const v = $('video', e.target);
-      if (e.isIntersecting && !reduced){ v.preload = 'auto'; v.play().catch(() => {}); } else v.pause();
-    }), { threshold: .5 });
-    wins.forEach((w) => vio.observe(w));
-  }
+  const play = (v, on) => {
+    if (on && !reduced){ v.preload = 'auto'; v.play().catch(() => {}); } else v.pause();
+  };
 
-  const tick = () => { const d = new Date(); $('#clock').textContent = String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0'); };
-  tick(); setInterval(tick, 15000);
-
-  $('.bar').style.setProperty('--i', 0);
-  $('.term').style.setProperty('--i', 1);
-  $('.status').style.setProperty('--i', 7);
-
-  let first = null;
-  try { first = sessionStorage.getItem('ales'); } catch (e) {}
-  const start = () => focus(P.some((p) => p.id === first) ? first : P[0].id);
-
-  /* ---------- bootul: loguri, wordmark, apoi ferestrele intră în tiling ---------- */
+  /* ---------- proiectul activ: culoarea paginii, clipul de pe ecran ---------- */
   const root = document.documentElement;
-  if (!root.classList.contains('boot')){ start(); return; }
-  root.classList.add('booting');
-  const loader = $('#loader'), log = $('#log');
-  $$('#mark span').forEach((s, i) => s.style.setProperty('--i', i));
-
-  const lines = [
-    ['', ':: running early hook [udev]'],
-    ['', ':: mounting \'/dev/nvme0n1p2\' on real root'],
-    ['ok', 'Started Journal Service.'],
-    ['ok', 'Reached target Local File Systems.'],
-    ...P.map((p) => ['ok', `Mounted /proiecte/${p.short}.`]),
-    ['ok', 'Started Network Manager.'],
-    ['ok', 'Reached target Graphical Interface.'],
-    ['st', 'Starting Hyprland…']
-  ];
-  let done = false, timers = [];
-  const later = (fn, ms) => timers.push(setTimeout(fn, ms));
-  function finish(){
-    if (done) return; done = true;
-    timers.forEach(clearTimeout);
-    try { sessionStorage.setItem('booted', '1'); } catch (e) {}
-    loader.classList.add('mark', 'out');
-    // ferestrele pornesc după ce a început să se ridice cortina
-    setTimeout(() => { root.classList.add('up'); start(); }, 300);
-    setTimeout(() => { loader.remove(); root.classList.remove('booting', 'boot', 'up'); }, 1600);
+  let cur = -1;
+  function activate(i){
+    if (i === cur) return;
+    cur = i;
+    const p = P[i];
+    if (p){
+      root.style.setProperty('--bg', p.bg); root.style.setProperty('--ink', p.ink); root.style.setProperty('--acc', p.acc);
+      root.dataset.tone = luma(p.bg) < .5 ? 'dark' : 'light';
+      $('#stageUrl').textContent = 'elod3.github.io/' + p.id;
+      $('#stageNr').textContent = nr(i) + ' / ' + nr(P.length - 1);
+    } else {
+      ['--bg', '--ink', '--acc'].forEach((k) => root.style.removeProperty(k));
+      root.dataset.tone = 'light';
+    }
+    $$('.case').forEach((c) => c.classList.toggle('on', +c.dataset.i === i));
+    $$('.shot').forEach((s) => {
+      const on = +s.dataset.i === i;
+      s.classList.toggle('on', on);
+      if (wide.matches) play($('video', s), on);
+    });
   }
-  if (reduced){ finish(); return; }
-  lines.forEach(([k, t], i) => later(() => {
-    const tag = k === 'ok' ? '<span class="ok">[  OK  ]</span> ' : k === 'st' ? '<span class="st">  ::  </span> ' : '';
-    log.insertAdjacentHTML('beforeend', tag + t + '\n');
-  }, 60 + i * 70));
-  const tLog = 60 + lines.length * 70;
-  later(() => loader.classList.add('mark'), tLog + 120);
-  later(finish, tLog + 120 + 1500);
-  loader.addEventListener('click', finish);
-  addEventListener('keydown', function k(){ removeEventListener('keydown', k); finish(); });
+  function luma(hex){
+    const n = parseInt(hex.slice(1), 16);
+    return (0.2126 * (n >> 16) + 0.7152 * (n >> 8 & 255) + 0.0722 * (n & 255)) / 255;
+  }
+
+  // Proiectul activ e fișa care trece prin mijlocul ecranului; în afara lucrărilor, pagina revine la hârtie.
+  const work = $('#lucrari');
+  function onScroll(){
+    const mid = innerHeight / 2;
+    const w = work.getBoundingClientRect();
+    if (w.top > mid || w.bottom < mid){ activate(-1); return; }
+    let best = 0;
+    $$('.case').forEach((c, i) => { if (c.getBoundingClientRect().top < mid) best = i; });
+    activate(best);
+  }
+  let raf = 0;
+  addEventListener('scroll', () => { if (!raf) raf = requestAnimationFrame(() => { raf = 0; onScroll(); }); }, { passive: true });
+  addEventListener('resize', onScroll);
+  onScroll();
+
+  // Pe telefon fiecare fișă are clipul ei, care rulează doar cât e pe ecran.
+  if ('IntersectionObserver' in window){
+    const io = new IntersectionObserver((es) => es.forEach((e) => {
+      if (!wide.matches) play(e.target, e.isIntersecting);
+    }), { threshold: .5 });
+    $$('.case__clip video').forEach((v) => io.observe(v));
+  }
+  wide.addEventListener('change', () => {
+    $$('video').forEach((v) => v.pause());
+    cur = -1; onScroll();
+  });
+
+  requestAnimationFrame(() => root.classList.add('in'));
 })();

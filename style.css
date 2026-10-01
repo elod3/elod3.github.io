@@ -1,147 +1,134 @@
-/* Portofoliul arată ca desktopul pe care e făcut: Arch + Hyprland, tema Catppuccin Mocha.
-   Bordura activă are gradientul implicit din Hyprland (33ccff → 00ff99); fiecare proiect
-   își aduce accentul lui în bara de adresă și în terminal. */
+/* Portofoliul e un catalog de lucrări: hârtie caldă, un index numerotat, fișe cu client și tehnologie.
+   Pe măsură ce derulezi lucrările, pagina ia culorile site-ului prezentat (setate din app.js). */
 :root{
-  --crust:#11111b; --mantle:#181825; --base:#1e1e2e; --s0:#313244; --s1:#45475a; --ov:#6c7086;
-  --sub:#a6adc8; --text:#cdd6f4; --green:#a6e3a1; --blue:#89b4fa; --peach:#fab387; --yellow:#f9e2af;
-  --hypr:linear-gradient(45deg,#33ccff,#00ff99);
-  --acc:#89b4fa;
-  --gap:10px;
+  --paper:#efe8da; --ink0:#16140f; --red:#d9431e;
+  --bg:var(--paper); --ink:var(--ink0); --acc:var(--red);
+  --line:color-mix(in srgb, var(--ink) 16%, transparent);
+  --soft:color-mix(in srgb, var(--ink) 62%, transparent);
+  --f:'Bricolage Grotesque', 'Helvetica Neue', sans-serif;
   --m:'JetBrains Mono', ui-monospace, monospace;
-  --f:'Bricolage Grotesque', ui-sans-serif, sans-serif;
-  --pop:cubic-bezier(.05,.9,.1,1.05);
+  --pad:clamp(18px, 4vw, 64px);
+  --ease:cubic-bezier(.7,0,.2,1);
+  --out:cubic-bezier(.16,1,.3,1);
 }
 *,*::before,*::after{box-sizing:border-box}
-html,body{margin:0;height:100%}
-body{background:var(--crust);color:var(--text);font:14px/1.55 var(--m);-webkit-font-smoothing:antialiased;
-  display:grid;grid-template-rows:auto 1fr auto;min-height:100vh;
-  background-image:radial-gradient(circle at 1px 1px, rgba(205,214,244,.06) 1px, transparent 1.4px);background-size:22px 22px}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 17px/1.55 var(--f);-webkit-font-smoothing:antialiased;
+  transition:background-color .7s var(--ease), color .7s var(--ease)}
 a{color:inherit}
-kbd{font:inherit;color:var(--text);border:1px solid var(--s1);border-radius:4px;padding:0 5px}
-:focus-visible{outline:2px solid #33ccff;outline-offset:2px}
+:focus-visible{outline:2px solid var(--acc);outline-offset:3px}
+::selection{background:var(--acc);color:var(--bg)}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+em{font-style:normal;font-weight:300;color:var(--acc);transition:color .7s var(--ease)}
 
-/* ——— waybar ——— */
-.bar{margin:var(--gap) var(--gap) 0;height:38px;display:flex;align-items:center;gap:14px;padding:0 12px;
-  background:var(--mantle);border:1px solid var(--s0);border-radius:10px;color:var(--sub);font-size:13px;position:relative;z-index:3}
-.bar__logo{width:18px;height:18px;flex:none}
-.ws{display:flex;gap:4px}
-.ws button{all:unset;cursor:pointer;min-width:28px;height:24px;display:grid;place-items:center;border-radius:6px;color:var(--ov);
-  transition:background-color .3s, color .3s, min-width .4s var(--pop)}
-.ws button:hover{color:var(--text)}
-.ws button.on{background:var(--acc);color:var(--crust);min-width:50px;font-weight:600}
-.ws button:focus-visible{outline:2px solid var(--text)}
-.bar__title{color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
-.bar__right{margin-left:auto;display:flex;gap:16px;white-space:nowrap}
-.bar__who{color:var(--green)}
+/* ——— antet ——— */
+.top{position:sticky;top:0;z-index:5;display:flex;align-items:baseline;justify-content:space-between;gap:24px;
+  padding:18px var(--pad);background:var(--bg);transition:background-color .7s var(--ease)}
+.top__name{font-weight:700;font-size:19px;letter-spacing:-.02em;text-decoration:none}
+.top__nav{display:flex;gap:clamp(14px,2.4vw,32px);font-size:15px}
+.top__nav a{text-decoration:none;color:var(--soft);transition:color .2s}
+.top__nav a:hover{color:var(--ink)}
 
-/* ——— desktopul ——— */
-.desk{display:grid;grid-template-columns:minmax(320px,27%) 1fr;gap:var(--gap);padding:var(--gap);min-height:0}
+/* ——— intro ——— */
+.intro{display:grid;grid-template-columns:1fr minmax(260px, 30%);column-gap:var(--pad);
+  padding:clamp(56px,13vh,150px) var(--pad) clamp(40px,8vh,90px)}
+.intro__h{grid-column:1 / -1;margin:0 0 clamp(36px,7vh,80px);font-weight:650;
+  font-size:clamp(46px, 8.6vw, 140px);line-height:.92;letter-spacing:-.05em;font-variation-settings:'opsz' 96}
+.ln{display:block;overflow:hidden;padding-bottom:.06em;margin-bottom:-.06em}
+.ln > span{display:inline-block}
+.js .ln > span{transform:translateY(105%);transition:transform 1s var(--out)}
+.js.in .ln > span{transform:none}
+.js.in .ln:nth-child(2) > span{transition-delay:.08s}
+.js.in .ln:nth-child(3) > span{transition-delay:.16s}
+.intro__side{grid-column:2}
+.intro__lead{margin:0 0 28px;font-size:clamp(17px,1.35vw,20px);line-height:1.5}
+.facts{margin:0}
+.facts div{display:grid;grid-template-columns:9.5em 1fr;gap:12px;padding:10px 0;border-top:1px solid var(--line)}
+.facts dt{font:12px/1.9 var(--m);color:var(--soft)}
+.facts dd{margin:0;font-size:15px}
+.intro__down{grid-column:1;align-self:end;margin-top:28px;font:13px var(--m);color:var(--soft);text-decoration:none}
+.intro__down:hover{color:var(--ink)}
 
-/* fereastra: 2px de bordură făcuți din fundal, ca gradientul să poată avea colțuri rotunjite */
-.win{position:relative;border-radius:11px;padding:2px;background:var(--s1);transition:background .3s}
-.win.on,.term{background:var(--hypr)}
-.win__in{position:relative;height:100%;border-radius:9px;overflow:hidden;background:var(--base)}
-.win__cap{height:30px;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:0 12px;
-  background:var(--mantle);color:var(--ov);font-size:12px;border-bottom:1px solid var(--s0)}
+/* ——— lucrările ——— */
+.work{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:0 var(--pad);padding:0 var(--pad);border-top:1px solid var(--line)}
+.cases{grid-column:1;grid-row:1}
+.case{min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding:12vh 0;
+  opacity:.28;transition:opacity .6s var(--ease)}
+.case.on{opacity:1}
+.case__nr{display:flex;gap:14px;margin:0 0 14px;font:13px var(--m);color:var(--soft)}
+.case__nr span{color:var(--acc);transition:color .7s var(--ease)}
+.case__name{margin:0 0 22px;font-weight:650;font-size:clamp(38px,4.6vw,74px);line-height:.95;letter-spacing:-.045em}
+.case__clip{display:none}
+.case__what{margin:0 0 30px;max-width:40ch;font-size:clamp(16px,1.2vw,18px)}
+.case__fig{display:grid;grid-template-columns:auto 1fr;align-items:end;gap:18px;margin:0 0 30px}
+.case__fig b{font-weight:700;font-size:clamp(40px,4.4vw,70px);line-height:.85;letter-spacing:-.04em;font-variant-numeric:tabular-nums;
+  color:var(--acc);transition:color .7s var(--ease)}
+.case__fig span{max-width:24ch;font-size:14px;line-height:1.4;color:var(--soft)}
+.case__meta{margin:0 0 30px}
+.case__meta div{display:grid;grid-template-columns:7.5em 1fr;gap:12px;padding:9px 0;border-top:1px solid var(--line)}
+.case__meta div:last-child{border-bottom:1px solid var(--line)}
+.case__meta dt{font:12px/1.9 var(--m);color:var(--soft)}
+.case__meta dd{margin:0;font-size:15px}
+.case__go{align-self:flex-start;font-weight:600;font-size:17px;text-decoration:none;padding-bottom:3px;
+  background:linear-gradient(var(--acc),var(--acc)) left bottom / 100% 2px no-repeat;transition:background-size .35s var(--ease)}
+.case__go:hover{background-size:100% 100%;color:var(--bg)}
 
-/* ——— terminalul ——— */
-.term{display:flex;flex-direction:column;min-height:0}
-.term > .win__cap{border-radius:9px 9px 0 0}
-.term__body{flex:1;background:var(--base);border-radius:0 0 9px 9px;padding:18px 20px;overflow:auto;min-height:0}
-.term__body p{margin:0}
-.pr{color:var(--green)}
-.gap{margin-top:18px !important}
-.term__name{font:700 clamp(40px,4.4vw,68px)/.92 var(--f);letter-spacing:-.045em;margin:10px 0 12px;color:var(--text);font-variation-settings:'opsz' 96}
-.term__lead{color:var(--sub);font:400 16px/1.5 var(--f);max-width:40ch}
-.term__ls{list-style:none;margin:6px 0 0;padding:0;display:grid;gap:2px}
-.term__ls button{all:unset;cursor:pointer;display:flex;gap:12px;padding:3px 8px;margin-left:-8px;border-radius:5px;color:var(--sub);transition:background-color .2s,color .2s}
-.term__ls button b{color:var(--ov);font-weight:400;width:1.2em}
-.term__ls button:hover{background:var(--s0);color:var(--text)}
-.term__ls button.on{background:var(--s0);color:var(--acc)}
-.term__ls button:focus-visible{outline:2px solid var(--acc);outline-offset:0}
-#catName{color:var(--acc);font-weight:400}
-.term__readme{margin-top:8px;min-height:10.5em;color:var(--text)}
-.term__readme h2{font:700 24px/1.1 var(--f);letter-spacing:-.03em;margin:0 0 6px;color:var(--acc)}
-.term__readme .who{color:var(--ov);margin-bottom:8px}
-.term__readme .what{font:400 15px/1.5 var(--f);color:var(--sub);max-width:44ch}
-.term__readme .tags{margin-top:10px;color:var(--peach)}
-.caret{display:inline-block;width:8px;height:15px;background:var(--text);vertical-align:-2px;margin-left:2px;animation:blink 1s steps(1) infinite}
-@keyframes blink{50%{opacity:0}}
+/* ecranul fix: clipul proiectului activ intră de jos peste cel vechi */
+.stage{grid-column:2;grid-row:1;position:sticky;top:0;height:100vh;display:flex;flex-direction:column;justify-content:center;padding-top:40px}
+.stage__screen{position:relative;aspect-ratio:16/10;border-radius:6px;overflow:hidden;background:color-mix(in srgb, var(--ink) 8%, transparent);
+  box-shadow:0 0 0 1px var(--line), 0 30px 60px -30px rgba(0,0,0,.45)}
+.shot{position:absolute;inset:0;clip-path:inset(100% 0 0 0);transition:clip-path 0s .8s}
+.shot.on{z-index:2;clip-path:inset(0);transition:clip-path .8s var(--ease)}
+.shot video,.case__clip video{display:block;width:100%;height:100%;object-fit:cover;object-position:top}
+.stage__url{display:flex;justify-content:space-between;gap:16px;margin:14px 0 0;font:12px var(--m);color:var(--soft)}
 
-/* ——— ferestrele cu proiecte: master + stivă ——— */
-.tiles{position:relative;min-height:0}
-.tiles .win{position:absolute;display:block;text-decoration:none;cursor:pointer;
-  transition:left .55s var(--pop), top .55s var(--pop), width .55s var(--pop), height .55s var(--pop), background .3s, opacity .3s}
-/* orientarea „top” din layout-ul master: fereastra aleasă sus, lată; stiva e un rând jos */
-.win[data-slot="m"]{left:0;top:0;width:100%;height:calc(71% - var(--gap)/2)}
-.win[data-slot="s0"],.win[data-slot="s1"],.win[data-slot="s2"],.win[data-slot="s3"]{top:calc(71% + var(--gap)/2);height:calc(29% - var(--gap)/2);width:calc(25% - var(--gap)*3/4)}
-.win[data-slot="s0"]{left:0}
-.win[data-slot="s1"]{left:calc(25% + var(--gap)/4)}
-.win[data-slot="s2"]{left:calc(50% + var(--gap)/2)}
-.win[data-slot="s3"]{left:calc(75% + var(--gap)*3/4)}
-.win:not([data-slot="m"]):hover{background:var(--ov)}
-.shot{position:absolute;inset:30px 0 0;width:100%;height:calc(100% - 30px);object-fit:cover;object-position:top}
-.win[data-slot="m"] .shot{inset:30px 0 0}
-.url{display:flex;align-items:center;gap:8px;min-width:0;overflow:hidden;white-space:nowrap}
-.url i{width:8px;height:8px;border-radius:50%;background:var(--acc2,var(--ov));flex:none}
-.url span{overflow:hidden;text-overflow:ellipsis}
-.open{color:var(--text);opacity:0;transition:opacity .3s;flex:none}
-.win[data-slot="m"] .open{opacity:1}
-.label{position:absolute;left:0;right:0;bottom:0;padding:48px 20px 16px;background:linear-gradient(0deg,rgba(17,17,27,.94),rgba(17,17,27,0));
-  display:flex;align-items:flex-end;justify-content:space-between;gap:16px;pointer-events:none}
-.label b{font:700 clamp(22px,2.6vw,40px)/1 var(--f);letter-spacing:-.035em;color:#fff}
-.label small{color:var(--sub);font-size:12px;text-align:right}
-.win:not([data-slot="m"]) .label{padding:28px 10px 8px}
-.win:not([data-slot="m"]) .label b{font-size:15px;letter-spacing:-.01em}
-.win:not([data-slot="m"]) .label small{display:none}
+/* ——— index ——— */
+.index{padding:clamp(70px,14vh,160px) var(--pad) clamp(60px,10vh,120px);border-top:1px solid var(--line)}
+.index__h{margin:0 0 28px;font-weight:650;font-size:clamp(38px,4.6vw,74px);letter-spacing:-.045em;line-height:1}
+.tbl{width:100%;border-collapse:collapse}
+.tbl th{text-align:left;font:400 12px var(--m);color:var(--soft);padding:0 16px 10px 0;border-bottom:1px solid var(--ink)}
+.tbl td{padding:16px 16px 16px 0;border-bottom:1px solid var(--line);vertical-align:baseline;font-size:15px}
+.tbl td.m{font:12px var(--m);color:var(--soft)}
+.tbl td:nth-child(2) a{font-weight:600;font-size:clamp(18px,1.6vw,24px);letter-spacing:-.02em;text-decoration:none}
+.tbl td.go{text-align:right;padding-right:0;color:var(--soft)}
+.tbl tbody tr{cursor:pointer;transition:background-color .25s}
+.tbl tbody tr:hover{background:color-mix(in srgb, var(--acc) 12%, transparent)}
+.tbl tbody tr:hover td.go{color:var(--acc)}
 
-/* ——— bara de jos ——— */
-.status{display:flex;justify-content:space-between;gap:16px;padding:0 calc(var(--gap) + 4px) var(--gap);color:var(--ov);font-size:12px}
+/* ——— final ——— */
+.end{padding:clamp(70px,14vh,160px) var(--pad) 28px;background:var(--ink0);color:var(--paper)}
+.end em{color:#f0714b}
+.end__q{margin:0 0 clamp(36px,6vh,64px);font-weight:650;font-size:clamp(42px,7vw,116px);line-height:.94;letter-spacing:-.05em}
+.end__row{display:flex;flex-wrap:wrap;align-items:center;gap:20px 40px;margin-bottom:clamp(60px,12vh,140px)}
+.end__cta{display:inline-block;padding:18px 28px;border-radius:4px;background:var(--paper);color:var(--ink0);font-weight:600;font-size:18px;text-decoration:none;
+  transition:background-color .25s, color .25s}
+.end__cta:hover{background:#f0714b}
+.end__note{margin:0;max-width:34ch;font-size:15px;color:color-mix(in srgb, var(--paper) 62%, transparent)}
+.end__foot{display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px 24px;margin:0;padding-top:18px;
+  border-top:1px solid color-mix(in srgb, var(--paper) 16%, transparent);font:12px var(--m);color:color-mix(in srgb, var(--paper) 55%, transparent)}
+.end__foot a{color:inherit}
+.end__foot a:hover{color:var(--paper)}
 
-/* ——— loader: boot → wordmark → Hyprland ——— */
-.loader{display:none}
-.boot .loader{display:block;position:fixed;inset:0;z-index:50;background:var(--crust);cursor:pointer;
-  transition:clip-path .75s cubic-bezier(.7,0,.2,1)}
-.loader.out{clip-path:inset(0 0 100% 0);transition-delay:.25s}
-.loader.out .loader__mark span{animation:leave .5s cubic-bezier(.7,0,.3,1) forwards;animation-delay:calc(var(--i) * 45ms)}
-@keyframes leave{from{transform:none;opacity:1}to{transform:translateY(-120%);opacity:0}}
-.loader.out .loader__frame rect{stroke-dashoffset:-100;transition:stroke-dashoffset .7s cubic-bezier(.6,0,.2,1)}
-.loader__log{position:absolute;left:28px;right:28px;bottom:24px;margin:0;font:12px/1.55 var(--m);color:var(--sub);white-space:pre-wrap;
-  max-height:calc(100% - 48px);overflow:hidden;transition:opacity .3s}
-.loader__log .ok{color:var(--green)}
-.loader__log .st{color:var(--blue)}
-.loader.mark .loader__log{opacity:.12}
-.loader__mark{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;gap:.02em;
-  font:600 clamp(80px,22vw,340px)/1 var(--m);letter-spacing:-.06em;color:var(--text);overflow:hidden;pointer-events:none}
-.loader__mark span{display:inline-block;transform:translateY(110%);opacity:0}
-.loader.mark .loader__mark span{animation:rise .7s var(--pop) forwards;animation-delay:calc(var(--i) * 70ms)}
-@keyframes rise{to{transform:none;opacity:1}}
-.loader.mark .loader__mark span:last-child{color:#33ccff}
-.loader__frame{position:absolute;inset:14px;width:calc(100% - 28px);height:calc(100% - 28px);pointer-events:none}
-.loader__frame rect{stroke-dasharray:100;stroke-dashoffset:100}
-.loader.mark .loader__frame rect{transition:stroke-dashoffset 1s cubic-bezier(.6,0,.2,1);stroke-dashoffset:0}
-.loader__skip{position:absolute;top:24px;right:28px;margin:0;color:var(--ov);font-size:12px}
-
-/* ferestrele intră pe rând, cu animația „popin” din Hyprland */
-.boot .bar,.boot .win,.boot .status{opacity:0;transform:scale(.86)}
-.boot.up .bar,.boot.up .win,.boot.up .status{opacity:1;transform:none;
-  transition:opacity .45s, transform .6s var(--pop), left .55s var(--pop), top .55s var(--pop), width .55s var(--pop), height .55s var(--pop), background .3s;
-  transition-delay:calc(var(--i,0) * 70ms)}
-
-/* ——— ecrane mici: stivă verticală, fiecare fereastră cu clipul ei ——— */
-@media (max-width: 1000px){
-  body{display:block;background-size:18px 18px}
-  .bar__title,.bar__who{display:none}
-  .desk{grid-template-columns:1fr;padding:var(--gap)}
-  .tiles{display:grid;gap:var(--gap)}
-  .tiles .win,.win[data-slot]{position:relative;left:auto;top:auto;width:auto;height:auto;aspect-ratio:16/11}
-  .win[data-slot] .label{padding:40px 14px 12px}
-  .win[data-slot] .label b{font-size:24px}
-  .win[data-slot] .label small{display:block}
-  .win[data-slot] .open{opacity:1}
-  .status span:first-child{display:none}
-  .term__readme{min-height:0}
+/* ——— ecrane înguste: fiecare fișă cu clipul ei ——— */
+@media (max-width: 960px){
+  .intro{grid-template-columns:1fr}
+  .intro__side{grid-column:1}
+  .work{grid-template-columns:1fr}
+  .stage{display:none}
+  .case{min-height:0;padding:64px 0;opacity:1}
+  .case + .case{border-top:1px solid var(--line)}
+  .case__clip{display:block;margin:0 0 24px;aspect-ratio:16/10;border-radius:6px;overflow:hidden;box-shadow:0 0 0 1px var(--line)}
+  .tbl thead,.tbl td:nth-child(4),.tbl td:nth-child(5){display:none}
+  .tbl td:nth-child(3){font-size:13px;color:var(--soft)}
+}
+@media (max-width: 560px){
+  .top__nav a:not(:last-child){display:none}
+  .facts div,.case__meta div{grid-template-columns:7em 1fr}
+  .case__fig{grid-template-columns:1fr;gap:8px}
+  .tbl td:nth-child(3){display:none}
+  .end__q br{display:none}
 }
 @media (prefers-reduced-motion: reduce){
-  *,*::before,*::after{animation:none !important;transition-duration:.01s !important;transition-delay:0s !important}
+  html{scroll-behavior:auto}
+  *,*::before,*::after{transition-duration:.01s !important;transition-delay:0s !important}
 }
