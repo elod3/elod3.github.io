@@ -7,7 +7,7 @@
 <meta name="description" content="Portofoliul lui Koreh Elod: site-uri de prezentare, demo-uri 3D și prezentări interactive pentru firme. Cinci proiecte din 2026.">
 <link rel="canonical" href="https://elod3.github.io/">
 <meta property="og:title" content="Koreh Elod · site-uri și demo-uri pentru firme">
-<meta property="og:description" content="Cinci proiecte din 2026: Inhabit Media, casa care se construiește, MedClyn, Secret sauce, Domino.">
+<meta property="og:description" content="Cinci proiecte din 2026: Inhabit Media, casa care se construiește, MedClyn, Claude pe bune, Domino.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://elod3.github.io/">
 <meta property="og:image" content="https://elod3.github.io/og.jpg">
@@ -19,7 +19,7 @@
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="preload" href="fonts/bricolage-grotesque-300_800-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="fonts.css?v=2">
-<link rel="stylesheet" href="style.css?v=2">
+<link rel="stylesheet" href="style.css?v=3">
 <script>document.documentElement.classList.add('js')</script>
 </head>
 <body>
@@ -34,14 +34,14 @@
 </header>
 
 <main>
-  <!-- intro: o afirmație la stânga, faptele într-un cartuș la dreapta -->
+  <!-- intro: afirmația la stânga, lucrările împărțite ca un teanc de cărți la dreapta -->
   <section class="intro">
-    <h1 class="intro__h">
-      <span class="ln"><span>Fac site-uri</span></span>
-      <span class="ln"><span>pentru firme care</span></span>
-      <span class="ln"><span>au ceva <em>de arătat.</em></span></span>
-    </h1>
-    <div class="intro__side">
+    <div class="intro__text">
+      <h1 class="intro__h">
+        <span class="ln"><span>Fac site-uri</span></span>
+        <span class="ln"><span>pentru firme care</span></span>
+        <span class="ln"><span>au ceva <em>de arătat.</em></span></span>
+      </h1>
       <p class="intro__lead">De la prezentarea unui arhitect urmărit de 93.000 de oameni la un perete 3D pe care îl ștergi cu mâna ca să vezi placa antibacteriană de dedesubt.</p>
       <dl class="facts">
         <div><dt>Lucrări în 2026</dt><dd>5</dd></div>
@@ -49,6 +49,7 @@
         <div><dt>Fac</dt><dd>design, cod, 3D, video, publicare</dd></div>
       </dl>
     </div>
+    <div class="deck" id="deck" aria-label="Lucrările, pe scurt"></div>
     <a class="intro__down" href="#lucrari">Lucrările, una câte una <span aria-hidden="true">↓</span></a>
   </section>
 
@@ -56,7 +57,8 @@
   <section class="work" id="lucrari" aria-label="Lucrări">
     <div class="cases" id="cases"></div>
     <div class="stage" aria-hidden="true">
-      <div class="stage__screen" id="screen"></div>
+      <a class="stage__screen" id="screen" href="#" target="_blank" rel="noopener" tabindex="-1"></a>
+      <div class="stage__bars" id="bars"></div>
       <p class="stage__url"><span id="stageUrl">elod3.github.io</span><span id="stageNr">01 / 05</span></p>
     </div>
   </section>
@@ -72,6 +74,7 @@
 </main>
 
 <footer class="end" id="contact">
+  <p class="end__seen" id="seen" hidden></p>
   <p class="end__q">Ai o firmă care merită<br> un site <em>mai bun?</em></p>
   <div class="end__row">
     <a class="end__cta" href="https://github.com/elod3">Scrie-mi pe GitHub</a>
@@ -80,6 +83,9 @@
   <p class="end__foot"><span>© 2026 Koreh Elod</span><span>Codul paginii: <a href="https://github.com/elod3/elod3.github.io">github.com/elod3/elod3.github.io</a></span></p>
 </footer>
 
-<script src="app.js?v=2" defer></script>
+<div class="tag" id="tag" aria-hidden="true">Deschide site-ul ↗</div>
+<img class="peek" id="peek" alt="" aria-hidden="true" width="320" height="200">
+
+<script src="app.js?v=3" defer></script>
 </body>
 </html>

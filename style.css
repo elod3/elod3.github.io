@@ -30,23 +30,42 @@ em{font-style:normal;font-weight:300;color:var(--acc);transition:color .7s var(-
 .top__nav a:hover{color:var(--ink)}
 
 /* ——— intro ——— */
-.intro{display:grid;grid-template-columns:1fr minmax(260px, 30%);column-gap:var(--pad);
-  padding:clamp(56px,13vh,150px) var(--pad) clamp(40px,8vh,90px)}
-.intro__h{grid-column:1 / -1;margin:0 0 clamp(36px,7vh,80px);font-weight:650;
-  font-size:clamp(46px, 8.6vw, 140px);line-height:.92;letter-spacing:-.05em;font-variation-settings:'opsz' 96}
+.intro{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:0 var(--pad);align-items:center;
+  min-height:calc(100vh - 64px);padding:clamp(40px,8vh,100px) var(--pad) clamp(32px,6vh,64px)}
+.intro__text{grid-column:1}
+.intro__h{margin:0 0 clamp(28px,5vh,56px);font-weight:650;
+  font-size:clamp(44px, 6.6vw, 112px);line-height:.92;letter-spacing:-.05em;font-variation-settings:'opsz' 96}
 .ln{display:block;overflow:hidden;padding-bottom:.06em;margin-bottom:-.06em}
 .ln > span{display:inline-block}
 .js .ln > span{transform:translateY(105%);transition:transform 1s var(--out)}
 .js.in .ln > span{transform:none}
 .js.in .ln:nth-child(2) > span{transition-delay:.08s}
 .js.in .ln:nth-child(3) > span{transition-delay:.16s}
-.intro__side{grid-column:2}
-.intro__lead{margin:0 0 28px;font-size:clamp(17px,1.35vw,20px);line-height:1.5}
-.facts{margin:0}
+.intro__lead{margin:0 0 26px;max-width:42ch;font-size:clamp(17px,1.3vw,19px);line-height:1.5}
+.facts{margin:0;max-width:520px}
 .facts div{display:grid;grid-template-columns:9.5em 1fr;gap:12px;padding:10px 0;border-top:1px solid var(--line)}
 .facts dt{font:12px/1.9 var(--m);color:var(--soft)}
 .facts dd{margin:0;font-size:15px}
-.intro__down{grid-column:1;align-self:end;margin-top:28px;font:13px var(--m);color:var(--soft);text-decoration:none}
+
+/* teancul: lucrările împărțite ca niște cărți; se desfac la hover, se înclină după cursor */
+.deck{grid-column:2;grid-row:1 / span 2;position:relative;aspect-ratio:1/1;max-height:76vh;width:100%;justify-self:center;
+  --rx:0deg;--ry:0deg;transform:perspective(1400px) rotateX(var(--rx)) rotateY(var(--ry));transition:transform .6s var(--out)}
+.card{all:unset;box-sizing:border-box;position:absolute;left:15%;top:30%;width:70%;aspect-ratio:16/10;cursor:pointer;
+  z-index:var(--i);transform-origin:50% 160%;
+  --r:calc((var(--i) - 2) * 3deg);--x:calc((var(--i) - 2) * 2%);--lift:0%;
+  transform:translateX(var(--x)) rotate(var(--r)) translateY(var(--lift));
+  transition:transform .7s var(--out), opacity .4s}
+.card img{display:block;width:100%;height:100%;object-fit:cover;object-position:top;border-radius:6px;
+  box-shadow:0 0 0 1px var(--line), 0 24px 40px -22px rgba(22,20,15,.55)}
+.card span{position:absolute;left:0;top:calc(100% + 12px);font:12px var(--m);white-space:nowrap;color:var(--ink);opacity:0;transition:opacity .25s}
+.js .deck:not(.dealt) .card{transform:translateY(70vh) rotate(calc(var(--r) * 6));opacity:0}
+.deck.dealt:not(.ready) .card{transition-delay:calc((4 - var(--i)) * 110ms)}
+.deck.ready:hover .card{--r:calc((var(--i) - 2) * 6deg);--x:calc((var(--i) - 2) * 8%)}
+.deck.ready .card:hover,.deck.ready .card:focus-visible{--lift:-8%;z-index:20}
+.deck.ready .card:hover span,.deck.ready .card:focus-visible span{opacity:1}
+.card:focus-visible{outline:none}
+.card:focus-visible img{outline:2px solid var(--acc);outline-offset:3px}
+.intro__down{grid-column:1;align-self:end;margin-top:20px;justify-self:start;font:13px var(--m);color:var(--soft);text-decoration:none}
 .intro__down:hover{color:var(--ink)}
 
 /* ——— lucrările ——— */
@@ -75,12 +94,16 @@ em{font-style:normal;font-weight:300;color:var(--acc);transition:color .7s var(-
 
 /* ecranul fix: clipul proiectului activ intră de jos peste cel vechi */
 .stage{grid-column:2;grid-row:1;position:sticky;top:0;height:100vh;display:flex;flex-direction:column;justify-content:center;padding-top:40px}
-.stage__screen{position:relative;aspect-ratio:16/10;border-radius:6px;overflow:hidden;background:color-mix(in srgb, var(--ink) 8%, transparent);
+.stage__screen{display:block;position:relative;aspect-ratio:16/10;border-radius:6px;overflow:hidden;background:color-mix(in srgb, var(--ink) 8%, transparent);
   box-shadow:0 0 0 1px var(--line), 0 30px 60px -30px rgba(0,0,0,.45)}
 .shot{position:absolute;inset:0;clip-path:inset(100% 0 0 0);transition:clip-path 0s .8s}
 .shot.on{z-index:2;clip-path:inset(0);transition:clip-path .8s var(--ease)}
 .shot video,.case__clip video{display:block;width:100%;height:100%;object-fit:cover;object-position:top}
-.stage__url{display:flex;justify-content:space-between;gap:16px;margin:14px 0 0;font:12px var(--m);color:var(--soft)}
+.stage__bars{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-top:14px}
+.stage__bars button{all:unset;position:relative;cursor:pointer;padding:7px 0}
+.stage__bars button::before{content:'';display:block;height:2px;background:var(--line)}
+.stage__bars i{position:absolute;left:0;right:0;top:7px;height:2px;background:var(--ink);transform:scaleX(0);transform-origin:left}
+.stage__url{display:flex;justify-content:space-between;gap:16px;margin:6px 0 0;font:12px var(--m);color:var(--soft)}
 
 /* ——— index ——— */
 .index{padding:clamp(70px,14vh,160px) var(--pad) clamp(60px,10vh,120px);border-top:1px solid var(--line)}
@@ -98,6 +121,10 @@ em{font-style:normal;font-weight:300;color:var(--acc);transition:color .7s var(-
 /* ——— final ——— */
 .end{padding:clamp(70px,14vh,160px) var(--pad) 28px;background:var(--ink0);color:var(--paper)}
 .end em{color:#f0714b}
+.end__seen{margin:0 0 22px;font-size:15px;color:color-mix(in srgb, var(--paper) 70%, transparent)}
+.end__seen button{all:unset;cursor:pointer;color:var(--paper);text-decoration:underline;text-underline-offset:3px;text-decoration-color:#f0714b}
+.end__seen button:hover{color:#f0714b}
+.end__seen button:focus-visible{outline:2px solid #f0714b}
 .end__q{margin:0 0 clamp(36px,6vh,64px);font-weight:650;font-size:clamp(42px,7vw,116px);line-height:.94;letter-spacing:-.05em}
 .end__row{display:flex;flex-wrap:wrap;align-items:center;gap:20px 40px;margin-bottom:clamp(60px,12vh,140px)}
 .end__cta{display:inline-block;padding:18px 28px;border-radius:4px;background:var(--paper);color:var(--ink0);font-weight:600;font-size:18px;text-decoration:none;
@@ -109,10 +136,18 @@ em{font-style:normal;font-weight:300;color:var(--acc);transition:color .7s var(-
 .end__foot a{color:inherit}
 .end__foot a:hover{color:var(--paper)}
 
+/* ——— cursorul: eticheta de pe ecran și posterul din index ——— */
+.tag,.peek{position:fixed;left:0;top:0;z-index:20;pointer-events:none;opacity:0;scale:.85;transition:opacity .2s, scale .3s var(--out)}
+.tag{padding:8px 13px;border-radius:999px;background:var(--ink);color:var(--bg);font-size:13px;font-weight:600;white-space:nowrap}
+.peek{width:300px;height:auto;aspect-ratio:16/10;object-fit:cover;object-position:top;border-radius:6px;box-shadow:0 30px 50px -24px rgba(22,20,15,.6)}
+.tag.on,.peek.on{opacity:1;scale:1}
+
 /* ——— ecrane înguste: fiecare fișă cu clipul ei ——— */
 @media (max-width: 960px){
-  .intro{grid-template-columns:1fr}
-  .intro__side{grid-column:1}
+  .intro{grid-template-columns:1fr;min-height:0}
+  .deck{grid-column:1;grid-row:auto;aspect-ratio:5/4;max-height:none;margin:12px 0 8px}
+  .card{left:10%;top:18%;width:80%}
+  .intro__down{grid-row:auto}
   .work{grid-template-columns:1fr}
   .stage{display:none}
   .case{min-height:0;padding:64px 0;opacity:1}
