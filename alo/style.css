@@ -205,6 +205,9 @@ em{font-style:italic;color:var(--acc)}
 
 .foot{display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px 24px;padding:22px var(--pad);font-size:13px;color:var(--soft)}
 
+/* fără număr de WhatsApp setat în app.js, butoanele de contact nu apar */
+.no-wa .top__cta,.no-wa .js-wa,.no-wa .proof__msg{display:none}
+
 /* ——— ecrane înguste ——— */
 @media (max-width: 900px){
   .hero,.calc__head,.calc__body,.limits__cols,.plans__head{grid-template-columns:minmax(0,1fr)}

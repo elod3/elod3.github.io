@@ -130,7 +130,7 @@ em{font-style:normal;font-weight:300;color:var(--acc);transition:color .7s var(-
 .end__cta{display:inline-block;padding:18px 28px;border-radius:4px;background:var(--paper);color:var(--ink0);font-weight:600;font-size:18px;text-decoration:none;
   transition:background-color .25s, color .25s}
 .end__cta:hover{background:#f0714b}
-.end__note{margin:0;max-width:34ch;font-size:15px;color:color-mix(in srgb, var(--paper) 62%, transparent)}
+.end__note{margin:0 0 clamp(60px,12vh,140px);max-width:34ch;font-size:15px;color:color-mix(in srgb, var(--paper) 62%, transparent)}
 .end__foot{display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px 24px;margin:0;padding-top:18px;
   border-top:1px solid color-mix(in srgb, var(--paper) 16%, transparent);font:12px var(--m);color:color-mix(in srgb, var(--paper) 55%, transparent)}
 .end__foot a{color:inherit}

@@ -153,6 +153,9 @@ h2{font-size:clamp(40px,5.4vw,84px);margin-bottom:24px}
 
 .foot{display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px 24px;padding:22px var(--pad);border-top:1px solid var(--line);font-size:13px;color:var(--soft)}
 
+/* fără număr de WhatsApp setat în app.js, butoanele de contact nu apar */
+.no-wa .top__cta,.no-wa #trimite{display:none}
+
 /* ——— ecrane înguste ——— */
 @media (max-width: 960px){
   .hero,.script__head,.script__body{grid-template-columns:1fr}

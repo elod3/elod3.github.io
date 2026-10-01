@@ -2,6 +2,7 @@
 (() => {
   // Numărul de WhatsApp, în format internațional fără „+” (ex. 40712345678). Gol = butonul duce la portofoliu.
   const WA = '';
+  if (!WA) document.documentElement.classList.add('no-wa');
 
   const $ = (s, r = document) => r.querySelector(s);
   const $$ = (s, r = document) => [...r.querySelectorAll(s)];
@@ -116,7 +117,7 @@
   prod2.addEventListener('input', update);
   $('#form').addEventListener('submit', (e) => {
     e.preventDefault();
-    const url = WA ? `https://wa.me/${WA}?text=${encodeURIComponent(msgFor(prod.value.trim()))}` : 'https://elod3.github.io/#contact';
+    const url = WA ? `https://wa.me/${WA}?text=${encodeURIComponent(msgFor(prod.value.trim()))}` : '#';
     open(url, WA ? '_blank' : '_self', 'noopener');
   });
   update();

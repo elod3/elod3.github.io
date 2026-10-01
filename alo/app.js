@@ -3,6 +3,7 @@
 (() => {
   // Numărul de WhatsApp, în format internațional fără „+” (ex. 40712345678). Gol = butoanele duc la portofoliu.
   const WA = '';
+  if (!WA) document.documentElement.classList.add('no-wa');
 
   const $ = (s, r = document) => r.querySelector(s);
   const $$ = (s, r = document) => [...r.querySelectorAll(s)];
@@ -280,7 +281,7 @@
       ? `Bună! Aș vrea o demonstrație cu Alo: WhatsApp ${w.name} plus telefonul (avem cam ${c} apeluri pe zi).`
       : 'Bună! Aș vrea o demonstrație cu Alo.';
     $('#msg').textContent = msg;
-    const href = WA ? `https://wa.me/${WA}?text=${encodeURIComponent(msg)}` : 'https://elod3.github.io/#contact';
+    const href = WA ? `https://wa.me/${WA}?text=${encodeURIComponent(msg)}` : '#';
     $$('.js-wa').forEach((a) => { a.href = href; if (WA){ a.target = '_blank'; a.rel = 'noopener'; } });
   }
   [calls, days, dur, ...$$('input[name="wa"]')].forEach((i) => i.addEventListener('input', calc));
