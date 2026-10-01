@@ -19,7 +19,7 @@ em{font-style:italic;color:var(--acc)}
 
 /* ——— antet ——— */
 .top{position:sticky;top:0;z-index:5;display:flex;align-items:center;gap:28px;padding:16px var(--pad);
-  background:color-mix(in srgb, var(--bg) 92%, transparent);border-bottom:1px solid transparent;transition:border-color .3s}
+  background:var(--bg);border-bottom:1px solid transparent;transition:border-color .3s}
 .top.scrolled{border-bottom-color:var(--line)}
 .logo{font:400 34px/1 var(--serif);text-decoration:none;display:flex;align-items:center;gap:8px}
 .top__nav{display:flex;gap:24px;margin-left:auto;font-size:15px}
@@ -169,14 +169,15 @@ em{font-style:italic;color:var(--acc)}
 .price tr.best td:last-child::after{content:'cel mai ieftin';display:block;font-size:12px;font-weight:400;color:var(--acc)}
 .wa-pick{border:0;margin:0 0 28px;padding:0;display:flex;flex-wrap:wrap;gap:8px}
 .wa-pick legend{font-size:15px;margin-bottom:10px;padding:0}
-.wa-pick label{cursor:pointer}
-.wa-pick input{position:absolute;opacity:0;pointer-events:none}
+.wa-pick label{cursor:pointer;position:relative}
+.wa-pick input{position:absolute;left:0;top:0;width:1px;height:1px;margin:0;opacity:0;pointer-events:none}
 .wa-pick span{display:inline-block;padding:9px 16px;border-radius:999px;font-size:14px;font-weight:600;box-shadow:inset 0 0 0 1px var(--ink);transition:background-color .2s, color .2s}
 .wa-pick input:checked + span{background:var(--ink);color:var(--bg)}
 .wa-pick input:focus-visible + span{outline:2px solid var(--acc);outline-offset:3px}
 .sum{width:100%;border-collapse:collapse;margin-top:26px;font-size:15px;font-variant-numeric:tabular-nums;background:var(--bg)}
 .sum caption{text-align:left;font:400 24px/1.1 var(--serif);padding:0 0 10px}
 .sum th,.sum td{text-align:left;padding:12px 14px;border-bottom:1px solid var(--line)}
+.sum td{white-space:nowrap}
 .sum thead th{font-weight:400;font-size:13px;color:var(--soft);padding-top:12px}
 .sum tbody th{font-weight:600}
 .sum .tot th,.sum .tot td{border-bottom:0;border-top:2px solid var(--ink);font-weight:700;font-size:17px}
@@ -219,7 +220,22 @@ em{font-style:italic;color:var(--acc)}
   .limits__cols > div + div{margin-top:40px}
 }
 @media (max-width: 560px){
-  .price th:nth-child(4),.price td:nth-child(4){display:none}
+  /* extensiile de voce: câte un bloc — nume și preț lunar, apoi minutele, apoi totalul */
+  .price thead{display:none}
+  .price tr{display:grid;grid-template-columns:1fr auto;gap:2px 12px;padding:14px 0;border-bottom:1px solid var(--line)}
+  .price td{padding:0;border:0}
+  .price td:nth-child(2){text-align:right}
+  .price td:nth-child(2)::after{content:' / lună';font-weight:400;font-size:13px;color:var(--soft)}
+  .price td:nth-child(3),.price td:nth-child(4){grid-column:1 / -1;font-size:14px;color:var(--soft)}
+  .price td:nth-child(3)::before{content:'Incluse: '}
+  .price td:nth-child(4)::before{content:'Minut în plus: '}
+  .price td:nth-child(5){grid-column:1 / -1;margin-top:6px}
+  .price td:nth-child(5)::before{content:'La volumul tău: ';font-weight:400;color:var(--soft)}
+  .price tr.best{padding-left:12px;padding-right:12px}
+  .price tr.best td:first-child{box-shadow:none;padding-left:0}
+  .price tr.best{box-shadow:inset 3px 0 0 var(--acc)}
+  .sum{font-size:14px}
+  .sum th,.sum td{padding:10px 8px}
   .hero__facts div{grid-template-columns:7em 1fr}
   .call{padding:16px 14px;border-radius:18px}
   .bot--big{width:96px;top:-72px;right:18px}
