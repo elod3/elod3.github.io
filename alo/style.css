@@ -167,6 +167,19 @@ em{font-style:italic;color:var(--acc)}
 .price tr.best{background:var(--bg)}
 .price tr.best td:first-child{box-shadow:inset 3px 0 0 var(--acc);padding-left:12px}
 .price tr.best td:last-child::after{content:'cel mai ieftin';display:block;font-size:12px;font-weight:400;color:var(--acc)}
+.wa-pick{border:0;margin:0 0 28px;padding:0;display:flex;flex-wrap:wrap;gap:8px}
+.wa-pick legend{font-size:15px;margin-bottom:10px;padding:0}
+.wa-pick label{cursor:pointer}
+.wa-pick input{position:absolute;opacity:0;pointer-events:none}
+.wa-pick span{display:inline-block;padding:9px 16px;border-radius:999px;font-size:14px;font-weight:600;box-shadow:inset 0 0 0 1px var(--ink);transition:background-color .2s, color .2s}
+.wa-pick input:checked + span{background:var(--ink);color:var(--bg)}
+.wa-pick input:focus-visible + span{outline:2px solid var(--acc);outline-offset:3px}
+.sum{width:100%;border-collapse:collapse;margin-top:26px;font-size:15px;font-variant-numeric:tabular-nums;background:var(--bg)}
+.sum caption{text-align:left;font:400 24px/1.1 var(--serif);padding:0 0 10px}
+.sum th,.sum td{text-align:left;padding:12px 14px;border-bottom:1px solid var(--line)}
+.sum thead th{font-weight:400;font-size:13px;color:var(--soft);padding-top:12px}
+.sum tbody th{font-weight:600}
+.sum .tot th,.sum .tot td{border-bottom:0;border-top:2px solid var(--ink);font-weight:700;font-size:17px}
 .calc__why{margin:16px 0 0;font-size:15px;max-width:60ch}
 .calc__per{margin:12px 0 0;font-size:15px;color:var(--soft)}
 .calc__per b{color:var(--ink);font-weight:600}

@@ -227,10 +227,17 @@
 
   /* ================= calculatorul pentru voce ================= */
   const PLANS = [
-    { name: 'BASIC', inc: 200, setup: 250, month: 400, over: 2.5 },
-    { name: 'STANDARD', inc: 500, setup: 400, month: 750, over: 2 },
-    { name: 'PREMIUM', inc: 1000, setup: 600, month: 1300, over: 1.7 }
+    { name: 'VOICE BASIC', inc: 200, setup: 250, month: 400, over: 2.5 },
+    { name: 'VOICE STANDARD', inc: 500, setup: 400, month: 750, over: 2 },
+    { name: 'VOICE PREMIUM', inc: 1000, setup: 600, month: 1300, over: 1.7 }
   ];
+  // pachetele de bază, pe WhatsApp: intervale (prețul exact depinde de afacere)
+  const WA_PLANS = [
+    { name: 'BASIC', month: [500, 800], setup: [300, 500] },
+    { name: 'STANDARD', month: [800, 1500], setup: [500, 1000] },
+    { name: 'PREMIUM', month: [1500, 2500], setup: [1000, 2000] }
+  ];
+  const range = (a, b) => Math.round(a).toLocaleString('ro-RO') + '–' + Math.round(b).toLocaleString('ro-RO') + ' lei';
   const calls = $('#calls'), days = $('#days'), dur = $('#dur'), tbody = $('#plans');
   PLANS.forEach((p) => {
     const tr = document.createElement('tr');
@@ -259,18 +266,24 @@
     $('#totHead').textContent = `La ${mins.toLocaleString('ro-RO')} min plătești`;
     const cheap = PLANS[0];
     $('#why').textContent = best === cheap
-      ? `La volumul tău, cel mai mic pachet e și cel mai ieftin.`
-      : `BASIC e pachetul cel mai ieftin (${lei(cheap.month)} pe lună), dar include doar ${cheap.inc} de minute. La ${mins.toLocaleString('ro-RO')} de minute, cele în plus îl fac mai scump decât ${best.name}, așa că ți-l marcăm pe ${best.name}.`;
+      ? `La volumul tău, cea mai mică extensie e și cea mai ieftină.`
+      : `${cheap.name} e extensia cea mai ieftină (${lei(cheap.month)} pe lună), dar include doar ${cheap.inc} de minute. La ${mins.toLocaleString('ro-RO')} de minute, cele în plus îl fac mai scump decât ${best.name}, așa că ți-l marcăm pe ${best.name}.`;
     $('#perCall').textContent = (best.total / (c * d)).toFixed(1).replace('.', ',') + ' lei';
-    $('#setup').textContent = lei(best.setup);
+    const w = WA_PLANS[+($('input[name="wa"]:checked') || { value: 1 }).value];
+    $('#sWaName').textContent = 'WhatsApp ' + w.name;
+    $('#sWaM').textContent = range(...w.month); $('#sWaS').textContent = range(...w.setup);
+    $('#sVoName').textContent = '+ ' + best.name;
+    $('#sVoM').textContent = lei(best.total); $('#sVoS').textContent = lei(best.setup);
+    $('#sTotM').textContent = range(w.month[0] + best.total, w.month[1] + best.total);
+    $('#sTotS').textContent = range(w.setup[0] + best.setup, w.setup[1] + best.setup);
     const msg = touched
-      ? `Bună! Aș vrea o demonstrație cu Alo, pe WhatsApp și la telefon (avem cam ${c} apeluri pe zi).`
+      ? `Bună! Aș vrea o demonstrație cu Alo: WhatsApp ${w.name} plus telefonul (avem cam ${c} apeluri pe zi).`
       : 'Bună! Aș vrea o demonstrație cu Alo.';
     $('#msg').textContent = msg;
     const href = WA ? `https://wa.me/${WA}?text=${encodeURIComponent(msg)}` : 'https://elod3.github.io/#contact';
     $$('.js-wa').forEach((a) => { a.href = href; if (WA){ a.target = '_blank'; a.rel = 'noopener'; } });
   }
-  [calls, days, dur].forEach((i) => i.addEventListener('input', calc));
+  [calls, days, dur, ...$$('input[name="wa"]')].forEach((i) => i.addEventListener('input', calc));
   calc();
 
   /* ---------- antetul primește o linie după ce începi să derulezi ---------- */

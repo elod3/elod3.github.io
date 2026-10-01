@@ -13,7 +13,7 @@
 <meta name="theme-color" content="#f1eee8">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="fonts.css?v=1">
-<link rel="stylesheet" href="style.css?v=3">
+<link rel="stylesheet" href="style.css?v=4">
 </head>
 <body>
 
@@ -115,10 +115,16 @@
   <section class="calc" id="telefon">
     <div class="calc__head">
       <h2>Vrei să răspundă și la telefon?</h2>
-      <p>Telefonul se adaugă separat, peste pachetul de WhatsApp, și se plătește după minute. Mută cifrele după afacerea ta: îți arătăm toate pachetele de voce și îl marcăm pe cel mai ieftin pentru volumul tău, chiar dacă e cel mic.</p>
+      <p>Telefonul e o extensie: o adaugi peste pachetul de WhatsApp și o plătești după minute. Alege-ți pachetul de WhatsApp, mută cifrele după afacerea ta și vezi totalul pe lună. Dintre pachetele de voce îl marcăm pe cel mai ieftin pentru volumul tău, chiar dacă e cel mic.</p>
     </div>
     <div class="calc__body">
       <div class="calc__in">
+        <fieldset class="wa-pick">
+          <legend>Pachetul tău de WhatsApp</legend>
+          <label><input type="radio" name="wa" value="0"><span>BASIC</span></label>
+          <label><input type="radio" name="wa" value="1" checked><span>STANDARD</span></label>
+          <label><input type="radio" name="wa" value="2"><span>PREMIUM</span></label>
+        </fieldset>
         <label><span>Apeluri pe zi</span><output id="oCalls">18</output>
           <input type="range" id="calls" min="3" max="60" step="1" value="18"></label>
         <label><span>Zile lucrătoare pe lună</span><output id="oDays">24</output>
@@ -130,11 +136,20 @@
       <div class="calc__out">
         <p class="calc__min"><b id="mins">950</b> minute pe lună</p>
         <table class="price">
-          <thead><tr><th>Voce</th><th>Preț lunar</th><th>Minute incluse</th><th>Minut în plus</th><th id="totHead">La 950 min plătești</th></tr></thead>
+          <thead><tr><th>Extensia de voce</th><th>Preț lunar</th><th>Minute incluse</th><th>Minut în plus</th><th id="totHead">La 950 min plătești</th></tr></thead>
           <tbody id="plans"></tbody>
         </table>
         <p class="calc__why" id="why"></p>
-        <p class="calc__per">Cu pachetul marcat, un apel te costă cam <b id="perCall">3,0 lei</b>. Instalarea vocii se plătește o dată: <b id="setup">600 lei</b>. Păstrezi numărul tău: îl redirecționezi către Alo, iar linia se aprobă în 2–3 zile lucrătoare.</p>
+        <table class="sum" aria-live="polite">
+          <caption>Ce plătești, WhatsApp plus telefon</caption>
+          <thead><tr><th></th><th>Pe lună</th><th>Instalare, o dată</th></tr></thead>
+          <tbody>
+            <tr><th id="sWaName">WhatsApp STANDARD</th><td id="sWaM">800–1.500 lei</td><td id="sWaS">500–1.000 lei</td></tr>
+            <tr><th id="sVoName">+ VOICE PREMIUM</th><td id="sVoM">1.300 lei</td><td id="sVoS">600 lei</td></tr>
+            <tr class="tot"><th>Total</th><td id="sTotM">2.100–2.800 lei</td><td id="sTotS">1.100–1.600 lei</td></tr>
+          </tbody>
+        </table>
+        <p class="calc__per">Doar partea de telefon te costă cam <b id="perCall">3,0 lei</b> pe apel. Păstrezi numărul tău: îl redirecționezi către Alo, iar linia se aprobă în 2–3 zile lucrătoare.</p>
       </div>
     </div>
   </section>
@@ -179,6 +194,6 @@
   <span>Prețuri în lei, valabile din iulie 2026</span>
 </footer>
 
-<script src="app.js?v=3" defer></script>
+<script src="app.js?v=4" defer></script>
 </body>
 </html>
