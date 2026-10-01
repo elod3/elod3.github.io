@@ -10,6 +10,7 @@
 }
 *,*::before,*::after{box-sizing:border-box}
 html{scroll-behavior:smooth}
+html,body{overflow-x:clip}
 body{margin:0;background:var(--bg);color:var(--ink);font:400 17px/1.55 var(--sans);-webkit-font-smoothing:antialiased}
 a{color:inherit}
 :focus-visible{outline:2px solid var(--acc);outline-offset:3px}
@@ -206,7 +207,7 @@ em{font-style:italic;color:var(--acc)}
 
 /* ——— ecrane înguste ——— */
 @media (max-width: 900px){
-  .hero,.calc__head,.calc__body,.limits__cols,.plans__head{grid-template-columns:1fr}
+  .hero,.calc__head,.calc__body,.limits__cols,.plans__head{grid-template-columns:minmax(0,1fr)}
   .stagebox{margin-top:96px}
   .tiers thead{display:none}
   .tiers tr{display:block;padding:16px 0;border-bottom:1px solid var(--line)}
@@ -220,6 +221,9 @@ em{font-style:italic;color:var(--acc)}
   .limits__cols > div + div{margin-top:40px}
 }
 @media (max-width: 560px){
+  .top{gap:12px}
+  .top__cta{white-space:nowrap;font-size:14px;padding:8px 13px}
+  .logo{font-size:28px}
   /* extensiile de voce: câte un bloc — nume și preț lunar, apoi minutele, apoi totalul */
   .price thead{display:none}
   .price tr{display:grid;grid-template-columns:1fr auto;gap:2px 12px;padding:14px 0;border-bottom:1px solid var(--line)}
@@ -235,6 +239,7 @@ em{font-style:italic;color:var(--acc)}
   .price tr.best td:first-child{box-shadow:none;padding-left:0}
   .price tr.best{box-shadow:inset 3px 0 0 var(--acc)}
   .sum{font-size:14px}
+  .sum td{white-space:normal}
   .sum th,.sum td{padding:10px 8px}
   .hero__facts div{grid-template-columns:7em 1fr}
   .call{padding:16px 14px;border-radius:18px}
