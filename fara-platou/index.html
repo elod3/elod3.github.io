@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="ro">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fără platou · reclame video făcute cu AI, gata de postat</title>
+<meta name="description" content="Ne trimiți produsul, primești scenariul pe secunde, apoi reclama terminată: imagine generată cu AI, voce în română, subtitrări. Fără echipă de filmare, fără actori, fără platou.">
+<meta property="og:title" content="Fără platou · reclame video făcute cu AI">
+<meta property="og:description" content="Scenariul pe secunde înainte să plătești, apoi reclama terminată, gata de Reels, TikTok și Facebook.">
+<meta property="og:image" content="https://elod3.github.io/fara-platou/og.jpg">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#0d0d0c">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="fonts.css?v=1">
+<link rel="stylesheet" href="style.css?v=1">
+<script>
+  document.documentElement.classList.add('js');
+  try { if (!sessionStorage.getItem('dubla')) document.documentElement.classList.add('slate-on'); } catch (e) {}
+</script>
+</head>
+<body>
+
+<!-- claqueta: bate o dată, la prima vizită -->
+<div class="slate" id="slate" aria-hidden="true">
+  <div class="slate__board">
+    <div class="slate__stick"></div>
+    <div class="slate__body">
+      <b>FĂRĂ PLATOU</b>
+      <dl><div><dt>Scena</dt><dd>1</dd></div><div><dt>Dubla</dt><dd>1</dd></div><div><dt>Platou</dt><dd>—</dd></div></dl>
+    </div>
+  </div>
+</div>
+
+<header class="top">
+  <a class="logo" href="#"><i aria-hidden="true"></i>FĂRĂ PLATOU</a>
+  <nav class="top__nav" aria-label="Secțiuni">
+    <a href="#scenariu">Scenariul</a>
+    <a href="#productie">Cum lucrăm</a>
+    <a href="#limite">Ce nu facem</a>
+  </nav>
+  <a class="top__cta" href="#trimite">Trimite produsul</a>
+</header>
+
+<main>
+  <section class="hero">
+    <h1>Reclame video.<br><span>Fără platou.</span></h1>
+    <div class="hero__side">
+      <p>Tu ne trimiți produsul. Noi scriem reclama pe secunde, o generăm cu AI (imaginea cu Higgsfield, vocea în română) și ți-o dăm gata de pus pe Reels, TikTok și Facebook.</p>
+      <p class="hero__no">Fără echipă de filmare. Fără actori. Fără zile de platou.</p>
+    </div>
+  </section>
+
+  <!-- scenariul: monitorul și foaia AV merg pe același cap de redare -->
+  <section class="script" id="scenariu">
+    <div class="script__head">
+      <h2>Asta cumperi întâi: scenariul.</h2>
+      <div>
+      <p>Înainte să generăm un singur cadru, primești reclama scrisă pe secunde: ce se vede, ce se aude, ce scrie pe ecran. O aprobi sau o corectezi. Mai jos, un exemplu pentru o prăjitorie de cafea.</p>
+      <label class="try">Scrie ce vinzi tu și vezi foaia pe numele tău:
+        <input id="prod2" type="text" maxlength="60" placeholder="ex. lumânări din ceară de soia" autocomplete="off"></label>
+      </div>
+    </div>
+
+    <div class="script__body">
+      <div class="monitor">
+        <div class="frame" id="frame">
+          <span class="frame__rec"><i></i>REC</span>
+          <span class="frame__tc" id="tc">00:00:00</span>
+          <span class="frame__shot" id="shot">PRIM-PLAN</span>
+          <p class="frame__desc" id="desc"></p>
+          <p class="frame__super" id="super"></p>
+          <span class="frame__slate" id="frameSlate">PRODUCȚIE: CAFEA DE SPECIALITATE</span>
+          <i class="frame__c c1"></i><i class="frame__c c2"></i><i class="frame__c c3"></i><i class="frame__c c4"></i>
+        </div>
+        <div class="deck">
+          <button type="button" class="play" id="play" aria-label="Pauză">❚❚</button>
+          <div class="track" id="track" role="slider" tabindex="0" aria-label="Secunda din reclamă" aria-valuemin="0" aria-valuemax="15" aria-valuenow="0">
+            <div class="track__beats" id="beats"></div>
+            <div class="track__head" id="head"></div>
+          </div>
+          <span class="deck__len">0:15</span>
+        </div>
+        <p class="monitor__note">Trage de cap sau dă click pe un rând din scenariu. Exemplu · 15 s · 9:16</p>
+      </div>
+
+      <div class="sheet">
+        <p class="sheet__top"><span id="sheetName">SCENARIU AV · CAFEA DE SPECIALITATE</span><span>15 s · 9:16 · RO</span></p>
+        <table class="av">
+          <thead><tr><th>TC</th><th>IMAGINE</th><th>SUNET</th></tr></thead>
+          <tbody id="rows"></tbody>
+        </table>
+        <p class="sheet__foot">Aprobat de: ________________ &nbsp; Data: __________</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ce primești, față în față cu o filmare clasică -->
+  <section class="vs">
+    <h2>Ce e diferit față de o filmare</h2>
+    <table class="cmp">
+      <thead><tr><th></th><th>Filmare clasică</th><th>Fără platou</th></tr></thead>
+      <tbody>
+        <tr><th>Echipă, actori, locație</th><td>le plătești pe toate</td><td>nu e nevoie de niciuna</td></tr>
+        <tr><th>Vezi ce iese</th><td>după montaj</td><td>din scenariu, înainte de generare</td></tr>
+        <tr><th>Schimbi un cadru</th><td>refilmezi</td><td>regenerăm cadrul</td></tr>
+        <tr><th>Altă variantă de hook</th><td>încă o zi de filmare</td><td>încă un rând în scenariu</td></tr>
+        <tr><th>Ce primești</th><td>materiale brute sau montaj</td><td>reclama terminată, cu voce și subtitrări</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- producția: cine face ce, ca într-un plan de filmare -->
+  <section class="prod" id="productie">
+    <h2>Cum lucrăm</h2>
+    <ol class="prod__list">
+      <li><span class="n">01</span><h3>Brief</h3><p>Ne trimiți poze reale cu produsul, linkul și ce vrei să vinzi.</p><p class="who"><b>Tu</b> poze + link</p></li>
+      <li><span class="n">02</span><h3>Scenariu</h3><p>Primești reclama pe secunde, ca foaia de mai sus. O aprobi sau o corectezi.</p><p class="who"><b>Tu</b> aprobi · <b>Noi</b> scriem</p></li>
+      <li><span class="n">03</span><h3>Generare</h3><p>Cadrele cu Higgsfield, după pozele tale; vocea în română; subtitrările scrise și verificate de om.</p><p class="who"><b>Noi</b></p></li>
+      <li><span class="n">04</span><h3>Livrare</h3><p>Fișierul final în 9:16, pentru Reels, TikTok și Shorts. La cerere și 1:1 sau 16:9.</p><p class="who"><b>Tu</b> o pui la promovat</p></li>
+    </ol>
+  </section>
+
+  <section class="limits" id="limite">
+    <h2>Ce nu facem</h2>
+    <ul>
+      <li><b>Nu inventăm clienți.</b> Fără „recenzii” jucate de oameni generați și fără fețe de oameni reali care n-au fost de acord.</li>
+      <li><b>Nu reinventăm produsul.</b> Pozele tale sunt referința; în reclamă, punga arată ca punga de pe raft.</li>
+      <li><b>Nu promitem viral.</b> Promitem o reclamă terminată, pe care o poți testa cu buget mic.</li>
+      <li><b>Nu lăsăm AI-ul să scrie pe ecran.</b> Încă greșește literele și diacriticele, așa că textul îl punem noi.</li>
+    </ul>
+  </section>
+
+  <section class="send" id="trimite">
+    <h2>Trimite produsul.<br><span>Primești scenariul înainte să plătești.</span></h2>
+    <form class="send__form" id="form">
+      <label for="prod">Ce vinzi?</label>
+      <div class="send__row">
+        <input id="prod" name="prod" type="text" maxlength="60" placeholder="ex. cafea de specialitate" autocomplete="off">
+        <button type="submit" class="btn">Trimite pe WhatsApp</button>
+      </div>
+      <p class="send__msg">Mesajul pleacă deja scris: <q id="msg"></q></p>
+    </form>
+  </section>
+</main>
+
+<footer class="foot">
+  <span>Fără platou · făcut de <a href="https://elod3.github.io/">Koreh Elod</a></span>
+  <span>Exemplul de scenariu e ilustrativ, nu o reclamă difuzată.</span>
+</footer>
+
+<script src="app.js?v=1" defer></script>
+</body>
+</html>

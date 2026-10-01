@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="ro">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Alo · asistentul care răspunde la telefonul cabinetului</title>
+<meta name="description" content="Alo preia programările, reprogramările și întrebările pacienților la telefon, pe numărul pe care îl știu deja. Ce e complicat ajunge la un om. De la 400 lei pe lună.">
+<meta property="og:title" content="Alo · asistentul care răspunde la telefonul cabinetului">
+<meta property="og:description" content="Programări, reprogramări, program și prețuri, la telefon. Ce e complicat ajunge la un om.">
+<meta property="og:image" content="https://elod3.github.io/alo/og.jpg">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#f1eee8">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="fonts.css?v=1">
+<link rel="stylesheet" href="style.css?v=1">
+</head>
+<body>
+
+<header class="top">
+  <a class="logo" href="#">Alo<i aria-hidden="true"></i></a>
+  <nav class="top__nav" aria-label="Secțiuni">
+    <a href="#cum">Cum merge</a>
+    <a href="#minute">Prețuri</a>
+    <a href="#limite">Ce nu face</a>
+  </nav>
+  <a class="top__cta" href="#proba">Apel de probă</a>
+</header>
+
+<main>
+  <!-- hero: promisiunea la stânga, un apel adevărat (scris) la dreapta -->
+  <section class="hero">
+    <div class="hero__text">
+      <h1>Telefonul sună de 18 ori pe zi. <em>Alo răspunde la toate.</em></h1>
+      <p class="hero__lead">Un asistent vocal care preia programările, reprogramările și întrebările despre program, prețuri și adresă, pe numărul cabinetului pe care pacienții îl știu deja. Orice e complicat ajunge la un om.</p>
+      <dl class="hero__facts">
+        <div><dt>Răspunde</dt><dd>din prima secundă, și sâmbăta dimineața</dd></div>
+        <div><dt>Se prezintă</dt><dd>ca asistent automat, din prima frază</dd></div>
+        <div><dt>De la</dt><dd>400 lei / lună, 200 de minute incluse</dd></div>
+      </dl>
+    </div>
+
+    <figure class="call" id="call" aria-label="Demonstrație: un apel la cabinet">
+      <div class="call__top">
+        <span class="call__state"><i class="dot"></i><span id="state">Gata de apel</span></span>
+        <b id="clock">00:00</b>
+      </div>
+      <p class="call__who">Cabinet stomatologic · apel de demonstrație</p>
+      <div class="wave" id="wave" aria-hidden="true"></div>
+      <ol class="call__log" id="log" aria-live="polite"></ol>
+      <div class="call__ctl">
+        <button type="button" class="btn btn--live" id="start">Pornește apelul</button>
+        <button type="button" class="btn btn--ghost" id="cut" disabled>Întrerupe-l</button>
+      </div>
+      <figcaption class="call__note">Apasă „Întrerupe-l” cât timp vorbește Alo: se oprește și te ascultă, ca un om.</figcaption>
+    </figure>
+  </section>
+
+  <!-- cum merge: trei pași, ca o fișă de instalare -->
+  <section class="steps" id="cum">
+    <h2>Cum merge</h2>
+    <ol class="steps__list">
+      <li>
+        <span class="n">01</span>
+        <h3>Păstrezi numărul tău</h3>
+        <p>Nu le dai pacienților un număr nou. Redirecționezi numărul cabinetului către linia lui Alo; ei sună exact unde sunau și până acum.</p>
+        <small>Linia tehnică se aprobă o singură dată, în 2–3 zile lucrătoare.</small>
+      </li>
+      <li>
+        <span class="n">02</span>
+        <h3>Alo preia apelurile simple</h3>
+        <p>Programări noi, reprogramări, confirmări, program, prețuri, adresă. Te poate întrerupe pacientul oricând: se oprește și ascultă.</p>
+        <small>Răspunsul vine în mai puțin de o secundă, altfel conversația sună robotic.</small>
+      </li>
+      <li>
+        <span class="n">03</span>
+        <h3>Restul ajunge la tine</h3>
+        <p>Când pacientul cere un om, are o durere sau o urgență, Alo îl transferă la cabinet și te anunță pe loc.</p>
+        <small>Un prim filtru pentru apelurile simple, nu un înlocuitor al recepției.</small>
+      </li>
+    </ol>
+  </section>
+
+  <!-- calculatorul: câte minute ai și ce pachet te costă cel mai puțin -->
+  <section class="calc" id="minute">
+    <div class="calc__head">
+      <h2>Câte minute ai pe lună?</h2>
+      <p>Mută cifrele după cabinetul tău. Îți arătăm toate pachetele și îl marcăm pe cel mai ieftin pentru volumul tău, chiar dacă e cel mic.</p>
+    </div>
+    <div class="calc__body">
+      <div class="calc__in">
+        <label><span>Apeluri pe zi</span><output id="oCalls">18</output>
+          <input type="range" id="calls" min="3" max="60" step="1" value="18"></label>
+        <label><span>Zile lucrătoare pe lună</span><output id="oDays">24</output>
+          <input type="range" id="days" min="18" max="26" step="1" value="24"></label>
+        <label><span>Minute pe apel, în medie</span><output id="oDur">2,2</output>
+          <input type="range" id="dur" min="0.5" max="5" step="0.1" value="2.2"></label>
+        <p class="calc__hint">Un cabinet cu 2–3 medici are cam 18 apeluri pe zi, de 2,2 minute: apeluri scurte de 30 de secunde amestecate cu programări de 3–4 minute.</p>
+      </div>
+      <div class="calc__out">
+        <p class="calc__min"><b id="mins">950</b> minute pe lună</p>
+        <table class="price">
+          <thead><tr><th>Pachet</th><th>Incluse</th><th>Lunar</th><th>Minut în plus</th><th>Pentru tine</th></tr></thead>
+          <tbody id="plans"></tbody>
+        </table>
+        <p class="calc__per">Cu pachetul marcat, un apel te costă cam <b id="perCall">3,0 lei</b>. Instalarea se plătește o dată: <b id="setup">600 lei</b>.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- limitele: ce face și ce nu face, față în față -->
+  <section class="limits" id="limite">
+    <h2>Ce face și ce nu face</h2>
+    <div class="limits__cols">
+      <div>
+        <h3>Face</h3>
+        <ul>
+          <li>Programează, reprogramează și confirmă</li>
+          <li>Spune programul, prețurile și adresa</li>
+          <li>Se prezintă ca asistent automat la începutul fiecărui apel, cum cere AI Act</li>
+          <li>Te anunță pe loc când un apel are nevoie de tine</li>
+        </ul>
+      </div>
+      <div>
+        <h3>Nu face</h3>
+        <ul>
+          <li>Nu dă sfaturi medicale. La durere sau urgență, transferă la cabinet</li>
+          <li>Nu se dă drept om și nu refuză niciodată „vreau să vorbesc cu cineva”</li>
+          <li>Nu înregistrează apeluri fără să scrie în documentul GDPR cât le păstrează și cine are acces</li>
+          <li>Nu promite o voce pe care n-ai auzit-o: testăm vocea în română pe apeluri reale înainte de contract</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- proba: CTA cu mesajul deja scris din calculator -->
+  <section class="proof" id="proba">
+    <h2>Sună-l înainte să-l cumperi.</h2>
+    <p>Pornim cu cabinetul tău ca pilot: facem cel puțin 20 de apeluri reale împreună, tu suni și asculți, apoi decizi. Dacă ai deja asistentul pe WhatsApp, vocea se adaugă peste el.</p>
+    <a class="btn btn--big js-wa" href="#proba">Vreau un apel de probă</a>
+    <p class="proof__msg">Mesajul pleacă deja scris: <q id="msg">Bună! Avem cam 18 apeluri pe zi. Aș vrea un apel de probă cu Alo.</q></p>
+  </section>
+</main>
+
+<footer class="foot">
+  <span>Alo · făcut de <a href="https://elod3.github.io/">Koreh Elod</a></span>
+  <span>Prețuri în lei, valabile din iulie 2026</span>
+</footer>
+
+<script src="app.js?v=1" defer></script>
+</body>
+</html>

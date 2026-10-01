@@ -21,6 +21,14 @@
       what: 'Un perete de faianță contaminat pe care îl ștergi cu mâna, iar dedesubt apare placa antibacteriană. Cerințele regulamentului față în față cu fișa tehnică, șantiere reale și hala construită în 3D din trei numere.',
       fig: '852/2004', figL: 'regulamentul CE de igienă, citat rând cu rând lângă fișa tehnică a plăcii',
       tech: 'three.js · texturi PBR · HDRI', bg: '#0e1c29', ink: '#e4edf2', acc: '#24bfcd' },
+    { id: 'alo', name: 'Alo', who: 'produsul meu', year: '2026', kind: 'Agent vocal AI',
+      what: 'Site de vânzare pentru recepționerul vocal pe care îl fac pentru cabinete. Un apel rulează pe pagină și îl poți întrerupe ca pe un om; calculatorul arată toate pachetele și îl marchează pe cel mai ieftin pentru volumul tău, chiar dacă e cel mic.',
+      fig: '950', figL: 'de minute pe lună la un cabinet cu 18 apeluri pe zi; de aici pornește calculatorul',
+      tech: 'HTML · CSS · JS', bg: '#121412', ink: '#e9ebe4', acc: '#d8f45a' },
+    { id: 'fara-platou', name: 'Fără platou', who: 'agenția mea de reclame AI', year: '2026', kind: 'Site de agenție',
+      what: 'Reclame video făcute cu Higgsfield și voce AI, vândute gata făcute. Pagina e un document de producție: un monitor rulează reclama pe 15 secunde, foaia de scenariu se aprinde în sincron, iar ce scrii că vinzi apare pe claqueta.',
+      fig: '15 s', figL: 'scenariul pe secunde, aprobat de client înainte de generare',
+      tech: 'HTML · CSS · JS', bg: '#0d0d0c', ink: '#ede9df', acc: '#ffb21a' },
     { id: 'claude', path: 'prezentari/claude', name: 'Claude, pe bune', who: 'prezentare proprie', year: '2026', kind: 'Prezentare interactivă',
       what: 'Claude explicat pentru oameni care n-au scris cod: cum ghicește un model următorul cuvânt, ce sunt tokenii, familia de modele cu prețurile ei și cele trei uși (chat, Claude Code, API). Rulează în browser, se controlează din taste, cu note de prezentator pe telefon.',
       fig: '19', figL: 'slide-uri, cu gravuri SVG desenate pentru ele',
@@ -39,6 +47,7 @@
   P.forEach((p, i) => {
     const c = document.createElement('button');
     c.type = 'button'; c.className = 'card'; c.style.setProperty('--i', P.length - 1 - i);  // 01 stă deasupra
+    c.style.setProperty('--mid', (P.length - 1) / 2);
     c.innerHTML = `<img src="media/${p.id}.webp" alt="" width="960" height="600" decoding="async"><span>${nr(i)} · ${p.name}</span>`;
     c.setAttribute('aria-label', 'Mergi la ' + p.name);
     c.addEventListener('click', () => go(i));
@@ -76,6 +85,7 @@
     tr.addEventListener('click', (e) => { if (!e.target.closest('a')) $('a', tr).click(); });
     rows.appendChild(tr);
   });
+  bars.style.gridTemplateColumns = `repeat(${P.length}, 1fr)`;
   const caseEls = $$('.case'), shots = $$('.shot'), barEls = $$('#bars button');
 
   function go(i){
@@ -103,7 +113,7 @@
     const el = $('#seen'), l = left();
     if (!seen.size){ el.hidden = true; return; }
     el.hidden = false;
-    if (!l.length){ el.textContent = 'Le-ai văzut pe toate cinci. Următoarea poate fi a ta.'; return; }
+    if (!l.length){ el.textContent = 'Le-ai văzut pe toate. Următoarea poate fi a ta.'; return; }
     el.innerHTML = `Ai văzut ${seen.size} din ${P.length}. ${l.length === 1 ? 'Ți-a scăpat' : 'Ți-au scăpat'}: ` +
       list(l.map((p) => `<button type="button" data-i="${P.indexOf(p)}">${p.name}</button>`)) + '.';
     $$('button', el).forEach((b) => b.addEventListener('click', () => go(+b.dataset.i)));

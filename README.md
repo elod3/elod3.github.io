@@ -19,3 +19,8 @@ Trucurile mici, fiecare cu motivul lui:
 - `media/` — câte un video (7–11 s, fără sunet) și un poster WebP pentru fiecare proiect; `claude.mp4` e înregistrat din `prezentari/claude/`
 - `fonts/` — Bricolage Grotesque (titluri și text) și JetBrains Mono (cifre, etichete), găzduite local
 - `og.jpg` — imaginea de share, captură a introducerii la 1200×630
+- `alo/` — site-ul agentului vocal AI pentru cabinete (apel demo care se poate întrerupe, calculator de minute)
+- `fara-platou/` — site-ul agenției de reclame AI (monitor cu scenariul pe 15 secunde, foaie AV, claqueta)
+
+Butoanele de WhatsApp din `alo/app.js` și `fara-platou/app.js` citesc constanta `WA` (număr fără „+”);
+cât e goală, duc la contactul din portofoliu.

@@ -52,15 +52,15 @@ em{font-style:normal;font-weight:300;color:var(--acc);transition:color .7s var(-
   --rx:0deg;--ry:0deg;transform:perspective(1400px) rotateX(var(--rx)) rotateY(var(--ry));transition:transform .6s var(--out)}
 .card{all:unset;box-sizing:border-box;position:absolute;left:15%;top:30%;width:70%;aspect-ratio:16/10;cursor:pointer;
   z-index:var(--i);transform-origin:50% 160%;
-  --r:calc((var(--i) - 2) * 3deg);--x:calc((var(--i) - 2) * 2%);--lift:0%;
+  --r:calc((var(--i) - var(--mid)) * 2.5deg);--x:calc((var(--i) - var(--mid)) * 1.5%);--lift:0%;
   transform:translateX(var(--x)) rotate(var(--r)) translateY(var(--lift));
   transition:transform .7s var(--out), opacity .4s}
 .card img{display:block;width:100%;height:100%;object-fit:cover;object-position:top;border-radius:6px;
   box-shadow:0 0 0 1px var(--line), 0 24px 40px -22px rgba(22,20,15,.55)}
 .card span{position:absolute;left:0;top:calc(100% + 12px);font:12px var(--m);white-space:nowrap;color:var(--ink);opacity:0;transition:opacity .25s}
 .js .deck:not(.dealt) .card{transform:translateY(70vh) rotate(calc(var(--r) * 6));opacity:0}
-.deck.dealt:not(.ready) .card{transition-delay:calc((4 - var(--i)) * 110ms)}
-.deck.ready:hover .card{--r:calc((var(--i) - 2) * 6deg);--x:calc((var(--i) - 2) * 8%)}
+.deck.dealt:not(.ready) .card{transition-delay:calc((6 - var(--i)) * 90ms)}
+.deck.ready:hover .card{--r:calc((var(--i) - var(--mid)) * 3.5deg);--x:calc((var(--i) - var(--mid)) * 4%)}
 .deck.ready .card:hover,.deck.ready .card:focus-visible{--lift:-8%;z-index:20}
 .deck.ready .card:hover span,.deck.ready .card:focus-visible span{opacity:1}
 .card:focus-visible{outline:none}
