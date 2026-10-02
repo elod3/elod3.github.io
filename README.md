@@ -20,6 +20,7 @@ Trucurile mici, fiecare cu motivul lui:
 - `fonts/` — Bricolage Grotesque (titluri și text) și JetBrains Mono (cifre, etichete), găzduite local
 - `og.jpg` — imaginea de share, captură a introducerii la 1200×630
 - `alo/` — site-ul agentului vocal AI pentru cabinete (apel demo care se poate întrerupe, calculator de minute)
+- `media/planificatorul-casei-tale.*` — clipul paginii de vânzare din repo-ul `planificatorul-casei-tale`
 - `fara-platou/` — site-ul agenției de reclame AI (monitor cu scenariul pe 15 secunde, foaie AV, claqueta)
 
 Butoanele de WhatsApp din `alo/app.js` și `fara-platou/app.js` citesc constanta `WA` (număr fără „+”);
