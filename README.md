@@ -28,3 +28,4 @@ cât e goală, duc la contactul din portofoliu.
 - `riseup/` — site-ul vechi RiseUp (stâlpul de foc cu scântei, tabăra, cele 12 triburi), păstrat în portofoliu; cel live e pe riseupmovement.ro. `noindex`, ca să nu concureze cu el
 - `minicurs/` — redesign de concept (neoficial, `noindex`) al inhabitstudio.ro/minicurs/: planșa care se desenează în ordinea lecțiilor; sursa preluată e în `~/Projects/minicurs-sursa/`
 - Arcadian Residence e în repo-ul `sitehuni-` (path în lista `P`), clipul în `media/arcadian.*`
+- `integritas-africa/` — concept de pagină de strângere de fonduri pentru misiunea în Africa a clasei a XII-a de la Liceul Integritas (`noindex`); sursele și licențele pozelor în README-ul lui
