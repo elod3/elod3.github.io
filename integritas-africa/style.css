@@ -238,7 +238,7 @@ h2 { font-size: clamp(2.1rem, 4.6vw, 4rem); line-height: 1.02; }
 .foot li { margin: 6px 0; }
 
 /* ---------- MOBIL ---------- */
-@media (max-width: 760px) {
+@media (max-width: 760px), (max-aspect-ratio: 4/5) {
   .top-note { font-size: 10px; max-width: 150px; margin-left: 12px; }
   body { font-size: 16px; }
   .top-logo img { height: 28px; }
@@ -251,10 +251,10 @@ h2 { font-size: clamp(2.1rem, 4.6vw, 4rem); line-height: 1.02; }
   .fact { grid-column: 1; grid-row: 2; margin-top: 1em; }
   .actor--sil { grid-row: 3; height: 50vh; align-self: end; margin-bottom: 5vh; }
   .actor--child { height: 42vh; margin-bottom: 5vh; }
-  .actor--teacher { height: 46vh; justify-self: start; }
+  .actor--teacher { height: min(46vh, 95vw); justify-self: start; }
   .ld-mid { height: 26%; bottom: 18%; }
   .ld-far { height: 30%; bottom: 24%; }
-  .board { width: 24vh; height: 15vh; }
+  .board { left: 70%; width: min(24vh, 46vw); height: min(15vh, 29vw); }
   .scene--us .stage { grid-template-columns: 1fr; }
   .group-slot { height: 36vh; margin-top: 24px; }
   .stage--doc { padding-top: 110px; row-gap: 32px; }
