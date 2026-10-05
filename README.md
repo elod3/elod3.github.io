@@ -16,7 +16,7 @@ Trucurile mici, fiecare cu motivul lui:
   când pleci, iar finalul spune ce ți-a scăpat, cu link spre ele.
 
 - `index.html`, `style.css`, `app.js` — pagina; proiectele, cu textele și culorile lor, sunt în lista `P` din `app.js`
-- `media/` — câte un video (7–11 s, fără sunet) și un poster WebP pentru fiecare proiect; `claude.mp4` e înregistrat din `prezentari/claude/`
+- `media/` — câte un video (7–11 s, fără sunet) și un poster WebP pentru fiecare proiect
 - `fonts/` — Bricolage Grotesque (titluri și text) și JetBrains Mono (cifre, etichete), găzduite local
 - `og.jpg` — imaginea de share, captură a introducerii la 1200×630
 - `alo/` — site-ul agentului vocal AI pentru cabinete (apel demo care se poate întrerupe, calculator de minute)
@@ -25,3 +25,6 @@ Trucurile mici, fiecare cu motivul lui:
 
 Butoanele de WhatsApp din `alo/app.js` și `fara-platou/app.js` citesc constanta `WA` (număr fără „+”);
 cât e goală, duc la contactul din portofoliu.
+- `riseup/` — site-ul vechi RiseUp (stâlpul de foc cu scântei, tabăra, cele 12 triburi), păstrat în portofoliu; cel live e pe riseupmovement.ro. `noindex`, ca să nu concureze cu el
+- `minicurs/` — redesign de concept (neoficial, `noindex`) al inhabitstudio.ro/minicurs/: planșa care se desenează în ordinea lecțiilor; sursa preluată e în `~/Projects/minicurs-sursa/`
+- Arcadian Residence e în repo-ul `sitehuni-` (path în lista `P`), clipul în `media/arcadian.*`
