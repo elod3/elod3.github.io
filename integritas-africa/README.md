@@ -1,7 +1,7 @@
 # Integritas · Africa (concept)
 
 Pagina „Africa” propusă pentru site-ul Liceului Internațional Integritas (Budiu Mic, Mureș):
-strângere de fonduri pentru misiunea clasei a XII-a. Concept făcut de Luca (Koreh Elod), elev Integritas.
+strângere de fonduri pentru misiunea clasei a XII-a. Concept, deocamdată neoficial.
 `noindex` cât timp e concept. Doar în română; site-ul școlii are și EN, versiunile HU/EN vin după aprobare.
 
 Static: `index.html`, `style.css`, `app.js`, `assets/`. GSAP + ScrollTrigger (cdnjs), Lenis (jsDelivr).
