@@ -289,10 +289,13 @@
     const sec = $('.rail'), track = $('#railTrack');
     if (!sec || !track || RM || !GS || !ST) return;
     const dist = () => Math.max(0, track.scrollWidth - track.parentElement.clientWidth + 48);
+    const hide = (on) => document.body.classList.toggle('pay-off', on);
     buildRail.anim = GS.to(track, {
       x: () => -dist(), ease: 'none',
       scrollTrigger: { trigger: sec, start: 'top top', end: () => '+=' + dist(),
-        pin: true, scrub: 0.8, invalidateOnRefresh: true, anticipatePin: 1 }
+        pin: true, scrub: 0.8, invalidateOnRefresh: true, anticipatePin: 1,
+        onEnter: () => hide(true), onEnterBack: () => hide(true),
+        onLeave: () => hide(false), onLeaveBack: () => hide(false) }
     });
   }
 
@@ -448,9 +451,6 @@
     if (ST) {
       ST.create({ trigger: '.pulse', start: 'top 70%',
         onToggle: (s) => document.body.classList.toggle('pay-on', s.isActive || s.progress > 0) });
-      // cât ține secțiunea pe orizontală, fișa se dă la o parte: acolo trec panourile
-      ST.create({ trigger: '.rail', start: 'top 60%', end: 'bottom bottom',
-        onToggle: (s) => document.body.classList.toggle('pay-off', s.isActive) });
     }
     document.body.classList.toggle('pay-on', scrollY > innerHeight);
 
