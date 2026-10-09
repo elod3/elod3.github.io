@@ -444,3 +444,12 @@ main { position: relative; z-index: 1; }
 [hidden] { display: none !important; }
 
 .r-lead { stroke: rgba(42, 26, 18, .3); stroke-width: 1; stroke-dasharray: 2 5; fill: none; }
+
+/* pe ecran îngust tabelul etapelor nu mai forțează linia: încape, nu se taie */
+@media (max-width: 620px) {
+  .legs { font-size: 14px; }
+  .legs th, .legs td { padding-right: 10px; }
+  .legs td.t { white-space: normal; }
+  .legs .todo { font-size: .85em; }
+  .cost th { width: auto; padding-right: 12px; }
+}
