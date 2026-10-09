@@ -27,7 +27,14 @@
     ],
     // scroll (0..1) -> cât din drum s-a parcurs. Nu e liniar cu distanța:
     // zborul ar fi mâncat tot, iar savana n-ar fi apucat să se vadă.
-    pace: [[0, 0], [0.17, 0], [0.33, 0.064], [0.64, 0.931], [0.88, 1], [1, 1]]
+    // cât din drum s-a parcurs, după scroll. Nu e liniar cu distanța: zborul
+    // ar fi mâncat tot, iar etapa prin savană n-ar fi apucat să se vadă.
+    pace:     [[0, 0], [0.30, 0], [0.44, 0.064], [0.72, 0.931], [0.92, 1], [1, 1]],
+    // cât din glob e desenat
+    drawPace: [[0, 0.42], [0.24, 1], [1, 1]],
+    // apropierea: desenăm lumea întreagă, coborâm la Mureș pentru autocar,
+    // urcăm înapoi la decolare, coborâm iar în savană la sosire
+    zoomPace: [[0, 1], [0.24, 1], [0.32, 9], [0.46, 9], [0.58, 1], [0.76, 1], [0.95, 9.5], [1, 9.5]]
   };
 
   const RM = matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -62,93 +69,94 @@
   /* ======================================================================
      ACTUL I · globul
      ====================================================================== */
-  function paceMap(x) {
-    const p = CONFIG.pace;
+  const smoothstep = (x) => { x = clamp(x, 0, 1); return x * x * (3 - 2 * x); };
+  function paceOn(p, x) {
     for (let i = 1; i < p.length; i++) {
       if (x <= p[i][0]) {
         const [x0, y0] = p[i - 1], [x1, y1] = p[i];
-        const t = x1 === x0 ? 0 : (x - x0) / (x1 - x0);
-        const s = t * t * (3 - 2 * t);
-        return y0 + (y1 - y0) * s;
+        const u = x1 === x0 ? 0 : (x - x0) / (x1 - x0);
+        return y0 + (y1 - y0) * smoothstep(u);
       }
     }
-    return 1;
+    return p[p.length - 1][1];
   }
 
-  function hasWebGL() {
+  function fallback() {
+    document.body.classList.add('no-atlas');
+    const h = $('#atlas'); if (h) h.remove();
+  }
+
+  async function buildAtlas() {
+    const host = $('#atlas'), sec = $('.journey'), labels = $('#globeLabels');
+    if (!host || !sec) return;
+
+    let atlas;
     try {
-      const c = document.createElement('canvas');
-      return !!(window.WebGLRenderingContext && (c.getContext('webgl2') || c.getContext('webgl')));
-    } catch (e) { return false; }
-  }
-
-  function beatsOnly() {
-    // fără glob: beat-urile devin blocuri normale, una sub alta
-    document.body.classList.add('no-globe');
-    const cv = $('#globe'); if (cv) cv.remove();
-  }
-
-  async function buildGlobe() {
-    const canvas = $('#globe'), host = $('.journey'), labels = $('#globeLabels');
-    if (!canvas || !host) return;
-    if (!hasWebGL()) { beatsOnly(); return; }
-
-    let globe;
-    try {
-      const mod = await import('./globe.js');
-      globe = mod.initGlobe(canvas, CONFIG.stops, {
-        lowRes: innerWidth < 820 || devicePixelRatio < 1.5,
-        onLabels: (list) => paintLabels(labels, list)
-      });
-      await globe.ready;
+      const mod = await import('./atlas.js');
+      atlas = mod.initAtlas(host, CONFIG.stops, { onLabels: (l) => paintLabels(labels, l) });
+      await atlas.ready;
     } catch (err) {
-      console.warn('globul nu a pornit:', err);
-      beatsOnly();
+      console.warn('atlasul nu a pornit:', err);
+      fallback();
       return;
     }
 
-    const resize = () => globe.resize();
-    addEventListener('resize', resize);
-    resize();
+    let rz;
+    addEventListener('resize', () => { clearTimeout(rz); rz = setTimeout(() => { atlas.resize(); draw(true); }, 140); });
 
-    let target = 0, shown = 0, spin = 0, alive = true;
-    const loop = () => {
-      if (!alive) return;
-      shown += (target - shown) * 0.09;
-      if (shown < 0.004) spin += 1;
-      globe.render(shown, spin);
+    // ținta vine de la scroll, afișarea o urmărește lin — de aici vine mersul „frumos”
+    const want = { t: 0, draw: RM ? 1 : 0.42, zoom: 1 };
+    const has = { t: 0, draw: RM ? 1 : 0.42, zoom: 1 };
+    let intro = RM ? 1 : 0;
+
+    function draw(snap) {
+      if (snap) { has.t = want.t; has.zoom = want.zoom; }
+      atlas.render({ t: has.t, draw: has.draw * intro, zoomTo: has.zoom });
+    }
+    draw(true);
+    if (RM) { want.t = 0.55; draw(true); return; }
+
+    let last = performance.now();
+    const loop = (now) => {
+      const dt = Math.min(0.05, (now - last) / 1000); last = now;
+      const k = 1 - Math.pow(0.0016, dt);        // urmărire amortizată, fără sacadare
+      has.t += (want.t - has.t) * k;
+      has.draw += (want.draw - has.draw) * k;
+      has.zoom += (want.zoom - has.zoom) * k;
+      if (intro < 1) intro = Math.min(1, intro + dt / 2.0);
+      const e = intro < 1 ? intro * intro * (3 - 2 * intro) : 1;
+      atlas.render({ t: has.t, draw: has.draw * e, zoomTo: has.zoom });
       requestAnimationFrame(loop);
     };
-
-    if (RM) { globe.render(0.55, 0); return; }
     requestAnimationFrame(loop);
 
-    ST && ST.create({
-      trigger: host, start: 'top top', end: 'bottom bottom', scrub: true,
-      onUpdate: (self) => { target = paceMap(self.progress); },
-      onRefresh: (self) => { target = paceMap(self.progress); }
-    });
+    const take = (self) => {
+      want.t = paceOn(CONFIG.pace, self.progress);
+      want.draw = paceOn(CONFIG.drawPace, self.progress);
+      want.zoom = paceOn(CONFIG.zoomPace, self.progress);
+    };
+    ST && ST.create({ trigger: sec, start: 'top top', end: 'bottom bottom', scrub: true,
+      onUpdate: take, onRefresh: take });
 
     // beat-urile se schimbă odată cu etapele
     const beats = $$('.beat');
-    const marks = [0.0, 0.2, 0.4, 0.68, 0.9];           // în progresul de scroll
+    const marks = [0, 0.31, 0.50, 0.77, 0.94];
+    if (GS) { GS.set(beats, { opacity: 0 }); GS.set(beats[0], { opacity: 1 }); beats[0].dataset.on = 1; }
     ST && ST.create({
-      trigger: host, start: 'top top', end: 'bottom bottom', scrub: true,
+      trigger: sec, start: 'top top', end: 'bottom bottom', scrub: true,
       onUpdate: (self) => {
-        const p = self.progress;
         let at = 0;
-        marks.forEach((m, i) => { if (p >= m) at = i; });
+        marks.forEach((m, i) => { if (self.progress >= m) at = i; });
         beats.forEach((b, i) => {
-          const want = i === at ? 1 : 0;
-          if (+b.dataset.on !== want) {
-            b.dataset.on = want;
-            if (GS) GS.to(b, { opacity: want, y: want ? 0 : 14, duration: 0.45, ease: 'power2.out', overwrite: true });
-            else b.style.opacity = want;
+          const w = i === at ? 1 : 0;
+          if (+b.dataset.on !== w) {
+            b.dataset.on = w;
+            if (GS) GS.to(b, { opacity: w, y: w ? 0 : 16, duration: 0.5, ease: 'power2.out', overwrite: true });
+            else b.style.opacity = w;
           }
         });
       }
     });
-    if (GS) { GS.set(beats, { opacity: 0 }); GS.set(beats[0], { opacity: 1 }); beats[0].dataset.on = 1; }
   }
 
   function paintLabels(host, list) {
@@ -174,7 +182,7 @@
       const x = l.x * w, y = l.y * h;
       if (x < 8 || x > w - 60 || y < 70 || y > h - 20) return;
       if (narrow && y > h * 0.56) return;                 // acolo stă textul etapei
-      if (placed.some((q) => Math.abs(q.y - y) < 26 && Math.abs(q.x - x) < 150)) return;
+      if (placed.some((q) => Math.hypot(q.x - x, q.y - y) < 92)) return;
       placed.push({ x, y });
       show[i] = { x, y };
     });
@@ -182,7 +190,7 @@
       const el = host.children[i];
       if (!el) return;
       el.classList.toggle('on', !!show[i]);
-      if (show[i]) el.style.transform = `translate(${(show[i].x + 14).toFixed(1)}px, ${show[i].y.toFixed(1)}px) translateY(-50%)`;
+      if (show[i]) el.style.transform = `translate(${(show[i].x + 13).toFixed(1)}px, ${(show[i].y - 17).toFixed(1)}px) translateY(-50%)`;
     });
   }
 
@@ -397,6 +405,8 @@
      ====================================================================== */
   function buildMisc() {
     if (ST) {
+      ST.create({ trigger: '.voices', start: 'top 40%', end: 'bottom 60px',
+        onToggle: (s) => document.body.classList.toggle('on-dark', s.isActive) });
       ST.create({ trigger: '.doc--school', start: 'top 60px', end: 'max',
         onToggle: (s) => document.body.classList.toggle('on-paper', s.isActive) });
     }
@@ -417,6 +427,6 @@
   buildChapel();
   buildPay();
   buildMisc();
-  buildGlobe();
+  buildAtlas();
   if (ST) addEventListener('load', () => ST.refresh());
 })();

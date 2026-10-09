@@ -27,6 +27,7 @@
   --wine: #723837;
   --ember: #e0782f;
   --space: #06080f;
+  --vellum: #f7efdf;
   --dusk: #1a0f0b;
   --ink: #241710;
   --paper: #f6ead2;
@@ -42,7 +43,7 @@
 html { -webkit-text-size-adjust: 100%; overflow-x: clip; scroll-behavior: smooth; }
 html.lenis, html.lenis body { height: auto; }
 .lenis.lenis-smooth { scroll-behavior: auto !important; }
-body { margin: 0; background: var(--space); color: var(--cream); overflow-x: clip;
+body { margin: 0; background: var(--vellum); color: var(--ink); overflow-x: clip;
   font-family: var(--sans); font-size: 17px; line-height: 1.6; }
 img { display: block; max-width: 100%; height: auto; }
 a { color: inherit; }
@@ -65,8 +66,10 @@ h2 { font-size: clamp(1.8rem, 3.1vw, 2.9rem); line-height: 1.06; }
 .btn--gold { background: var(--wine); color: var(--cream); box-shadow: 0 4px 0 -1px #46201f; }
 .btn--gold:hover { background: #8c4543; }
 .btn--gold:active { transform: translateY(3px); box-shadow: 0 1px 0 -1px #46201f; }
-.btn--ghost { border: 1px solid currentColor; color: inherit; }
-.btn--ghost:hover { background: var(--cream); color: var(--ink); border-color: var(--cream); }
+.btn--ghost { border: 1px solid rgba(36,23,16,.4); color: inherit; }
+.btn--ghost:hover { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+.foot .btn--ghost, body.on-dark .btn--ghost { border-color: currentColor; }
+.foot .btn--ghost:hover { background: var(--cream); color: var(--ink); border-color: var(--cream); }
 
 /* ---------- bara de sus ---------- */
 .top { position: fixed; z-index: 30; inset: 0 0 auto 0; display: flex; align-items: center; gap: 18px;
@@ -77,70 +80,100 @@ h2 { font-size: clamp(1.8rem, 3.1vw, 2.9rem); line-height: 1.06; }
 .top-nav a { font: 600 12.5px/1 var(--sans); letter-spacing: .04em; text-decoration: none; padding: 11px 13px;
   opacity: .78; transition: opacity .2s; }
 .top-nav a:hover { opacity: 1; }
-.top-nav .top-cta { opacity: 1; background: var(--cream); color: var(--ink); border-radius: 2px; margin-left: 8px; }
-.top-nav .top-cta:hover { background: var(--gold); color: #fff; }
+.top-nav .top-cta { opacity: 1; background: var(--wine); color: var(--cream); border-radius: 2px; margin-left: 8px; }
+.top-nav .top-cta:hover { background: #8c4543; }
+.top { background: linear-gradient(180deg, var(--vellum) 56%, rgba(247,239,223,0)); }
+body.on-dark .top { background: linear-gradient(180deg, rgba(26,15,11,.92) 50%, rgba(26,15,11,0)); color: var(--cream); }
+body.on-dark .top-nav .top-cta { background: var(--cream); color: var(--ink); }
 body.on-paper .top { background: linear-gradient(180deg, var(--paper) 58%, rgba(246,234,210,0)); color: var(--ink); }
-body.on-paper .top-nav .top-cta { background: var(--wine); color: var(--cream); }
 @media (max-width: 820px) { .top-nav a:not(.top-cta) { display: none; } }
 
-/* ---------- ACTUL I · globul ---------- */
-.journey { height: 480vh; position: relative; background: var(--space); }
+/* ---------- ACTUL I · atlasul desenat cu linia, pe crem ---------- */
+.journey { height: 520vh; position: relative; background: var(--vellum); }
 .jstage { position: sticky; top: 0; height: 100svh; overflow: hidden; }
-#globe { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.atlas { position: absolute; inset: 0; }
+.atlas-svg { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
 .jstage::after { content: ""; position: absolute; inset: 0; pointer-events: none;
-  background: linear-gradient(96deg, rgba(6,8,15,.92) 0%, rgba(6,8,15,.74) 30%, rgba(6,8,15,.1) 60%, rgba(6,8,15,0) 78%); }
+  background: linear-gradient(96deg, var(--vellum) 0%, rgba(247,239,223,.94) 24%, rgba(247,239,223,.6) 40%, rgba(247,239,223,0) 56%); }
 @media (max-width: 900px) {
-  .jstage::after { background: linear-gradient(180deg, rgba(6,8,15,.9) 0%, rgba(6,8,15,.6) 34%, rgba(6,8,15,.12) 58%, rgba(6,8,15,.55) 100%); }
+  .jstage::after { background: linear-gradient(180deg, var(--vellum) 0%, rgba(247,239,223,.9) 26%, rgba(247,239,223,.25) 44%,
+    rgba(247,239,223,.4) 72%, var(--vellum) 100%); }
 }
 
-/* etichetele opririlor, text adevărat proiectat peste glob */
+/* linia, în cele trei greutăți ale lui hairline */
+.a-l { fill: none; stroke-linecap: round; stroke-linejoin: round; }
+.a-l--lo   { stroke: rgba(36, 23, 16, .26); stroke-width: .85; stroke-dasharray: 1 4.5; }
+.a-l--edge { stroke: rgba(36, 23, 16, .82); stroke-width: 1.15; }
+.a-l--hi   { stroke: var(--wine); stroke-width: 1.5; }
+.a-l--eq   { stroke: rgba(161, 136, 84, .75); stroke-width: 1; stroke-dasharray: 7 6; }
+.a-rim { fill: none; stroke: rgba(36, 23, 16, .42); stroke-width: 1.2; }
+.a-plan { stroke: rgba(114, 56, 55, .42); stroke-width: 1.1; stroke-dasharray: 2 5; }
+.a-route { fill: none; }
+.a-route--air  { stroke: var(--wine);  stroke-width: 1.9; }
+.a-route--road { stroke: var(--ember); stroke-width: 2.1; }
+.a-dot  { fill: var(--vellum); stroke: var(--ink); stroke-width: 1.5; }
+.a-dot--end { fill: var(--wine); stroke: var(--wine); }
+.a-ring { fill: none; stroke: var(--wine); stroke-width: 1; }
+.a-geo .a-l--lo { stroke: rgba(36, 23, 16, .42); stroke-width: 1; stroke-dasharray: 3 3.5; }
+
+/* etichetele opririlor */
 .glabels { position: absolute; inset: 0; pointer-events: none; z-index: 2; }
-.glabel { position: absolute; transform: translate(14px, -50%); white-space: nowrap;
-  font: 600 11.5px/1.25 var(--sans); letter-spacing: .06em; color: var(--cream);
-  opacity: 0; transition: opacity .35s var(--ease); text-shadow: 0 1px 10px rgba(0,0,0,.9); }
+.glabel { position: absolute; white-space: nowrap; color: var(--ink);
+  font: 600 11.5px/1.25 var(--sans); letter-spacing: .05em;
+  opacity: 0; transition: opacity .4s var(--ease); }
 .glabel.on { opacity: 1; }
-.glabel b { display: block; font-weight: 600; font-size: 12.5px; letter-spacing: .04em; }
-.glabel span { display: block; font-weight: 500; font-size: 10px; letter-spacing: .14em;
-  text-transform: uppercase; color: rgba(242,225,189,.6); margin-top: 2px; }
-.glabel::before { content: ""; position: absolute; left: -14px; top: 50%; width: 8px; height: 1px;
-  background: rgba(242,225,189,.5); }
+.glabel b { display: block; font-size: 12.5px; letter-spacing: .03em; }
+.glabel span { display: block; font-weight: 500; font-size: 9.5px; letter-spacing: .15em;
+  text-transform: uppercase; color: rgba(36, 23, 16, .5); margin-top: 2px; }
+.glabel::before { content: ""; position: absolute; left: -13px; top: 50%; width: 9px; height: 1px;
+  background: rgba(36, 23, 16, .4); }
+.glabel b, .glabel span {
+  text-shadow: 0 0 4px var(--vellum), 0 0 4px var(--vellum), 0 0 8px var(--vellum); }
 
 .beats { position: absolute; inset: 0; z-index: 3; pointer-events: none; }
-.beat { position: absolute; left: var(--gut); right: auto; top: 50%; transform: translateY(-50%);
-  width: min(34rem, calc(100vw - var(--gut) * 2 - var(--rail))); opacity: 0; }
+.beat { position: absolute; left: var(--gut); top: 50%; transform: translateY(-50%);
+  width: min(33rem, calc(100vw - var(--gut) * 2)); opacity: 0; color: var(--ink); }
 .beat > * { pointer-events: auto; }
-.beat--hero { width: min(40rem, calc(100vw - var(--gut) * 2 - var(--rail))); opacity: 1; }
+.beat--hero { width: min(40rem, calc(100vw - var(--gut) * 2)); opacity: 1; }
 .kicker { font: 600 11.5px/1.4 var(--sans); letter-spacing: .16em; text-transform: uppercase;
-  color: var(--gold); margin: 0 0 1.3em; }
-.lede { font-size: clamp(1rem, 1.25vw, 1.18rem); color: rgba(242,225,189,.86); margin: 0 0 1.9em;
-  max-width: 32rem; }
+  color: var(--wine); margin: 0 0 1.3em; }
+.lede { font-size: clamp(1rem, 1.25vw, 1.18rem); color: rgba(36, 23, 16, .82); margin: 0 0 1.9em; max-width: 32rem; }
 .hero-act { display: flex; flex-wrap: wrap; gap: 12px; margin: 0; }
 .scrollnote { display: flex; align-items: center; gap: 12px; margin: clamp(26px, 5vh, 52px) 0 0;
-  font: 500 11.5px/1 var(--sans); letter-spacing: .12em; text-transform: uppercase;
-  color: rgba(242,225,189,.5); }
-.scrollnote i { width: 44px; height: 1px; background: rgba(242,225,189,.28); position: relative; overflow: hidden; }
+  font: 500 11.5px/1 var(--sans); letter-spacing: .12em; text-transform: uppercase; color: rgba(36, 23, 16, .48); }
+.scrollnote i { width: 44px; height: 1px; background: rgba(36, 23, 16, .22); position: relative; overflow: hidden; }
 .scrollnote i::after { content: ""; position: absolute; inset: 0 auto 0 -40%; width: 40%;
-  background: var(--cream); animation: slide 2.4s var(--ease) infinite; }
+  background: var(--wine); animation: slide 2.4s var(--ease) infinite; }
 @keyframes slide { to { left: 110%; } }
 
 .step { display: flex; align-items: baseline; gap: .8em; margin: 0 0 1em;
-  font: 600 11.5px/1 var(--sans); letter-spacing: .18em; text-transform: uppercase; color: var(--gold); }
-.step span { font-family: var(--serif); font-size: 2.1rem; letter-spacing: 0; color: var(--cream);
+  font: 600 11.5px/1 var(--sans); letter-spacing: .18em; text-transform: uppercase; color: var(--wine); }
+.step span { font-family: var(--serif); font-size: 2.1rem; letter-spacing: 0; color: var(--ink);
   font-variant-numeric: tabular-nums; line-height: 1; }
 .num { font-family: var(--serif); font-size: clamp(2.6rem, 6vw, 5rem); line-height: 1; margin: .1em 0 .3em;
   font-variant-numeric: tabular-nums; color: var(--ember); letter-spacing: -.02em; }
-.say { margin: 0; max-width: 26rem; color: rgba(242,225,189,.78); font-size: 15.5px; }
+.say { margin: 0; max-width: 26rem; color: rgba(36, 23, 16, .75); font-size: 15.5px; }
 .beat h2 { font-size: clamp(1.4rem, 2.3vw, 2.1rem); }
 
 @media (max-width: 900px) {
-  .beat { top: auto; bottom: 14vh; transform: none; right: var(--gut); width: auto; }
-  .beat--hero { top: 12vh; bottom: auto; }
+  .beat { top: auto; bottom: 12vh; transform: none; right: var(--gut); width: auto; }
+  .beat--hero { top: 11vh; bottom: auto; }
   .num { font-size: clamp(2.4rem, 13vw, 3.6rem); }
 }
 
+/* fără modul: etapele devin blocuri de text */
+body.no-atlas .journey { height: auto; }
+body.no-atlas .jstage { position: static; height: auto; overflow: visible; padding: 17vh 0 10vh; }
+body.no-atlas .jstage::after, body.no-atlas .glabels { display: none; }
+body.no-atlas .beats { position: static; inset: auto; }
+body.no-atlas .beat { position: static; opacity: 1 !important; transform: none; width: auto;
+  max-width: 36rem; margin: 0 var(--gut) 9vh; padding-left: 22px; border-left: 2px solid rgba(161,136,84,.5); }
+body.no-atlas .beat--hero { border-left: 0; padding-left: 0; }
+
 /* ---------- ACTUL II · oamenii, în lumina apusului ---------- */
-.voices { height: 280vh; position: relative;
-  background: linear-gradient(180deg, var(--space) 0%, #190d0a 16%, #351409 42%, #7a2f13 68%, #c2561f 86%, #e08030 100%); }
+.voices { height: 300vh; position: relative; color: var(--cream);
+  background: linear-gradient(180deg, var(--vellum) 0%, #d9bf92 7%, #8a5a33 15%, #3a1a0e 26%, #22100b 40%,
+    #4a1d0d 58%, #8c3514 76%, #c2561f 90%, #e08030 100%); }
 .vstage { position: sticky; top: 0; height: 100svh; overflow: hidden;
   padding: 0 var(--gut); padding-right: calc(var(--gut) + var(--rail)); }
 .vstage::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 26vh; pointer-events: none;
@@ -178,9 +211,9 @@ body.on-paper .top-nav .top-cta { background: var(--wine); color: var(--cream); 
 /* ---------- actele pe hârtie ---------- */
 .doc { position: relative; z-index: 2; background: var(--paper); color: var(--ink);
   padding: clamp(64px, 9vh, 118px) 0; }
-.doc--school::before { content: ""; position: absolute; left: 0; right: 0; top: -22vh; height: 22vh;
+.doc--school::before { content: ""; position: absolute; left: 0; right: 0; top: -26vh; height: 26vh;
   pointer-events: none;
-  background: linear-gradient(180deg, rgba(246,234,210,0), rgba(246,234,210,.55) 62%, var(--paper) 100%); }
+  background: linear-gradient(180deg, rgba(246,234,210,0), rgba(246,234,210,.5) 58%, rgba(246,234,210,.9) 84%, var(--paper) 100%); }
 .wrap { max-width: 1460px; margin: 0 auto; padding: 0 var(--gut);
   padding-right: calc(var(--gut) + var(--rail)); }
 .dhead { max-width: 40rem; margin-bottom: clamp(26px, 4vh, 48px); }
@@ -330,7 +363,7 @@ body.pay-on .pay { opacity: 1; transform: none; }
   .scrollnote i::after { animation: none; }
   .journey { height: auto; }
   .jstage { position: static; height: auto; padding: 16vh 0 10vh; }
-  #globe { position: relative; height: 56vh; }
+  .atlas { position: relative; height: 58vh; }
   .beats { position: static; inset: auto; }
   .beat { position: static; opacity: 1 !important; transform: none; width: auto;
     max-width: 36rem; margin: 0 var(--gut) 8vh; }

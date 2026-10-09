@@ -4,8 +4,8 @@ Pagina de strângere de fonduri pentru misiunea clasei a XII-a la **Școala Adve
 (lângă Bariadi, regiunea Simiyu, Tanzania): o biserică și un dispensar pentru 700 de elevi
 și profesori. Nu mai e concept — intră live.
 
-Static: `index.html`, `style.css`, `app.js`, `globe.js`, `assets/`.
-Fără CDN: GSAP 3.15 + ScrollTrigger, Lenis 1.3.26 și three.js 0.186 stau în `assets/vendor/`.
+Static: `index.html`, `style.css`, `app.js`, `atlas.js`, `assets/`.
+Fără CDN: GSAP 3.15 + ScrollTrigger și Lenis 1.3.26 stau în `assets/vendor/`.
 Fonturile sunt ale școlii (Lora, Montserrat), locale.
 
 ## Decizia estetică
@@ -15,32 +15,39 @@ Fonturile sunt ale școlii (Lora, Montserrat), locale.
 - **Ton:** al elevilor, la persoana I. Fraze scurte, cifre reale, zero limbaj de instituție.
   Textele vechi luate de pe site-ul școlii („misiune / viziune / valori”) au fost scoase: sunt
   corporate și nu le-ar spune niciun elev cu voce tare.
-- **Trei lumini, în ordinea drumului:** spațiu (globul) → apus de savană (oamenii) → hârtie
-  (cifrele și donația). Fiecare schimbare de lumină marchează o schimbare de loc, nu un efect.
-- **Elementul memorabil:** globul. Pământul adevărat, cu drumul desenat peste el, parcurs de
-  cele trei vehicule reale — autocar până la Budapesta, avion până la Nairobi, mașină prin
-  savană până la școală. Camera merge cu ei, ca în Google Earth. Animația *este* argumentul:
-  arată cât de departe pleacă treizeci de adolescenți.
+- **Trei lumini, în ordinea drumului:** hârtie crem (drumul desenat) → apus de savană (oamenii)
+  → hârtie (cifrele și donația). Fiecare schimbare de lumină marchează o schimbare de loc.
+- **Elementul memorabil:** atlasul. Globul se desenează singur cu linia, pe hârtie crem, apoi
+  pleacă punctul din Târgu Mureș: autocar până la Budapesta, avion până la Nairobi, mașină prin
+  savană până la școală. Camera coboară și urcă odată cu ei. Animația *este* argumentul: arată
+  cât de departe pleacă treizeci de adolescenți.
 - **Al doilea element:** biserica izometrică din actul IV, cu linii groase, care se construiește
   sub cursor (pe telefon, la derulare). Donația e clădirea care crește.
 - **Montserrat** iese la `slop_scan.py` ca „font sigur”, dar e fontul real al școlii, din CSS-ul
   lor live. Scanner: **P0 = 0, P1 = 2 (ambele Montserrat), P2 = 0**.
 
-## Globul
+## Atlasul
 
-`globe.js` e un modul ES care primește lista de opriri și întoarce `render(t, spin)`.
+`atlas.js` e un modul ES. Desenează globul cu linia, pe hârtie crem, în limbajul hairline:
+trei greutăți de linie — `lo` punctat (paralele, meridiane, granițe), `edge` (țărmuri),
+`hi` (drumul și vehiculele) — toate cu capete rotunde.
 
-- Textura: **Blue Marble** (NASA, domeniu public), redimensionată la 4096×2048 WebP (664 KB);
-  sub 820 px lățime se încarcă varianta 2k (208 KB). Luminile de noapte, tot NASA.
-- Zi/noapte vin dintr-un shader mic. **Soarele urmează drumul**, ca locul despre care vorbește
-  textul să fie mereu luminat.
-- Traseul e desenat din coordonatele reale, cu interpolare pe cercul mare; etapele cu avionul
-  se arcuiesc, cele pe uscat stau pe sol.
-- Vehiculele își păstrează mărimea pe ecran: `scale = base × distanța camerei`.
-- `CONFIG.pace` mapează scroll-ul la drum **neliniar**. Liniar, zborul ar fi mâncat 87% din
-  scroll, iar etapa prin savană n-ar fi apucat să se vadă.
-- Fără WebGL sau dacă modulul nu se încarcă: `body.no-globe`, iar etapele devin blocuri de text
-  una sub alta. Cu `prefers-reduced-motion` globul se desenează o singură dată, static.
+- **Fără 3D, fără WebGL, fără texturi.** Proiecție ortografică scrisă de mână (vreo 20 de linii),
+  fără d3. De aici vine și mersul lin: 940 KB tot proiectul, în loc de 3,5 MB.
+- Geografia: **Natural Earth 110m** (domeniu public) — țărmuri, granițe, lacuri — simplificată
+  cu Douglas-Peucker la 9.671 de puncte, 120 KB în `assets/atlas.json`.
+- **Se desenează singur**: cercul, apoi paralelele și meridianele unul câte unul, apoi țărmurile,
+  fiecare ca din creion. O parte la intrarea în pagină, restul din scroll.
+- Drumul apare întâi **punctat**, ca un plan, apoi se umple pe măsură ce îl parcurgem.
+- Coregrafia apropierii, în `CONFIG.zoomPace`: desenăm lumea întreagă → **coborâm la Târgu Mureș**
+  (autocarul se vede mergând până la Budapesta) → **urcăm la decolare**, globul se deschide →
+  zborul până la Nairobi → **coborâm în savană** pentru ultima etapă cu mașina.
+  Fără coborâre, Mureș și Budapesta sunt la 15 px distanță și totul se calcă.
+- Vehiculele sunt desenate tot din linii și își păstrează mărimea pe ecran. Autobuzul și mașina
+  se leagănă puțin; avionul se întoarce după direcția de mers.
+- Urmărirea e amortizată exponențial, nu legată direct de scroll — de aici vine mersul „frumos”.
+- Liniile complet în afara ecranului nu se mai desenează (contează la zoom 9).
+- Fără modul sau cu `prefers-reduced-motion`: `body.no-atlas`, etapele devin blocuri de text.
 
 ## Plata
 
@@ -54,7 +61,7 @@ Tot ce e de configurat stă în `CONFIG`, în capul lui `app.js`:
 | `stripeLink` | Payment Link-ul școlii, cu „clientul alege suma”. **Card, Google Pay și Apple Pay apar automat** pe pagina Stripe, fără backend și fără verificare de domeniu. Gol = butonul duce la `/donatii`. |
 | `paypalLink` | buton separat; apare doar dacă e completat. PayPal **nu** merge prin Stripe pe un cont din România. |
 | `stops` | opririle, cu `mode: 'road' \| 'air'`. Schimbi lista, se redesenează tot drumul. |
-| `pace` | ritmul scroll → drum. |
+| `pace`, `drawPace`, `zoomPace` | ritmul scroll → drum, desen, apropiere. |
 
 ## Cifre și de unde vin
 
