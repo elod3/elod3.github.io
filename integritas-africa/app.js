@@ -1,14 +1,76 @@
-/* Integritas · Africa — concept. Loader de film + o singură zi pe savană, legată de scroll. */
+/* Integritas · Africa — concept.
+   Două acte: apus (hero + voci), apoi hârtie (drumul, noi, clipul, galeria, visul, donația).
+   Elementul care ține pagina: linia traseului, desenată din coordonatele reale ale celor
+   șapte opriri. Aceeași linie, îndoită în izometrie, ridică biserica din secțiunea 05. */
 (() => {
-  const RM = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const $ = (s, r = document) => r.querySelector(s);
-  const $$ = (s, r = document) => [...r.querySelectorAll(s)];
-  const NS = 'http://www.w3.org/2000/svg';
+  'use strict';
 
-  /* ---------- teren: dealuri periodice + salcâmi, generate în pixeli reali ---------- */
+  /* ======================================================================
+     CONFIG — singurul loc de schimbat când școala dă datele reale.
+     ====================================================================== */
+  const CONFIG = {
+    // Stripe Payment Link al școlii (Dashboard › Payment links › „clientul alege suma”).
+    // Cardul, Google Pay și Apple Pay apar automat pe pagina Stripe.
+    // Lasă gol cât timp nu există: butonul trimite atunci la pagina de donații a școlii.
+    stripeLink: '',
+    // suma se trimite în bani (1 leu = 100); Stripe o preia din parametrul de mai jos
+    stripeAmountParam: '__prefilled_amount',
+    // fallback cât timp nu e Stripe
+    fallbackLink: 'https://liceulintegritas.ro/donatii',
+    // butonul PayPal apare doar dacă e completat (ex. https://www.paypal.com/donate/?hosted_button_id=…)
+    paypalLink: '',
+    // clipul, pe limbi. Pune ID-ul de YouTube când e gata; gol = „se montează”.
+    clip: { ro: '', en: '', hu: '', es: '' },
+    clipNames: { ro: 'română', en: 'engleză', hu: 'maghiară', es: 'spaniolă' },
+    // traseul: coordonate reale (lon, lat). „road” = bucata făcută pe uscat.
+    route: [
+      { n: 'Târgu Mureș',  s: 'România',   lon: 24.56, lat:  46.54 },
+      { n: 'Budapesta',    s: 'Ungaria',   lon: 19.04, lat:  47.50, road: true },
+      { n: 'Istanbul',     s: 'Turcia',    lon: 28.98, lat:  41.01 },
+      { n: 'Nairobi',      s: 'Kenya',     lon: 36.82, lat:  -1.29 },
+      { n: 'Sirari',       s: 'graniță',   lon: 34.50, lat:  -1.25, road: true },
+      { n: 'Bariadi',      s: 'Tanzania',  lon: 33.98, lat:  -2.80, road: true },
+      { n: 'Kusekwa',      s: 'școala',    lon: 33.80, lat:  -2.95, road: true, end: true }
+    ],
+    gallery: [
+      { f: 'misiune-kenya-2025.webp', up: true, c: 'Kenya, februarie 2025: pachete cu alimente pentru 50 de familii, duse acasă la fiecare.' },
+      { f: 'galerie/drum-readytoserve.webp', c: 'Poarta campusului de la Budiu Mic: „Ready to serve”.' },
+      { f: 'galerie/azil-batrani.webp',      c: 'Azilul de bătrâni, la finalul vizitei. Una dintre opririle săptămânii de misiune.' },
+      { f: 'galerie/razvan-prezentare.webp', c: 'Seminar în fața unei săli pline. Așa arată misiunea de acasă.' },
+      { f: 'galerie/elevi-cantand.webp',     c: 'Două colege, la microfon.' },
+      { f: 'galerie/clasa-elevi.webp',       c: 'Ora de clasă la Integritas.' },
+      { f: 'galerie/clasa-11.webp',          c: 'În capelă, cu foile în mână. Jumătate din misiune se face cu vocea.' },
+      { f: 'galerie/baieti-rugaciune.webp',  c: 'Băieții, la rugăciune.' },
+      { f: 'galerie/imbratisare.webp',       c: 'O îmbrățișare, în sală.' },
+      { f: 'galerie/aruncare-toci.webp',     c: 'Clasa terminală, la absolvire. Anul viitor suntem noi.' },
+      { f: 'galerie/apus.webp',              c: 'Dealurile din jurul campusului, la apus.' },
+      { slot: 'Namibia', c: 'Poze din misiunea anterioară — le aducem de la colegii din anii trecuți.' },
+      { slot: 'Kusekwa, anul acesta', c: 'Locul gol pe care îl umplem când ne întoarcem.' }
+    ]
+  };
+
+  const RM = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const $  = (s, r = document) => r.querySelector(s);
+  const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+  const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+  const GS = window.gsap;
+  if (GS) {
+    if (window.ScrollTrigger) GS.registerPlugin(ScrollTrigger);
+    if (window.DrawSVGPlugin) GS.registerPlugin(DrawSVGPlugin);
+    if (window.MotionPathPlugin) GS.registerPlugin(MotionPathPlugin);
+  }
+  const ST = GS && window.ScrollTrigger ? ScrollTrigger : null;
+  const svgEl = (t, a = {}) => {
+    const e = document.createElementNS('http://www.w3.org/2000/svg', t);
+    for (const k in a) e.setAttribute(k, a[k]);
+    return e;
+  };
+
+  /* ======================================================================
+     Dealurile din fundal — aceleași siluete de salcâm ca înainte, fără animale.
+     ====================================================================== */
   function rng(seed) { return () => ((seed = (seed * 16807) % 2147483647) / 2147483647); }
   function ridge(W, H, base, amp, harm, r) {
-    // sumă de sinusuri cu frecvențe întregi => se repetă exact la fiecare W
     const ph = harm.map(() => r() * Math.PI * 2);
     const pts = [];
     for (let x = 0; x <= W; x += Math.max(4, W / 220)) {
@@ -19,12 +81,11 @@
     return `M0 ${H} L${pts.map((p) => p[0].toFixed(1) + ' ' + p[1].toFixed(1)).join(' L')} L${W} ${H} Z`;
   }
   function acacia(x, y, h, r) {
-    // trunchi bifurcat + coroană plată, ca umbrela: siluetele de pe savană
     const w = h * (1.5 + r() * 0.7);
     const fork = y - h * (0.42 + r() * 0.1);
     const top = y - h;
     const t = Math.max(1.5, h * 0.035);
-    let d = `M${x - t} ${y} L${x - t * 0.6} ${fork} L${x - w * 0.28} ${top + h * 0.12} L${x - w * 0.28 + t * 1.4} ${top + h * 0.12} L${x} ${fork - h * 0.06} L${x + w * 0.22 - t} ${top + h * 0.1} L${x + w * 0.22 + t * 0.6} ${top + h * 0.1} L${x + t * 0.8} ${fork} L${x + t} ${y} Z`;
+    const d = `M${x - t} ${y} L${x - t * 0.6} ${fork} L${x - w * 0.28} ${top + h * 0.12} L${x - w * 0.28 + t * 1.4} ${top + h * 0.12} L${x} ${fork - h * 0.06} L${x + w * 0.22 - t} ${top + h * 0.1} L${x + w * 0.22 + t * 0.6} ${top + h * 0.1} L${x + t * 0.8} ${fork} L${x + t} ${y} Z`;
     let c = '';
     const n = 12 + Math.floor(r() * 6);
     for (let i = 0; i < n; i++) {
@@ -45,168 +106,58 @@
     }
     return `<path d="${d}"/>`;
   }
-  function paintLayer(svg, kind, seed) {
-    const W = innerWidth, H = svg.getBoundingClientRect().height || innerHeight * 0.4;
-    const r = rng(seed);
-    let g = '';
-    if (kind === 'far') {
-      g += `<path d="${ridge(W, H, 0.62, H * 0.09, [1, 2, 5], r)}"/>`;
-      for (let i = 0; i < 5; i++) g += acacia(r() * W, H * 0.66, H * (0.1 + r() * 0.08), r);
-    } else if (kind === 'mid') {
-      g += `<path d="${ridge(W, H, 0.84, H * 0.05, [2, 3, 7], r)}"/>`;
-      const n = W < 700 ? 2 : 3;
-      for (let i = 0; i < n; i++) g += acacia(W * (i + 0.2 + r() * 0.6) / n, H * 0.86, H * (0.42 + r() * 0.3), r);
-    } else if (kind === 'near') {
-      g += `<path d="${ridge(W, H, 0.78, H * 0.06, [1, 3, 4], r)}"/>`;
-      g += grass(W, H, H * 0.8, r, 9, H * 0.28);
-    } else if (kind === 'skyfar') {
-      g += `<path d="${ridge(W, H, 0.55, H * 0.12, [1, 2, 4], r)}"/>`;
-      for (let i = 0; i < 4; i++) g += acacia(W * (0.05 + r() * 0.9), H * 0.6, H * (0.18 + r() * 0.16), r);
-    } else if (kind === 'front') {
-      g += `<path d="${ridge(W, H, 0.55, H * 0.12, [2, 3, 5], r)}"/>`;
-      g += grass(W, H, H * 0.58, r, 7, H * 0.5);
-    } else if (kind === 'skynear') {
-      g += `<path d="${ridge(W, H, 0.6, H * 0.1, [1, 2, 3], r)}"/>`;
-      g += grass(W, H, H * 0.62, r, 11, H * 0.22);
-    }
-    const tiles = svg.classList.contains('ld-layer') ? 3 : 1;
-    svg.setAttribute('viewBox', `0 0 ${W * tiles} ${H}`);
-    let out = `<g id="t-${kind}">${g}</g>`;
-    for (let i = 1; i < tiles; i++) out += `<use href="#t-${kind}" x="${W * i}"/>`;
-    svg.innerHTML = out;
+  function paintHills() {
+    const far = $('.sky-hills--far'), near = $('.sky-hills--near');
+    [[far, 'far', 51], [near, 'near', 67]].forEach(([svg, kind, seed]) => {
+      if (!svg) return;
+      const W = innerWidth, H = svg.getBoundingClientRect().height || innerHeight * 0.3;
+      const r = rng(seed);
+      let g = '';
+      if (kind === 'far') {
+        g += `<path d="${ridge(W, H, 0.55, H * 0.12, [1, 2, 4], r)}"/>`;
+        for (let i = 0; i < 4; i++) g += acacia(W * (0.05 + r() * 0.9), H * 0.6, H * (0.18 + r() * 0.16), r);
+      } else {
+        g += `<path d="${ridge(W, H, 0.6, H * 0.1, [1, 2, 3], r)}"/>`;
+        g += grass(W, H, H * 0.62, r, 11, H * 0.22);
+      }
+      svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
+      svg.innerHTML = g;
+    });
   }
-  function paintAll() {
-    paintLayer($('.ld-far'), 'far', 11);
-    paintLayer($('.ld-mid'), 'mid', 23);
-    paintLayer($('.ld-near'), 'near', 37);
-    paintLayer($('.sky-hills--far'), 'skyfar', 51);
-    paintLayer($('.sky-hills--near'), 'skynear', 67);
-    paintLayer($('.sky-front'), 'front', 83);
-  }
-  paintAll();
-  let rz; addEventListener('resize', () => { clearTimeout(rz); rz = setTimeout(paintAll, 200); });
+  paintHills();
+  let rz; addEventListener('resize', () => { clearTimeout(rz); rz = setTimeout(paintHills, 200); });
 
-  /* ---------- LOADER ---------- */
-  const loader = $('#loader');
-  const cam = $('.ld-cam');
-  const layers = $$('.ld-layer').map((el) => ({ el, sp: +el.dataset.speed }));
-  const gir = $('.ld-giraffe'), lion = $('.ld-lion'), jeep = $('.ld-jeep');
-  const cvs = $('.ld-dust'), ctx = cvs.getContext('2d');
-  const pctEl = $('#ldPct'), barEl = $('#ldBar');
-  let seen = false; try { seen = sessionStorage.getItem('ia-seen') === '1'; } catch (e) {}
-  const MIN = RM ? 600 : seen ? 2200 : 4600;
-  const t0 = performance.now();
-  let loaded = 0, total = 0, ready = false, running = true;
-
-  // ce trebuie încărcat: toate imaginile + fonturile
-  const srcs = [...new Set($$('img').map((i) => i.currentSrc || i.src))];
-  total = srcs.length + 1;
-  srcs.forEach((s) => { const im = new Image(); im.onload = im.onerror = () => loaded++; im.src = s; });
-  (document.fonts ? document.fonts.ready : Promise.resolve()).then(() => loaded++);
-  setTimeout(() => { loaded = total; }, 9000); // nu ținem pe nimeni ostatic
-
-  function sizeCanvas() { cvs.width = innerWidth; cvs.height = innerHeight; }
-  sizeCanvas(); addEventListener('resize', sizeCanvas);
-  const dust = [];
-  function puff(x, y, n, s) {
-    for (let i = 0; i < n; i++) dust.push({ x: x + (Math.random() - 0.5) * 10, y: y - Math.random() * 6, vx: -(1.2 + Math.random() * 2.2) * s, vy: -(0.15 + Math.random() * 0.5), r: 3 + Math.random() * 8 * s, a: 0.32 + Math.random() * 0.2, life: 1 });
-  }
-  function foot(el, fx) { const b = el.getBoundingClientRect(); return [b.left + b.width * fx, b.bottom - 2]; }
-
-  let last = t0;
-  function frame(now) {
-    if (!running) return;
-    const t = (now - t0) / 1000, dt = Math.min(0.05, (now - last) / 1000); last = now;
-    // pan de cameră: lumea fuge spre stânga, noi urmărim animalele
-    const vw = innerWidth;
-    layers.forEach(({ el, sp }) => { el.style.transform = `translate3d(${-((t * sp * vw * 0.42) % vw)}px,0,0)`; });
-    // mișcarea camerei: o apropiere lentă și un tremur de mână
-    const push = 1 + Math.min(t / 6, 1) * 0.06;
-    cam.style.transform = `scale(${push}) translate(${Math.sin(t * 1.3) * 2}px, ${Math.sin(t * 2.1) * 1.5}px)`;
-    // girafa: galop lent, legănat
-    const gp = t * Math.PI * 2 * 1.25;
-    gir.style.transform = `translate(${Math.sin(t * 0.6) * 1.5}vw, ${-Math.abs(Math.sin(gp)) * 3}%) rotate(${Math.sin(gp) * 3.2}deg)`;
-    // leul: salturi scurte, se strânge și se întinde, câștigă teren
-    const lp = t * Math.PI * 2 * 2.4;
-    const gain = Math.sin(t * 0.9) * 3 + Math.min(t, 4) * 0.9;
-    lion.style.transform = `translate(${gain}vw, ${-Math.max(0, Math.sin(lp)) * 16}%) scaleX(${1 + Math.sin(lp) * 0.05}) rotate(${Math.sin(lp + 1) * -4}deg)`;
-    // mașina: noi, pe drum de pământ
-    jeep.style.transform = `translate(${Math.sin(t * 0.7) * 1.2 + Math.min(t, 4) * 0.5}vw, ${(Math.sin(t * 23) * 0.6 + Math.sin(t * 9) * 1.2).toFixed(2)}px) rotate(${Math.sin(t * 7) * 0.6}deg)`;
-    // praf din spatele fiecăruia
-    if (Math.random() < 0.9) { const [x, y] = foot(gir, 0.3); puff(x, y, 1, 0.8); }
-    if (Math.random() < 0.9) { const [x, y] = foot(lion, 0.25); puff(x, y, 2, 0.9); }
-    { const [x, y] = foot(jeep, 0.15); puff(x, y, 2, 1.3); }
-    ctx.clearRect(0, 0, cvs.width, cvs.height);
-    for (let i = dust.length - 1; i >= 0; i--) {
-      const p = dust[i];
-      p.x += p.vx * 60 * dt; p.y += p.vy * 60 * dt; p.r += 14 * dt; p.life -= 0.55 * dt;
-      if (p.life <= 0) { dust.splice(i, 1); continue; }
-      const g = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.r);
-      g.addColorStop(0, `rgba(214,128,62,${p.a * p.life})`); g.addColorStop(1, 'rgba(214,128,62,0)');
-      ctx.fillStyle = g; ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, 7); ctx.fill();
-    }
-    // progres: cel mai mic dintre timp și încărcare, ca să nu sară
-    const p = Math.min(loaded / total, (now - t0) / MIN);
-    pctEl.textContent = String(Math.floor(p * 100)).padStart(2, '0');
-    barEl.style.width = (p * 100).toFixed(1) + '%';
-    if (p >= 1 && !ready) { ready = true; outro(); }
-    requestAnimationFrame(frame);
-  }
-
-  function staticLoader() {
-    const tick = () => {
-      const p = Math.min(loaded / total, (performance.now() - t0) / MIN);
-      pctEl.textContent = String(Math.floor(p * 100)).padStart(2, '0');
-      barEl.style.width = p * 100 + '%';
-      if (p >= 1) { ready = true; outro(); } else setTimeout(tick, 80);
-    };
-    tick();
-  }
-
-  function outro() {
-    try { sessionStorage.setItem('ia-seen', '1'); } catch (e) {}
-    const done = () => { running = false; loader.remove(); };
-    document.body.classList.remove('is-loading');
-    if (RM || !window.gsap) { loader.style.transition = 'opacity .4s'; loader.style.opacity = 0; setTimeout(done, 450); heroIn(); return; }
-    loader.classList.add('is-done');
-    const tl = gsap.timeline({ onComplete: done });
-    tl.to('.ld-bar--top', { yPercent: -100, duration: 0.9, ease: 'power3.inOut' }, 0)
-      .to('.ld-bar--bot', { yPercent: 100, duration: 0.9, ease: 'power3.inOut' }, 0)
-      .to(cam, { scale: 1.35, duration: 1.4, ease: 'power2.in' }, 0)
-      .to(loader, { opacity: 0, duration: 0.7, ease: 'power1.in' }, 0.65)
-      .add(heroIn, 0.75);
-  }
-
-  if (RM) { staticLoader(); } else requestAnimationFrame(frame);
-
-  /* ---------- CERUL: o singură zi, de la apus la dimineață ---------- */
+  /* ======================================================================
+     Cerul: de la apus (hero) la noapte (vocile), apoi hârtie.
+     ====================================================================== */
   const SKY = {
-    hero:     ['#3e1c14', '#b04a24', '#f0a04a', '#ffe2a6', 70, 1, 0, '#4a2114', '#1c0c08'],
-    lion:     ['#34170f', '#93391c', '#e0813a', '#ffcb7c', 79, 1, 0, '#3d1a10', '#170a06'],
-    child:    ['#1f0f0b', '#5c2416', '#b8572a', '#ffb262', 88, 0.9, 0.2, '#2a120b', '#110705'],
-    pastor:   ['#140a09', '#331612', '#7a3219', '#ff9a50', 97, 0.55, 0.55, '#1c0d08', '#0b0504'],
-    teacher:  ['#0b0708', '#1a100e', '#3d1d13', '#ff9050', 110, 0, 1, '#120907', '#070303'],
-    us:       ['#2f3340', '#9a6a4c', '#eeb170', '#fff0c8', 76, 1, 0.1, '#4a2c1c', '#241510'],
-    every:    ['#eadcc0', '#f2e3c4', '#f5e7c9', '#fff6e0', 60, 0, 0, '#e8d6b0', '#dfc89a'],
-    partners: ['#ecdfc3', '#f3e5c6', '#f5e8ca', '#fff6e0', 60, 0, 0, '#e8d6b0', '#dfc89a'],
-    give:     ['#eee1c4', '#f3e6c8', '#f6e9cc', '#fff6e0', 60, 0, 0, '#e8d6b0', '#dfc89a'],
+    hero:   ['#3e1c14', '#b04a24', '#f0a04a', '#ffe2a6', 70, 1,   0,   '#4a2114', '#1c0c08'],
+    voices: ['#0d0708', '#1d1210', '#44200f', '#ff9050', 108, 0,  1,   '#120907', '#070303'],
+    paper:  ['#efe2c6', '#f3e6c9', '#f6e9cc', '#fff6e0', 60, 0,   0,   '#e8d6b0', '#dfc89a']
   };
-  const hex = (h) => [1, 3, 5].map((i) => parseInt(h.slice(i, i + 2), 16));
-  const mix = (a, b, t) => { const A = hex(a), B = hex(b); return `rgb(${A.map((v, i) => Math.round(v + (B[i] - v) * t)).join(',')})`; };
+  const hx = (h) => [1, 3, 5].map((i) => parseInt(h.slice(i, i + 2), 16));
+  const mix = (a, b, t) => { const A = hx(a), B = hx(b); return `rgb(${A.map((v, i) => Math.round(v + (B[i] - v) * t)).join(',')})`; };
   const lerp = (a, b, t) => a + (b - a) * t;
-  const scenes = $$('.scene');
   const root = document.documentElement.style;
   let anchors = [];
-  function measure() {
-    anchors = scenes.map((s) => ({ key: s.dataset.sky, y: s.offsetTop + Math.max(0, s.offsetHeight - innerHeight) * 0.5 }));
+  function measureSky() {
+    anchors = [];
+    const seen = new Set();
+    $$('[data-sky]').forEach((s) => {
+      const k = s.dataset.sky;
+      if (seen.has(k)) return;
+      seen.add(k);
+      anchors.push({ key: k, y: s.offsetTop + Math.max(0, s.offsetHeight - innerHeight) * 0.35 });
+    });
   }
   function applySky(y) {
+    if (!anchors.length) return;
     let i = 0;
     while (i < anchors.length - 1 && y > anchors[i + 1].y) i++;
     const a = anchors[i], b = anchors[Math.min(i + 1, anchors.length - 1)];
     let t = b === a ? 0 : (y - a.y) / (b.y - a.y);
-    t = Math.max(0, Math.min(1, t)); t = t * t * (3 - 2 * t);
-    const A = SKY[a.key], B = SKY[b.key];
+    t = clamp(t, 0, 1); t = t * t * (3 - 2 * t);
+    const A = SKY[a.key] || SKY.paper, B = SKY[b.key] || SKY.paper;
     root.setProperty('--sky-top', mix(A[0], B[0], t));
     root.setProperty('--sky-mid', mix(A[1], B[1], t));
     root.setProperty('--sky-low', mix(A[2], B[2], t));
@@ -216,91 +167,499 @@
     root.setProperty('--stars', lerp(A[6], B[6], t).toFixed(3));
     root.setProperty('--hill-far', mix(A[7], B[7], t));
     root.setProperty('--hill-near', mix(A[8], B[8], t));
-    const light = ['every', 'partners', 'give'];
-    document.body.classList.toggle('on-light', light.includes(t < 0.5 ? a.key : b.key));
+    document.body.classList.toggle('on-paper', (t < 0.5 ? a.key : b.key) === 'paper');
   }
-  measure(); applySky(scrollY);
-  addEventListener('resize', () => { measure(); applySky(scrollY); });
-  addEventListener('load', () => { measure(); applySky(scrollY); });
+  measureSky(); applySky(scrollY);
+  addEventListener('resize', () => { measureSky(); applySky(scrollY); });
+  addEventListener('load',   () => { measureSky(); applySky(scrollY); });
+  addEventListener('scroll', () => applySky(scrollY), { passive: true });
 
-  /* ---------- SCROLL + SCENE ---------- */
+  /* ======================================================================
+     Scroll lin + ancore
+     ====================================================================== */
   let lenis = null;
   if (!RM && window.Lenis) {
     lenis = new Lenis({ lerp: 0.1, smoothWheel: true });
-    if (window.gsap) { lenis.on('scroll', ScrollTrigger.update); gsap.ticker.add((tm) => lenis.raf(tm * 1000)); gsap.ticker.lagSmoothing(0); }
+    if (GS && ST) {
+      lenis.on('scroll', ST.update);
+      GS.ticker.add((tm) => lenis.raf(tm * 1000));
+      GS.ticker.lagSmoothing(0);
+    }
   }
-  addEventListener('scroll', () => applySky(scrollY), { passive: true });
-
   $$('a[href^="#"]').forEach((a) => a.addEventListener('click', (e) => {
-    const el = $(a.getAttribute('href')); if (!el) return;
+    const el = $(a.getAttribute('href'));
+    if (!el) return;
     e.preventDefault();
-    if (lenis) lenis.scrollTo(el, { duration: 2.2 }); else el.scrollIntoView();
+    if (lenis) lenis.scrollTo(el, { duration: 1.5 }); else el.scrollIntoView({ behavior: 'smooth' });
   }));
 
-  function heroIn() {
-    if (RM || !window.gsap) return;
-    gsap.from('.scene--hero .copy > *', { y: 28, opacity: 0, duration: 1.1, stagger: 0.12, ease: 'power3.out', delay: 0.15 });
-    // girafa ridică capul în cadru și se uită la tine
-    gsap.from('.actor--giraffe img', { yPercent: 38, duration: 1.8, ease: 'power3.out' });
-    gsap.from('.top', { opacity: 0, y: -10, duration: 0.8, delay: 0.6 });
+  /* ======================================================================
+     01 · TRASEUL — proiecție echidistantă din coordonate reale, la scară egală
+     pe cele două axe; latitudinea dă înălțimea, longitudinea lățimea.
+     ====================================================================== */
+  function buildRoute() {
+    const svg = $('.route-svg');
+    if (!svg) return;
+    const P = CONFIG.route;
+    const VH = 620, padT = 30, padB = 34, x0 = 42, labelGap = 58, labelW = 196;
+    const lats = P.map((p) => p.lat), lons = P.map((p) => p.lon);
+    const latMax = Math.max(...lats), lonMin = Math.min(...lons);
+    const k = (VH - padT - padB) / (latMax - Math.min(...lats));   // px / grad, egal pe ambele axe
+    const ribbon = (Math.max(...lons) - lonMin) * k;
+    const labelX = x0 + ribbon + labelGap;
+    const VW = Math.round(labelX + labelW);
+    svg.setAttribute('viewBox', `0 0 ${VW} ${VH}`);
+    const xy = P.map((p) => [x0 + (p.lon - lonMin) * k, padT + (latMax - p.lat) * k]);
+
+    // etichetele se despart pe verticală când opririle sunt prea apropiate
+    const MIN = 34;
+    const ly = xy.map((q) => q[1]);
+    for (let i = 1; i < ly.length; i++) if (ly[i] - ly[i - 1] < MIN) ly[i] = ly[i - 1] + MIN;
+    const over = ly[ly.length - 1] - (VH - 16);
+    if (over > 0) for (let i = 0; i < ly.length; i++) ly[i] -= over;
+
+    const title = svg.querySelector('title');
+    svg.innerHTML = '';
+    if (title) svg.appendChild(title);
+    const g = svgEl('g');
+    svg.appendChild(g);
+
+    // ecuatorul: îl trecem între Istanbul și Nairobi
+    const eqY = padT + latMax * k;
+    g.appendChild(svgEl('line', { class: 'r-line r-eq', x1: 8, y1: eqY, x2: VW - 8, y2: eqY }));
+    const eqT = svgEl('text', { class: 'r-eq-t', x: 8, y: eqY - 11 });
+    eqT.textContent = 'Ecuator';
+    g.appendChild(eqT);
+
+    // fiecare etapă, segment propriu: uscatul portocaliu, zborul vișiniu și arcuit
+    const legs = [];
+    for (let i = 1; i < P.length; i++) {
+      const [ax, ay] = xy[i - 1], [bx, by] = xy[i];
+      const road = !!P[i].road;
+      let d;
+      if (road) {
+        d = `M${ax.toFixed(1)} ${ay.toFixed(1)} L${bx.toFixed(1)} ${by.toFixed(1)}`;
+      } else {
+        const mx = (ax + bx) / 2, my = (ay + by) / 2;
+        const dx = bx - ax, dy = by - ay, len = Math.hypot(dx, dy) || 1;
+        const off = Math.min(54, len * 0.14);
+        d = `M${ax.toFixed(1)} ${ay.toFixed(1)} Q${(mx + (dy / len) * off).toFixed(1)} ${(my - (dx / len) * off).toFixed(1)} ${bx.toFixed(1)} ${by.toFixed(1)}`;
+      }
+      const path = svgEl('path', { class: 'r-line' + (road ? ' r-road' : ' r-air'), d });
+      g.appendChild(path);
+      legs.push(path);
+    }
+
+    // opririle: punct, linie-ghid cu cot, nume
+    P.forEach((p, i) => {
+      const [px, py] = xy[i], ty = ly[i];
+      const bend = labelX - 24;
+      g.appendChild(svgEl('path', {
+        class: 'r-line r-lead',
+        d: `M${(px + 9).toFixed(1)} ${py.toFixed(1)} L${bend} ${py.toFixed(1)} L${bend + 10} ${ty.toFixed(1)} L${(labelX - 8).toFixed(1)} ${ty.toFixed(1)}`
+      }));
+      g.appendChild(svgEl('circle', { class: 'r-dot' + (p.end ? ' r-dot--end' : ''), cx: px, cy: py, r: p.end ? 7 : 5.4 }));
+      const n = svgEl('text', { class: 'r-name', x: labelX, y: ty + 1 });
+      n.textContent = p.n;
+      g.appendChild(n);
+      const sb = svgEl('text', { class: 'r-sub', x: labelX, y: ty + 17 });
+      sb.textContent = p.s;
+      g.appendChild(sb);
+    });
+
+    // o singură linie-mamă pentru semnul care merge pe traseu
+    const master = svgEl('path', {
+      d: xy.map(([x, y], i) => (i ? 'L' : 'M') + x.toFixed(1) + ' ' + y.toFixed(1)).join(' '),
+      fill: 'none', stroke: 'none'
+    });
+    g.appendChild(master);
+    const tok = svgEl('circle', { class: 'r-tok', cx: 0, cy: 0, r: 5 });
+    g.appendChild(tok);
+
+    if (RM || !GS || !ST) { tok.setAttribute('opacity', '0'); return; }
+
+    const tl = GS.timeline({
+      scrollTrigger: { trigger: svg, start: 'top 80%', end: 'bottom 55%', scrub: 0.6 }
+    });
+    if (window.DrawSVGPlugin) {
+      legs.forEach((p, i) => tl.from(p, { drawSVG: '0%', ease: 'none' }, i * 0.9));
+      tl.from($$('.r-lead', svg), { drawSVG: '0%', stagger: 0.55, ease: 'none' }, 0.3);
+    }
+    tl.from($$('.r-dot', svg), { scale: 0, transformOrigin: '50% 50%', stagger: 0.75, ease: 'back.out(2)' }, 0.25)
+      .from($$('.r-name, .r-sub', svg), { opacity: 0, x: -10, stagger: 0.1, ease: 'power2.out' }, 0.45);
+    if (window.MotionPathPlugin) {
+      tl.fromTo(tok, { opacity: 0 }, { opacity: 1, duration: 0.2 }, 0)
+        .to(tok, { motionPath: { path: master, align: master, alignOrigin: [0.5, 0.5] }, ease: 'none', duration: legs.length * 0.9 }, 0);
+    }
   }
 
-  if (!RM && window.gsap && window.ScrollTrigger) {
-    gsap.registerPlugin(ScrollTrigger);
-    const st = (el) => ({ trigger: el, start: 'top top', end: 'bottom bottom', scrub: 0.6 });
-
-    const hero = $('.scene--hero');
-    gsap.to('.actor--giraffe', { yPercent: -10, xPercent: 8, ease: 'none', scrollTrigger: st(hero) });
-    gsap.to('.scene--hero .copy', { y: -60, opacity: 0, ease: 'power1.in', scrollTrigger: { trigger: hero, start: '20% top', end: 'bottom bottom', scrub: 0.6 } });
-
-    // leul traversează cadrul de la dreapta la stânga, fără grabă
-    const ls = $('.scene--lion');
-    gsap.fromTo('.actor--lion', { xPercent: 55 }, { xPercent: -40, ease: 'none', scrollTrigger: { trigger: ls, start: 'top bottom', end: 'bottom top', scrub: 0.8 } });
-    gsap.from('.scene--lion .copy > *', { y: 40, opacity: 0, stagger: 0.15, ease: 'power2.out', scrollTrigger: { trigger: ls, start: 'top 60%', end: 'top top', scrub: 0.6 } });
-
-    // vocile: silueta urcă în contre-jour, apoi replica, apoi faptul real
-    $$('.scene--voice').forEach((s) => {
-      const tl = gsap.timeline({ scrollTrigger: { trigger: s, start: 'top 92%', end: 'top 5%', scrub: 0.7 } });
-      tl.from($('.actor--sil', s), { yPercent: 22, opacity: 0, ease: 'power2.out' }, 0)
-        .from($('.voice p', s), { clipPath: 'inset(0 100% 0 0)', ease: 'power1.inOut' }, 0.25)
-        .from($('.fact', s), { y: 24, opacity: 0, ease: 'power2.out' }, 0.6);
-    });
-
-    const us = $('.scene--us');
-    gsap.timeline({ scrollTrigger: { trigger: us, start: 'top 92%', end: 'top 5%', scrub: 0.7 } })
-      .from('.scene--us .copy > *', { y: 36, opacity: 0, stagger: 0.2 }, 0)
-      .from('.group-slot', { yPercent: 18, opacity: 0, ease: 'power2.out' }, 0.2);
-
-    $$('.stage--doc').forEach((s) => {
-      gsap.from($$(':scope > *', s), { y: 40, opacity: 0, stagger: 0.12, duration: 1, ease: 'power3.out', scrollTrigger: { trigger: s, start: 'top 72%' } });
-    });
-
-    // butonul de donație sare când apare: trebuie apăsat
-    const btn = $('.give-btn');
-    const hop = () => gsap.timeline()
-      .to(btn, { scaleY: 0.82, scaleX: 1.12, duration: 0.14, ease: 'power2.in' })
-      .to(btn, { y: -22, scaleY: 1.1, scaleX: 0.94, duration: 0.24, ease: 'power2.out' })
-      .to(btn, { y: 0, scaleY: 0.9, scaleX: 1.08, duration: 0.2, ease: 'power2.in' })
-      .to(btn, { scaleY: 1, scaleX: 1, duration: 0.5, ease: 'elastic.out(1.1, 0.4)' });
-    let hopT = null;
-    ScrollTrigger.create({ trigger: btn, start: 'top 85%', end: 'bottom 10%',
-      onEnter: () => { setTimeout(hop, 500); hopT = setInterval(hop, 5200); },
-      onEnterBack: () => { hop(); hopT = setInterval(hop, 5200); },
-      onLeave: () => clearInterval(hopT), onLeaveBack: () => clearInterval(hopT) });
-    btn.addEventListener('mouseenter', hop);
-
-    // fiecare cadru se stinge înainte să se dezlipească, ca să nu se vadă marginea scenei
-    $$('.scene:not(.scene--every):not(.scene--partners):not(.scene--give)').forEach((s) => {
-      gsap.to($('.stage', s), { opacity: 0, ease: 'power1.in', scrollTrigger: { trigger: s, start: 'bottom 122%', end: 'bottom 100%', scrub: 0.3 } });
-    });
-    addEventListener('load', () => ScrollTrigger.refresh());
-    ScrollTrigger.addEventListener('refresh', () => { measure(); applySky(scrollY); });
+  /* ======================================================================
+     03 · CLIPUL — română implicit, trei limbi la butoane
+     ====================================================================== */
+  function buildClip() {
+    const box = $('.player-box');
+    if (!box) return;
+    const nameEl = $('[data-lang-name]');
+    const show = (lang) => {
+      const id = (CONFIG.clip[lang] || '').trim();
+      if (nameEl) nameEl.textContent = CONFIG.clipNames[lang] || lang;
+      if (!id) {
+        box.dataset.state = 'soon';
+        const soon = $('.player-soon', box);
+        if (soon) soon.hidden = false;
+        const fr = $('iframe', box);
+        if (fr) fr.remove();
+        return;
+      }
+      box.dataset.state = 'video';
+      const soon = $('.player-soon', box);
+      if (soon) soon.hidden = true;
+      let fr = $('iframe', box);
+      if (!fr) {
+        fr = document.createElement('iframe');
+        fr.setAttribute('allow', 'accelerometer; encrypted-media; picture-in-picture; fullscreen');
+        fr.setAttribute('allowfullscreen', '');
+        fr.setAttribute('loading', 'lazy');
+        box.appendChild(fr);
+      }
+      fr.title = 'Clipul misiunii, în ' + (CONFIG.clipNames[lang] || lang);
+      fr.src = 'https://www.youtube-nocookie.com/embed/' + encodeURIComponent(id) + '?rel=0';
+    };
+    $$('.lang button').forEach((b) => b.addEventListener('click', () => {
+      $$('.lang button').forEach((o) => { o.classList.toggle('is-on', o === b); o.setAttribute('aria-pressed', String(o === b)); });
+      show(b.dataset.lang);
+    }));
+    show('ro');
   }
 
-  /* ---------- copiere IBAN ---------- */
+  /* ======================================================================
+     04 · GALERIA — contact sheet desfăcut în evantai; trage, săgeți, taste
+     ====================================================================== */
+  function buildFan() {
+    const fan = $('#fan'), track = $('.fan-track'), cap = $('#fanCap');
+    if (!fan || !track) return;
+    const items = CONFIG.gallery;
+    const cards = items.map((it, i) => {
+      const fig = document.createElement('figure');
+      fig.className = 'fan-card' + (it.slot ? ' fan-card--slot' : '');
+      if (it.slot) {
+        fig.innerHTML = `<div class="fan-card__slot"><b>${it.slot}</b><span>de adăugat</span></div>`;
+      } else {
+        const img = document.createElement('img');
+        img.src = 'assets/img/' + it.f;
+        img.alt = it.c;
+        img.loading = 'lazy';
+        img.decoding = 'async';
+        img.width = 420; img.height = 315;
+        fig.appendChild(img);
+      }
+      const n = document.createElement('span');
+      n.className = 'fan-card__n';
+      n.textContent = String(i + 1).padStart(2, '0') + ' / ' + String(items.length).padStart(2, '0');
+      fig.appendChild(n);
+      fig.addEventListener('click', () => go(i));
+      track.appendChild(fig);
+      return fig;
+    });
+
+    let at = 0;
+    const SPREAD = () => (innerWidth < 760 ? 74 : 128);
+    const place = (anim) => {
+      cards.forEach((c, i) => {
+        const d = i - at, ad = Math.abs(d);
+        const to = {
+          x: d * SPREAD() - 0.5 * c.offsetWidth,
+          y: ad * ad * 7 - 0.5 * c.offsetHeight + (ad ? 10 : -6),
+          rotate: d * 5.2,
+          scale: ad ? Math.max(0.74, 1 - ad * 0.07) : 1,
+          opacity: ad > 4 ? 0 : 1,
+          zIndex: 100 - ad
+        };
+        if (anim && GS && !RM) GS.to(c, { ...to, duration: 0.62, ease: 'power3.out' });
+        else if (GS) GS.set(c, to);
+      });
+      const it = items[at];
+      if (cap) cap.textContent = it.c;
+    };
+    const go = (i) => { at = clamp(i, 0, cards.length - 1); place(true); };
+
+    $$('[data-fan]').forEach((b) => b.addEventListener('click', () => go(at + Number(b.dataset.fan))));
+    fan.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight') { e.preventDefault(); go(at + 1); }
+      if (e.key === 'ArrowLeft')  { e.preventDefault(); go(at - 1); }
+    });
+
+    // tras cu mouse-ul / degetul
+    let down = null;
+    const start = (x) => { down = { x, at }; };
+    const move = (x) => { if (down === null) return; go(down.at - Math.round((x - down.x) / SPREAD())); };
+    const end = () => { down = null; };
+    fan.addEventListener('pointerdown', (e) => { start(e.clientX); fan.setPointerCapture(e.pointerId); });
+    fan.addEventListener('pointermove', (e) => { if (down) move(e.clientX); });
+    fan.addEventListener('pointerup', end);
+    fan.addEventListener('pointercancel', end);
+
+    place(false);
+    addEventListener('resize', () => place(false));
+    // intrarea: cărțile se desfac din teanc, o singură dată
+    if (GS && !RM) {
+      GS.from(cards, {
+        y: '+=120', rotate: 0, opacity: 0, duration: 0.8, stagger: 0.035, ease: 'power3.out',
+        scrollTrigger: ST ? { trigger: fan, start: 'top 82%' } : undefined
+      });
+    }
+  }
+
+  /* ======================================================================
+     05 · BISERICA — desen izometric din linii; cursorul o construiește.
+     Ordinea e ordinea de pe șantier: soclu, ziduri, ferme, acoperiș, uși, cruce.
+     ====================================================================== */
+  function buildChapel() {
+    const host = $('#chapel');
+    if (!host) return;
+    const W = 460, H = 420;
+    const svg = svgEl('svg', { viewBox: `0 0 ${W} ${H}`, role: 'img', 'aria-label': 'Desen izometric al bisericii' });
+    host.appendChild(svg);
+
+    const CX = W / 2, CY = H * 0.72, U = 29;          // unitate izometrică
+    const iso = (x, y, z) => [CX + (x - y) * U * 0.866, CY + (x + y) * U * 0.5 - z * U];
+    const L = (pts, cls) => {
+      const d = pts.map((p, i) => (i ? 'L' : 'M') + p[0].toFixed(1) + ' ' + p[1].toFixed(1)).join(' ');
+      const el = svgEl('path', { class: 'ch-l ' + (cls || ''), d });
+      svg.appendChild(el);
+      return el;
+    };
+    const A = 2.1, B = 3.2;                            // jumătate-lățime, jumătate-lungime
+    const parts = [];
+
+    // soclu
+    const base = [iso(-A, -B, 0), iso(A, -B, 0), iso(A, B, 0), iso(-A, B, 0), iso(-A, -B, 0)];
+    parts.push({ at: 0.00, el: L(base, 'ch-l--soft'), kind: 'draw' });
+
+    // cele patru ziduri, fiecare se ridică de la zero
+    const wallH = 2.0;
+    const corners = [[-A, -B], [A, -B], [A, B], [-A, B]];
+    const walls = corners.map((c, i) => {
+      const n = corners[(i + 1) % 4];
+      const el = L([iso(c[0], c[1], 0), iso(c[0], c[1], wallH), iso(n[0], n[1], wallH), iso(n[0], n[1], 0)], '');
+      return { at: 0.10 + i * 0.07, el, kind: 'rise', a: c, b: n, h: wallH };
+    });
+    parts.push(...walls);
+
+    // fermele acoperișului
+    const ridgeH = 3.3;
+    [-B, -B / 3, B / 3, B].forEach((y, i) => {
+      const el = L([iso(-A, y, wallH), iso(0, y, ridgeH), iso(A, y, wallH)], 'ch-l--soft');
+      parts.push({ at: 0.40 + i * 0.045, el, kind: 'draw' });
+    });
+    // coama și cele două ape
+    parts.push({ at: 0.58, el: L([iso(0, -B, ridgeH), iso(0, B, ridgeH)], 'ch-l--gold'), kind: 'draw' });
+    parts.push({ at: 0.62, el: L([iso(-A, -B, wallH), iso(0, -B, ridgeH), iso(0, B, ridgeH), iso(-A, B, wallH)], ''), kind: 'draw' });
+    parts.push({ at: 0.66, el: L([iso(A, -B, wallH), iso(0, -B, ridgeH), iso(0, B, ridgeH), iso(A, B, wallH)], ''), kind: 'draw' });
+
+    // ferestre pe latura lungă
+    [-1.6, 0, 1.6].forEach((y, i) => {
+      const el = L([iso(A, y - 0.34, 0.65), iso(A, y + 0.34, 0.65), iso(A, y + 0.34, 1.5), iso(A, y - 0.34, 1.5), iso(A, y - 0.34, 0.65)], 'ch-l--soft');
+      parts.push({ at: 0.72 + i * 0.03, el, kind: 'draw' });
+    });
+    // ușa, pe fațada dinspre privitor
+    parts.push({ at: 0.82, el: L([iso(-0.52, B, 0), iso(0.52, B, 0), iso(0.52, B, 1.62), iso(-0.52, B, 1.62), iso(-0.52, B, 0)], ''), kind: 'draw' });
+    parts.push({ at: 0.86, el: L([iso(0, B, 0), iso(0, B, 1.62)], 'ch-l--soft'), kind: 'draw' });
+    // treapta
+    parts.push({ at: 0.88, el: L([iso(-0.72, B + 0.26, 0), iso(0.72, B + 0.26, 0)], 'ch-l--soft'), kind: 'draw' });
+    // crucea, deasupra intrării
+    parts.push({ at: 0.92, el: L([iso(0, B, ridgeH), iso(0, B, ridgeH + 1.15)], 'ch-l--gold'), kind: 'draw' });
+    parts.push({ at: 0.96, el: L([iso(-0.38, B, ridgeH + 0.76), iso(0.38, B, ridgeH + 0.76)], 'ch-l--gold'), kind: 'draw' });
+
+    // lungimile, pentru desenul progresiv
+    parts.forEach((p) => {
+      const len = p.el.getTotalLength ? p.el.getTotalLength() : 0;
+      p.len = len || 1;
+      if (p.kind === 'rise') {
+        p.full = p.el.getAttribute('d');
+        p.flat = [iso(p.a[0], p.a[1], 0), iso(p.a[0], p.a[1], 0), iso(p.b[0], p.b[1], 0), iso(p.b[0], p.b[1], 0)]
+          .map((q, i) => (i ? 'L' : 'M') + q[0].toFixed(1) + ' ' + q[1].toFixed(1)).join(' ');
+      }
+    });
+
+    let p = RM ? 1 : 0, shown = RM ? 1 : 0;
+    const render = () => {
+      parts.forEach((q) => {
+        const t = clamp((shown * 1.14 - q.at) / 0.1, 0, 1);
+        if (q.kind === 'rise') {
+          const pts = [iso(q.a[0], q.a[1], 0), iso(q.a[0], q.a[1], q.h * t), iso(q.b[0], q.b[1], q.h * t), iso(q.b[0], q.b[1], 0)];
+          q.el.setAttribute('d', pts.map((z, i) => (i ? 'L' : 'M') + z[0].toFixed(1) + ' ' + z[1].toFixed(1)).join(' '));
+          q.el.style.opacity = t > 0 ? 1 : 0;
+        } else {
+          q.el.style.strokeDasharray = q.len;
+          q.el.style.strokeDashoffset = q.len * (1 - t);
+        }
+      });
+    };
+    render();
+
+    if (RM) return;
+    // pe telefon și cât timp cursorul e în altă parte, scroll-ul o ridică
+    let basep = 0;
+    // cursorul construiește: stânga = teren gol, dreapta = gata
+    host.addEventListener('pointermove', (e) => {
+      const r = host.getBoundingClientRect();
+      p = clamp((e.clientX - r.left) / r.width, 0, 1);
+    });
+    host.addEventListener('pointerleave', () => { p = basep; });
+    if (ST) {
+      const take = (self) => { basep = self.progress; if (!host.matches(':hover')) p = basep; };
+      ST.create({ trigger: host, start: 'top 85%', end: 'bottom 45%', scrub: true,
+        onUpdate: take, onRefresh: take });
+    }
+    const tick = () => { shown += (p - shown) * 0.12; render(); requestAnimationFrame(tick); };
+    requestAnimationFrame(tick);
+  }
+
+  /* ======================================================================
+     VOCILE — trei bătăi pe un cadru care stă
+     ====================================================================== */
+  function buildVoices() {
+    const sec = $('.scene--voices');
+    if (!sec || RM || !GS || !ST) return;
+    const beats = $$('.beat', sec);
+    const turn = $('.turn', sec);
+    GS.set(beats, { opacity: 0 });
+    GS.set(beats[0], { opacity: 1 });
+
+    const tl = GS.timeline({ scrollTrigger: { trigger: sec, start: 'top 85%', end: 'bottom bottom', scrub: 0.7 } });
+    beats.forEach((b, i) => {
+      const sil = $('.sil', b), v = $('.voice p', b), as = $('.aside', b), f = $('.fact', b);
+      const at = 0.35 + i * 1.1;
+      if (i) tl.to(beats[i - 1], { opacity: 0, duration: 0.22 }, at - 0.1)
+              .to(b, { opacity: 1, duration: 0.22 }, at - 0.08);
+      tl.from(sil, { yPercent: 16, opacity: 0, duration: 0.4, ease: 'power2.out' }, at)
+        .from(v,   { clipPath: 'inset(0 100% 0 0)', duration: 0.45, ease: 'power1.inOut' }, at + 0.12)
+        .from(as,  { opacity: 0, y: 12, duration: 0.3 }, at + 0.42)
+        .from(f,   { opacity: 0, y: 16, duration: 0.3 }, at + 0.55);
+    });
+    tl.to(turn, { opacity: 1, duration: 0.4, ease: 'power2.out' }, 0.35 + beats.length * 1.1 - 0.35);
+  }
+
+  /* ======================================================================
+     PANOUL DE PLATĂ
+     ====================================================================== */
+  function buildPay() {
+    const pay = $('#pay'), card = $('.pay-card'), here = $('#giveHere');
+    const go = $('#payGo'), goSum = $('#payGoSum'), other = $('#paySum'), note = $('#payNote');
+    const pp = $('#payPaypal');
+    if (!pay || !go) return;
+
+    let sum = 150;
+    const stripeOK = !!CONFIG.stripeLink.trim();
+
+    const link = () => {
+      if (!stripeOK) return CONFIG.fallbackLink;
+      const u = new URL(CONFIG.stripeLink);
+      u.searchParams.set(CONFIG.stripeAmountParam, String(Math.round(sum * 100)));
+      return u.toString();
+    };
+    const paint = () => {
+      goSum.textContent = String(sum);
+      go.href = link();
+      if (note) {
+        note.textContent = stripeOK
+          ? 'Plata se face pe pagina securizată Stripe a școlii. Suma o poți schimba și acolo.'
+          : 'Deocamdată butonul duce la pagina de donații a școlii. Când Stripe-ul e pornit, cardul, Google Pay și Apple Pay merg direct de aici.';
+      }
+    };
+    $$('.pay-amounts button').forEach((b) => b.addEventListener('click', () => {
+      $$('.pay-amounts button').forEach((o) => o.classList.toggle('is-on', o === b));
+      if (other) other.value = '';
+      sum = Number(b.dataset.sum);
+      paint();
+      if (GS && !RM) GS.fromTo(go, { scaleX: 1.03, scaleY: 0.94 }, { scaleX: 1, scaleY: 1, duration: 0.45, ease: 'elastic.out(1.1,.45)' });
+    }));
+    if (other) other.addEventListener('input', () => {
+      const v = Number(other.value);
+      if (v > 0) { $$('.pay-amounts button').forEach((o) => o.classList.remove('is-on')); sum = v; paint(); }
+    });
+    if (pp && CONFIG.paypalLink.trim()) { pp.hidden = false; pp.href = CONFIG.paypalLink; }
+    paint();
+
+    // butonul sare când intră în cadru: trebuie apăsat
+    if (GS && ST && !RM) {
+      const hop = () => GS.timeline()
+        .to(go, { scaleY: 0.86, scaleX: 1.08, duration: 0.13, ease: 'power2.in' })
+        .to(go, { y: -14, scaleY: 1.07, scaleX: 0.96, duration: 0.22, ease: 'power2.out' })
+        .to(go, { y: 0, scaleY: 0.94, scaleX: 1.05, duration: 0.18, ease: 'power2.in' })
+        .to(go, { scaleY: 1, scaleX: 1, duration: 0.5, ease: 'elastic.out(1.1,.4)' });
+      let timer = null;
+      ST.create({
+        trigger: '#doneaza', start: 'top 80%', end: 'bottom 20%',
+        onEnter: () => { setTimeout(hop, 450); timer = setInterval(hop, 6000); },
+        onEnterBack: () => { hop(); timer = setInterval(hop, 6000); },
+        onLeave: () => clearInterval(timer), onLeaveBack: () => clearInterval(timer)
+      });
+      go.addEventListener('mouseenter', hop);
+    }
+
+    // sub 1180px panoul coboară în secțiunea 07, iar bara de jos ia CTA-ul
+    const mq = matchMedia('(min-width: 1180px)');
+    const relocate = () => {
+      if (mq.matches) { if (card.parentElement !== pay) pay.appendChild(card); }
+      else if (here && card.parentElement !== here) here.appendChild(card);
+    };
+    relocate();
+    mq.addEventListener('change', relocate);
+
+    $$('[data-focus-pay]').forEach((a) => a.addEventListener('click', (e) => {
+      e.preventDefault();
+      const target = card.parentElement === pay ? go : card;
+      target.scrollIntoView({ block: 'center', behavior: RM ? 'auto' : 'smooth' });
+      if (GS && !RM) GS.fromTo(card, { boxShadow: '0 0 0 0 rgba(161,136,84,0)' },
+        { boxShadow: '0 0 0 7px rgba(161,136,84,.35)', duration: 0.35, yoyo: true, repeat: 1, ease: 'power2.out' });
+    }));
+
+    const bar = $('#paybar');
+    if (bar && GS && ST && !RM) {
+      ST.create({
+        trigger: '.scene--hero', start: 'bottom 70%',
+        onEnter: () => GS.to(bar, { y: 0, duration: 0.45, ease: 'power3.out' }),
+        onLeaveBack: () => GS.to(bar, { y: '102%', duration: 0.35, ease: 'power2.in' })
+      });
+      ST.create({
+        trigger: '#doneaza', start: 'top 70%',
+        onEnter: () => GS.to(bar, { y: '102%', duration: 0.35, ease: 'power2.in' }),
+        onLeaveBack: () => GS.to(bar, { y: 0, duration: 0.4, ease: 'power3.out' })
+      });
+    } else if (bar) { bar.style.transform = 'none'; }
+  }
+
+  /* ======================================================================
+     Intrări de secțiune, copiere IBAN, pornire
+     ====================================================================== */
+  function buildReveals() {
+    if (RM || !GS || !ST) return;
+    GS.from('.hero-in > *', { y: 24, opacity: 0, duration: 0.9, stagger: 0.09, ease: 'power3.out', delay: 0.1 });
+    GS.from('.top', { opacity: 0, y: -10, duration: 0.7, delay: 0.35 });
+    $$('.doc').forEach((s) => {
+      const kids = $$(':scope > .wrap > *', s);
+      GS.from(kids, { y: 30, opacity: 0, duration: 0.8, stagger: 0.1, ease: 'power3.out',
+        scrollTrigger: { trigger: s, start: 'top 76%' } });
+    });
+  }
+
   $$('[data-copy]').forEach((b) => b.addEventListener('click', async () => {
     try { await navigator.clipboard.writeText(b.dataset.copy); b.textContent = 'Copiat'; b.classList.add('ok'); }
     catch (e) { b.textContent = 'Selectează manual'; }
     setTimeout(() => { b.textContent = 'Copiază'; b.classList.remove('ok'); }, 2200);
   }));
+
+  buildVoices();
+  buildRoute();
+  buildClip();
+  buildFan();
+  buildChapel();
+  buildPay();
+  buildReveals();
+  if (ST) {
+    addEventListener('load', () => ST.refresh());
+    ST.addEventListener('refresh', () => { measureSky(); applySky(scrollY); });
+  }
 })();
