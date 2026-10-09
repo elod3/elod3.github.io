@@ -163,11 +163,19 @@ export function initAtlas(host, stops, opts = {}) {
     const w = el('g', { class: 'a-veh a-veh--' + kind });
     const put = (d, cls) => w.appendChild(el('path', { class: 'a-l ' + (cls || 'a-l--hi'), d }));
     if (kind === 'plane') {
-      put('M-13 0 L6 0 L13 2.6 L13 -2.6 L6 0');                       // fuzelaj + bot
-      put('M-1 0 L-9 10 L-5.5 10.6 L3 1.2');                          // aripa stângă
-      put('M-1 0 L-9 -10 L-5.5 -10.6 L3 -1.2');                       // aripa dreaptă
-      put('M-11 0 L-14.5 4.6 L-12.6 4.9 L-9.4 0.8', 'a-l--edge');
-      put('M-11 0 L-14.5 -4.6 L-12.6 -4.9 L-9.4 -0.8', 'a-l--edge');
+      // fuzelaj cu bot rotunjit
+      put('M-16.5 -1 L-12 -2.6 L10 -2.6 Q16.5 -2.4 17.6 0 Q16.5 2.4 10 2.6 L-12 2.6 L-16.5 1 Z');
+      // aripi sageata
+      put('M2 -2.3 L-9 -15.5 L-13.2 -15.5 L-4.2 -2.3 Z');
+      put('M2 2.3 L-9 15.5 L-13.2 15.5 L-4.2 2.3 Z');
+      // ampenaje
+      put('M-12.6 -2.2 L-16.6 -7.4 L-18.6 -7.4 L-16.4 -2.2 Z', 'a-l--edge');
+      put('M-12.6 2.2 L-16.6 7.4 L-18.6 7.4 L-16.4 2.2 Z', 'a-l--edge');
+      // deriva, vazuta de sus ca o muchie
+      put('M-11.5 0 L-18.4 0', 'a-l--edge');
+      // motoare sub aripi
+      put('M-3.2 -9.8 L-8.6 -9.8 L-8.6 -7.4 L-3.2 -7.4 Z', 'a-l--edge');
+      put('M-3.2 9.8 L-8.6 9.8 L-8.6 7.4 L-3.2 7.4 Z', 'a-l--edge');
     } else if (kind === 'bus') {
       put('M-15 2.6 L-15 -5 Q-15 -6.4 -13.4 -6.4 L11 -6.4 Q14.4 -6.4 15 -3 L15 2.6 Z');
       put('M-10.4 -4.2 L-10.4 -0.4 M-4.6 -4.2 L-4.6 -0.4 M1.2 -4.2 L1.2 -0.4', 'a-l--edge');
@@ -203,6 +211,7 @@ export function initAtlas(host, stops, opts = {}) {
   /* ---------- randarea unui cadru ---------- */
   function render(state) {
     const { draw, t, zoomTo } = state;
+    if (state.focus !== undefined && state.focus !== focus) { focus = state.focus; layout(); }
 
     // centrul: la început stăm pe Târgu Mureș, apoi mergem cu drumul
     const now = t > 0 ? at(t) : { lon: stops[0].lon, lat: stops[0].lat, mode: null };
@@ -274,7 +283,7 @@ export function initAtlas(host, stops, opts = {}) {
         const s = (kind === 'plane' ? 1.3 : 1.1) * clamp(Rbase / 200, 0.95, 2.1);
         const wob = kind === 'bus' || kind === 'car' ? Math.sin(t * 420) * 0.5 : 0;
         v.setAttribute('transform',
-          `translate(${q[0].toFixed(1)} ${(q[1] + wob).toFixed(1)}) rotate(${ang.toFixed(1)}) scale(${(flip ? -s : s).toFixed(3)} ${s.toFixed(3)})`);
+          `translate(${q[0].toFixed(1)} ${(q[1] + wob).toFixed(1)}) rotate(${ang.toFixed(1)}) scale(${s.toFixed(3)} ${(flip ? -s : s).toFixed(3)})`);
         v.style.opacity = 1;
       }
     }
@@ -289,14 +298,19 @@ export function initAtlas(host, stops, opts = {}) {
   }
 
   let geoLines = [];
+  let focus = 0;                       // 0 = textul e mare, globul sta in dreapta
+  function layout() {
+    const wide = W > 900;
+    cx = W * (wide ? lerp(0.74, 0.57, focus) : 0.5);
+    cy = H * (wide ? 0.5 : lerp(0.40, 0.44, focus));
+    Rbase = Math.min(W * (wide ? 0.46 : 0.5), H * (wide ? 0.52 : 0.40)) * lerp(0.86, 1.04, focus);
+  }
   function resize() {
     const r = host.getBoundingClientRect();
     W = Math.max(1, r.width); H = Math.max(1, r.height);
     svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
     svg.setAttribute('width', W); svg.setAttribute('height', H);
-    cx = W * (W > 900 ? 0.64 : 0.5);
-    cy = H * (W > 900 ? 0.5 : 0.44);
-    Rbase = Math.min(W * (W > 900 ? 0.46 : 0.48), H * (W > 900 ? 0.50 : 0.42));
+    layout();
   }
   resize();
 

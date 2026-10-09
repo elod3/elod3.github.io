@@ -5,26 +5,45 @@ Pagina de strângere de fonduri pentru misiunea clasei a XII-a la **Școala Adve
 și profesori. Nu mai e concept — intră live.
 
 Static: `index.html`, `style.css`, `app.js`, `atlas.js`, `assets/`.
-Fără CDN: GSAP 3.15 + ScrollTrigger și Lenis 1.3.26 stau în `assets/vendor/`.
-Fonturile sunt ale școlii (Lora, Montserrat), locale.
+Fonturile și bibliotecile sunt locale, în `assets/`. Vezi mai jos.
 
 ## Decizia estetică
 
 - **Public:** părinți, firme din Mureș, biserici, absolvenți, plus oricine primește linkul pe
   Instagram. Oameni care dau bani dacă văd exact unde ajung.
 - **Ton:** al elevilor, la persoana I. Fraze scurte, cifre reale, zero limbaj de instituție.
-  Textele vechi luate de pe site-ul școlii („misiune / viziune / valori”) au fost scoase: sunt
-  corporate și nu le-ar spune niciun elev cu voce tare.
-- **Trei lumini, în ordinea drumului:** hârtie crem (drumul desenat) → apus de savană (oamenii)
-  → hârtie (cifrele și donația). Fiecare schimbare de lumină marchează o schimbare de loc.
-- **Elementul memorabil:** atlasul. Globul se desenează singur cu linia, pe hârtie crem, apoi
-  pleacă punctul din Târgu Mureș: autocar până la Budapesta, avion până la Nairobi, mașină prin
-  savană până la școală. Camera coboară și urcă odată cu ei. Animația *este* argumentul: arată
-  cât de departe pleacă treizeci de adolescenți.
-- **Al doilea element:** biserica izometrică din actul IV, cu linii groase, care se construiește
-  sub cursor (pe telefon, la derulare). Donația e clădirea care crește.
-- **Montserrat** iese la `slop_scan.py` ca „font sigur”, dar e fontul real al școlii, din CSS-ul
-  lor live. Scanner: **P0 = 0, P1 = 2 (ambele Montserrat), P2 = 0**.
+  Textele de pe site-ul școlii („misiune / viziune / valori”) nu apar deloc: sunt corporate și
+  nu le-ar spune niciun elev cu voce tare.
+- **Paletă: noapte de savană.** Fundal cald-închis (`#0b0a09`), subiectul în chihlimbar
+  (`#e8742b`) și aur (`#c9a868`), apa și gradele în rece (`#4a7c80`). Contrastul cald/rece e
+  gradarea de film, obținută din culoare, nu din gradiente decorative. Aurul vine din identitatea
+  școlii; restul e ales pentru ecran, nu copiat de pe site-ul lor.
+- **Trei roluri de literă, niciunul implicit:** **Fraunces** (variabilă) la titluri — are
+  caracter, nu e un default; **Archivo** la text; **Martian Mono** la cifre, etichete și butoane,
+  ca la un aparat de măsură. Toate locale, cu diacritice, 184 KB în total.
+- **Se derulează și pe orizontală.** „Ce facem acolo” trece prin fața ta, nu pe sub ea: patru
+  panouri pinned, mutate pe axa X cu scroll-ul.
+- **Elementul memorabil:** atlasul. Globul se desenează singur cu linia, apoi pleacă punctul din
+  Târgu Mureș: autocar la Budapesta, avion la Nairobi, mașină prin savană. Titlul se retrage în
+  stânga-jos și se micșorează, iar globul intră în prim-plan. Animația *este* argumentul.
+- **Al doilea:** linia de monitor din actul II. Bate la 68–77 pe minut, curge la nesfârșit în
+  spatele textului și e acolo cu motiv: la standul din centru se măsoară tensiunea și saturația.
+- **Al treilea:** biserica izometrică, cu linii groase, care se construiește sub cursor.
+- `slop_scan.py`: **P0 = 0, P1 = 0, P2 = 0**.
+
+## Bibliotecile
+
+Toate locale, în `assets/vendor/`, fără CDN:
+
+| ce | de ce |
+|---|---|
+| GSAP 3.15 + ScrollTrigger | coregrafia, pin-ul și scroll-ul pe orizontală |
+| GSAP SplitText | titlurile intră pe rânduri, ca la generic de film (gratuit de la 3.13) |
+| Lenis 1.3.26 | scroll lin |
+
+Evaluate și refuzate: **three.js** (globul 3D se mișca sacadat și nu arăta a desen — scos),
+**Lottie** (ar fi adus ~250 KB și un stil care nu se potrivește cu linia desenată de noi),
+**d3-geo** (proiecția ortografică are 20 de linii scrise de mână, nu merită dependența).
 
 ## Atlasul
 
