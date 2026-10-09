@@ -373,6 +373,7 @@
           rotate: d * 5.2,
           scale: ad ? Math.max(0.74, 1 - ad * 0.07) : 1,
           opacity: ad > 4 ? 0 : 1,
+          visibility: ad > 5 ? 'hidden' : 'visible',
           zIndex: 100 - ad
         };
         if (anim && GS && !RM) GS.to(c, { ...to, duration: 0.62, ease: 'power3.out' });
@@ -498,6 +499,10 @@
     };
     render();
 
+    const hint = $('#dreamHint');
+    if (hint && !matchMedia('(hover: hover) and (pointer: fine)').matches) {
+      hint.textContent = 'Derulează: zidurile se ridică.';
+    }
     if (RM) return;
     // pe telefon și cât timp cursorul e în altă parte, scroll-ul o ridică
     let basep = 0;

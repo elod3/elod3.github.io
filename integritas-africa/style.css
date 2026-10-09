@@ -51,7 +51,7 @@
 }
 
 *, *::before, *::after { box-sizing: border-box; }
-html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; overflow-x: clip; }
 html.lenis, html.lenis body { height: auto; }
 .lenis.lenis-smooth { scroll-behavior: auto !important; }
 body {
@@ -273,7 +273,8 @@ main { position: relative; z-index: 1; }
 
 /* 04 galeria: contact sheet care se desface în evantai */
 .fan { position: relative; height: clamp(300px, 46vh, 460px); margin: clamp(24px, 4vh, 44px) 0 0;
-  touch-action: pan-y; cursor: grab; }
+  touch-action: pan-y; cursor: grab;
+  overflow: clip; overflow-clip-margin: 26px; }
 .fan:active { cursor: grabbing; }
 .fan-track { position: absolute; inset: 0; }
 .fan-card { position: absolute; left: 50%; top: 50%; width: clamp(200px, 23vw, 290px);
@@ -334,8 +335,12 @@ main { position: relative; z-index: 1; }
   margin-top: .5em; line-height: 1.5; }
 .give-cta .btn { white-space: nowrap; }
 @media (max-width: 760px) { .give-cta { grid-template-columns: 1fr; } }
-.give-arrow { display: none; }
-@media (min-width: 1180px) { .give-arrow { display: inline; } }
+.give-arrow, .give-where--wide { display: none; }
+.give-where--narrow { display: inline; }
+@media (min-width: 1180px) {
+  .give-arrow, .give-where--wide { display: inline; }
+  .give-where--narrow { display: none; }
+}
 
 /* ---------- panoul de plată ---------- */
 .pay { position: fixed; z-index: 25; right: 0; top: 0; height: 100vh; width: 360px;
