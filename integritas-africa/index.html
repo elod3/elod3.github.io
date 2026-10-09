@@ -4,274 +4,191 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
-<title>Africa · Liceul Integritas</title>
-<meta name="description" content="Clasa a XII-a a Liceului Internațional Integritas pleacă la Școala Adventistă Kusekwa. Mergem să ridicăm o biserică și un dispensar pentru 700 de elevi și profesori.">
-<meta name="theme-color" content="#1a0f0b">
+<title>Kusekwa · Clasa a XII-a, Liceul Integritas</title>
+<meta name="description" content="Treizeci de elevi din Mureș merg 6.700 de kilometri până la Școala Adventistă Kusekwa, în Tanzania, ca să ridice o biserică și un dispensar pentru 700 de elevi și profesori.">
+<meta name="theme-color" content="#06080f">
 <link rel="icon" href="assets/img/integritas-logo.svg">
 <link rel="preload" href="assets/fonts/lora-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/montserrat-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="style.css?v=5">
+<link rel="stylesheet" href="style.css?v=6">
 </head>
 <body>
 
-<a class="skip" href="#story">Sari la conținut</a>
-
-<!-- cerul, comun primelor două acte; culorile se rescriu din JS la scroll -->
-<div class="sky" aria-hidden="true">
-  <div class="sky-grad"></div>
-  <div class="sky-stars"></div>
-  <div class="sky-sun"></div>
-  <svg class="sky-hills sky-hills--far" preserveAspectRatio="none"></svg>
-  <svg class="sky-hills sky-hills--near" preserveAspectRatio="none"></svg>
-</div>
+<a class="skip" href="#drumul">Sari la conținut</a>
 
 <header class="top">
-  <a class="top-logo" href="https://liceulintegritas.ro/" aria-label="Liceul Internațional Integritas, site-ul școlii">
+  <a class="top-logo" href="https://liceulintegritas.ro/" aria-label="Liceul Internațional Integritas">
     <img src="assets/img/integritas-logo.svg" alt="Integritas, Ready to serve" width="166" height="36">
   </a>
-  <p class="top-note">Concept, deocamdată · nu e pagina oficială a școlii</p>
   <nav class="top-nav" aria-label="Secțiuni">
-    <a href="#drumul">Drumul</a>
-    <a href="#noi">Cine suntem</a>
-    <a href="#galerie">Galerie</a>
+    <a href="#scoala">Școala</a>
+    <a href="#biserica">Ce construim</a>
     <a class="top-cta" href="#doneaza">Donează</a>
   </nav>
 </header>
 
-<main id="story">
+<main>
 
-  <!-- ░░ ACTUL I · dark ░░ -->
+  <!-- ACTUL I: drumul, pe glob -->
+  <section class="journey" id="drumul">
+    <div class="jstage">
+      <canvas id="globe" aria-hidden="true"></canvas>
+      <div class="glabels" id="globeLabels" aria-hidden="true"></div>
 
-  <section class="scene scene--hero" data-sky="hero" id="acasa">
-    <div class="hero-in">
-      <p class="kicker">Liceul Internațional Integritas · Budiu Mic, jud. Mureș</p>
-      <h1>Șapte sute de oameni, <span class="nw">între pereți</span> de împrumut.</h1>
-      <p class="lede">Școala Adventistă Kusekwa are 700 de elevi și profesori. Comunitatea de acolo mută bănci în fiecare săptămână ca să aibă unde se ruga. În clasa a XII-a plecăm o lună la ei — să ridicăm o biserică și un dispensar.</p>
-      <p class="hero-act"><a class="btn btn--gold" href="#doneaza">Donează</a> <a class="btn btn--ghost" href="#clip">Vezi clipul</a></p>
-      <dl class="tally">
-        <div><dt>700</dt><dd>elevi și profesori la Kusekwa</dd></div>
-        <div><dt>30</dt><dd>elevi de clasa a XII-a care pleacă</dd></div>
-        <div><dt>4</dt><dd>ani de misiune în Africa, la Integritas</dd></div>
-        <div><dt>2</dt><dd>clădiri: o biserică și un dispensar</dd></div>
-      </dl>
-      <span class="scroll-hint" aria-hidden="true"><i></i></span>
-    </div>
-  </section>
+      <div class="beats">
 
-  <!-- vocile: trei replici din scenariul clipului, într-un singur act lipit -->
-  <section class="scene scene--voices" data-sky="voices" id="voci">
-    <div class="voices-pin">
-      <div class="voices-stack">
+        <article class="beat beat--hero" data-beat="0">
+          <p class="kicker">Clasa a XII-a · Liceul Integritas · Budiu Mic, Mureș</p>
+          <h1>Mergem 6.700 de kilometri ca să ridicăm niște ziduri.</h1>
+          <p class="lede">La Școala Adventistă Kusekwa, în Tanzania, sunt șapte sute de elevi și profesori. Sâmbăta mută băncile din clase, fiindcă alt loc de adunare nu au. Plecăm treizeci de elevi, pentru o lună, să le construim o biserică și un dispensar.</p>
+          <p class="hero-act">
+            <a class="btn btn--gold" href="#doneaza">Donează</a>
+            <a class="btn btn--ghost" href="#scoala">Ce e la Kusekwa</a>
+          </p>
+          <p class="scrollnote"><i aria-hidden="true"></i>Derulează — mergi cu noi pe drum</p>
+        </article>
 
         <article class="beat" data-beat="1">
-          <figure class="sil sil--child"><img src="assets/img/copil.webp" alt="Silueta unui copil, în contre-jour" width="594" height="1100" loading="lazy"></figure>
-          <p class="who">Un părinte</p>
-          <blockquote class="voice"><p>„Muncesc zilnic sub soarele acesta arzător și mă întorc acasă tot sărac.”</p></blockquote>
-          <p class="aside">— Tata, <span class="nw">mi-e</span> foame.</p>
-          <p class="fact">Nu pentru că nu muncește. Pentru că trei caiete și o pereche de încălțări costă mai mult decât are.</p>
+          <p class="step"><span>01</span> Autocarul</p>
+          <h2>Târgu Mureș &rarr; Budapesta</h2>
+          <p class="num">432 km</p>
+          <p class="say">Ultima bucată de drum pe care o știm pe de rost.</p>
         </article>
 
         <article class="beat" data-beat="2">
-          <figure class="sil sil--teacher"><span class="board" aria-hidden="true"></span><img src="assets/img/profesor.webp" alt="Silueta unui profesor care scrie pe o tablă" width="565" height="1100" loading="lazy"></figure>
-          <p class="who">O profesoară</p>
-          <blockquote class="voice"><p>„Elevii mei împart un creion la patru.”</p></blockquote>
-          <p class="aside">— Doamna, aveți un creion în plus?</p>
-          <p class="fact">Alții nu ajung deloc la școală, pentru că n-au încălțări. Băncile goale se văd din prima.</p>
+          <p class="step"><span>02</span> Avionul</p>
+          <h2>Budapesta &rarr; Istanbul &rarr; Nairobi</h2>
+          <p class="num">5.840 km</p>
+          <p class="say">O schimbare de avion la Istanbul. Pe la mijlocul drumului trecem ecuatorul.</p>
         </article>
 
         <article class="beat" data-beat="3">
-          <figure class="sil sil--pastor"><img src="assets/img/pastor.webp" alt="Silueta unui bărbat cu o carte în mână" width="537" height="1200" loading="lazy"></figure>
-          <p class="who">Pastorul</p>
-          <blockquote class="voice"><p>„Biserica mea nu e făcută din ziduri. E făcută din șapte sute de suflete.”</p></blockquote>
-          <p class="aside">— Pastore, când o să avem și noi o capelă?</p>
-          <p class="fact">Se strâng în sala școlii, pe bănci mutate în fiecare sâmbătă. La ziduri nu s-a ajuns încă.</p>
+          <p class="step"><span>03</span> Mașina</p>
+          <h2>Nairobi &rarr; Sirari &rarr; Bariadi &rarr; Kusekwa</h2>
+          <p class="num">466 km</p>
+          <p class="say">O graniță la mijloc, savană de jur împrejur, iar ultimii kilometri pe drum de pământ.</p>
+        </article>
+
+        <article class="beat beat--end" data-beat="4">
+          <p class="step"><span>04</span> Am ajuns</p>
+          <h2>Școala Adventistă Kusekwa</h2>
+          <p class="say">Bariadi, regiunea Simiyu, Tanzania. De aici încolo nu mai e despre drum.</p>
         </article>
 
       </div>
-      <p class="turn">O pereche de încălțări, trei creioane și niște ziduri. Atât despart șapte sute de oameni de o școală și o biserică adevărate.</p>
     </div>
   </section>
 
-  <!-- ░░ ACTUL II · hârtie ░░ -->
+  <!-- ACTUL II: oamenii -->
+  <section class="voices" id="oameni">
+    <div class="vstage">
+      <div class="vwrap">
 
-  <!-- 01 DRUMUL: traseul real, proiectat din coordonate; se desenează pe scroll -->
-  <section class="doc doc--route" data-sky="paper" id="drumul">
+        <article class="vbeat" data-v="1">
+          <figure class="sil"><img src="assets/img/copil.webp" alt="" width="594" height="1100" loading="lazy"></figure>
+          <p class="vwho">Un părinte</p>
+          <blockquote><p>„Muncesc zilnic sub soarele ăsta și mă întorc acasă tot sărac.”</p></blockquote>
+          <p class="vsub">&mdash; Tata, <span class="nw">mi-e</span> foame.</p>
+          <p class="vfact">Trei caiete și o pereche de încălțări costă mai mult decât are.</p>
+        </article>
+
+        <article class="vbeat" data-v="2">
+          <figure class="sil sil--t"><span class="board" aria-hidden="true"></span><img src="assets/img/profesor.webp" alt="" width="565" height="1100" loading="lazy"></figure>
+          <p class="vwho">O profesoară</p>
+          <blockquote><p>„Elevii mei împart un creion la patru.”</p></blockquote>
+          <p class="vsub">&mdash; Doamna, aveți un creion în plus?</p>
+          <p class="vfact">Alții nu ajung deloc la școală, fiindcă n-au cu ce să se încalțe. Băncile goale se văd din prima.</p>
+        </article>
+
+        <article class="vbeat" data-v="3">
+          <figure class="sil"><img src="assets/img/pastor.webp" alt="" width="537" height="1200" loading="lazy"></figure>
+          <p class="vwho">Pastorul</p>
+          <blockquote><p>„Biserica mea nu e făcută din ziduri. E făcută din șapte sute de suflete.”</p></blockquote>
+          <p class="vsub">&mdash; Pastore, când o să avem și noi o capelă?</p>
+          <p class="vfact">Se strâng în sala școlii, pe bănci mutate în fiecare sâmbătă.</p>
+        </article>
+
+      </div>
+      <p class="vturn">O pereche de încălțări, trei creioane și niște ziduri. Atât lipsește.</p>
+    </div>
+  </section>
+
+  <!-- ACTUL III: scoala -->
+  <section class="doc doc--school" id="scoala">
     <div class="wrap">
-      <header class="doc-head">
-        <p class="kicker"><span class="num">01</span> Drumul</p>
-        <h2>De la Târgu Mureș la Kusekwa</h2>
-        <p class="doc-lede">Două zboruri, o graniță și restul cu autobuzul. Undeva între Istanbul și Nairobi trecem ecuatorul.</p>
+      <header class="dhead">
+        <p class="eyebrow">Unde mergem</p>
+        <h2>Șapte sute de oameni și o sală de clasă</h2>
       </header>
-
-      <div class="route-grid">
-      <figure class="route">
-        <svg class="route-svg" viewBox="0 0 560 620" role="img" aria-labelledby="routeTitle">
-          <title id="routeTitle">Traseul misiunii: Târgu Mureș, Budapesta, Istanbul, Nairobi, Sirari, Bariadi, Kusekwa</title>
-        </svg>
-        <figcaption>Linia urmează coordonatele reale ale celor șapte opriri, la aceeași scară pe ambele axe. Poziția școlii Kusekwa e aproximativă.</figcaption>
-      </figure>
-
-      <table class="legs">
-        <caption>Etapele</caption>
-        <thead><tr><th scope="col">De la</th><th scope="col">Până la</th><th scope="col">Cu ce</th><th scope="col">Cât</th></tr></thead>
-        <tbody>
-          <tr><td>Târgu Mureș</td><td>Budapesta</td><td>autocar</td><td class="t"><span class="todo">[de completat]</span></td></tr>
-          <tr><td>Budapesta</td><td>Istanbul</td><td>avion</td><td class="t"><span class="todo">[de completat]</span></td></tr>
-          <tr><td>Istanbul</td><td>Nairobi</td><td>avion</td><td class="t"><span class="todo">[de completat]</span></td></tr>
-          <tr><td>Nairobi</td><td>Sirari <span class="muted">(graniță)</span></td><td>autobuz</td><td class="t"><span class="todo">[de completat]</span></td></tr>
-          <tr><td>Sirari</td><td>Bariadi</td><td>autobuz</td><td class="t"><span class="todo">[de completat]</span></td></tr>
-          <tr class="last"><td>Bariadi</td><td>Kusekwa Memorial School</td><td>drum de pământ</td><td class="t"><span class="todo">[de completat]</span></td></tr>
-        </tbody>
-      </table>
+      <div class="school-grid">
+        <div class="school-txt">
+          <p>Kusekwa e o școală adventistă lângă Bariadi, în nordul Tanzaniei. Are șapte sute de elevi și profesori. Biserica din sat nu are clădire, așa că sâmbăta se strânge tot acolo: se mută băncile, se ține slujba, apoi se pun băncile la loc pentru luni.</p>
+          <p>Noi mergem cu un singur scop: să plecăm de acolo lăsând în urmă ceva ce nu se mai mută săptămânal.</p>
+          <dl class="facts">
+            <div><dt>700</dt><dd>elevi și profesori la Kusekwa</dd></div>
+            <div><dt>30</dt><dd>elevi de clasa a XII-a care merg</dd></div>
+            <div><dt>4</dt><dd>ani de când clasele terminale de la Integritas merg în Africa</dd></div>
+            <div><dt>1 lună</dt><dd>cât stăm acolo</dd></div>
+          </dl>
+        </div>
+        <figure class="school-photo">
+          <img src="assets/img/misiune-kenya-2025.webp" alt="Elevi de la Integritas alături de familiile vizitate în Kenya, februarie 2025" width="1400" height="1050" loading="lazy">
+          <figcaption>Kenya, februarie 2025. Clasa de dinaintea noastră a dus pachete cu alimente la cincizeci de familii, acasă la fiecare.</figcaption>
+        </figure>
       </div>
     </div>
   </section>
 
-  <!-- 02 CINE SUNTEM -->
-  <section class="doc doc--us" data-sky="paper" id="noi">
-    <div class="wrap wrap--split">
-      <header class="doc-head">
-        <p class="kicker"><span class="num">02</span> Cine suntem</p>
-        <h2>Ready to serve</h2>
+  <!-- ACTUL IV: ce construim -->
+  <section class="doc doc--build" id="biserica">
+    <div class="wrap build-grid">
+      <header class="dhead">
+        <p class="eyebrow">Ce lăsăm în urmă</p>
+        <h2>O biserică și un dispensar</h2>
       </header>
-
-      <div class="us-text">
-        <blockquote class="pull">
-          <p>„Liceul Internațional Integritas oferă un program educațional care împletește însușirea cunoștințelor teoretice și practice cu studiul Bibliei, în vederea slujirii oamenilor.”</p>
-          <cite>Misiunea școlii, <a href="https://liceulintegritas.ro/" rel="noopener">liceulintegritas.ro</a></cite>
-        </blockquote>
-        <p>La Integritas fiecare clasă are o săptămână de misiune într-un oraș din România: seminarii în școli, stand în centru, azilul de bătrâni, din ușă în ușă. În clasa a XII-a săptămâna se transformă în trei-patru săptămâni, și se petrece în Africa.</p>
-        <p>De patru ani, clasele terminale de la Integritas au sprijinit proiecte în Africa. Acum e rândul nostru.</p>
-
-        <ul class="nots">
-          <li>Nu suntem profesori.</li>
-          <li>Nu suntem constructori.</li>
-          <li>Nu suntem pastori.</li>
-          <li>Nu suntem medici.</li>
-          <li>Nu suntem zidari.</li>
-          <li class="yes">Dar vrem să facem ceva.</li>
-        </ul>
-      </div>
-
-      <figure class="us-photo">
-        <img src="assets/img/galerie/aruncare-toci.webp" alt="Elevi Integritas aruncând tocile la absolvire" width="960" height="540" loading="lazy">
-        <figcaption>Clasa terminală, la absolvire. Fotografie din galeria școlii.</figcaption>
-      </figure>
-    </div>
-  </section>
-
-  <!-- 03 CLIPUL -->
-  <section class="doc doc--clip" data-sky="paper" id="clip">
-    <div class="wrap">
-      <header class="doc-head doc-head--row">
-        <div>
-          <p class="kicker"><span class="num">03</span> Clipul</p>
-          <h2>Un minut, povestit de noi</h2>
-        </div>
-        <div class="lang" role="group" aria-label="Limba clipului">
-          <button type="button" data-lang="ro" class="is-on" aria-pressed="true">Română</button>
-          <button type="button" data-lang="en" aria-pressed="false">English</button>
-          <button type="button" data-lang="hu" aria-pressed="false">Magyar</button>
-          <button type="button" data-lang="es" aria-pressed="false">Español</button>
-        </div>
-      </header>
-
-      <figure class="player" id="player">
-        <div class="player-box" data-state="soon">
-          <div class="player-soon">
-            <p class="player-soon__t">Clipul se montează.</p>
-            <p class="player-soon__d">Un minut: patru voci din Kusekwa, apoi intră clasa în cadru. Versiunea în <strong data-lang-name>română</strong> apare aici, iar celelalte trei la butoanele de sus.</p>
-          </div>
-        </div>
-        <figcaption class="player-cap">Până atunci, misiunea de acasă: <a href="https://www.youtube.com/watch?v=Cc4PeN7lgi0" rel="noopener">Misiune, 8 martie 2025</a> pe canalul școlii.</figcaption>
-      </figure>
-    </div>
-  </section>
-
-  <!-- 04 GALERIA: contact sheet care se desface în evantai -->
-  <section class="doc doc--gallery" data-sky="paper" id="galerie">
-    <div class="wrap">
-      <header class="doc-head doc-head--row">
-        <div>
-          <p class="kicker"><span class="num">04</span> Din anii trecuți</p>
-          <h2>Ce rămâne după</h2>
-        </div>
-        <p class="doc-lede doc-lede--tight">Trage cu mouse-ul sau folosește săgețile. <span class="muted">Pozele din Africa se adaugă de la colegii din anii trecuți.</span></p>
-      </header>
-
-      <div class="fan" id="fan" tabindex="0" role="region" aria-label="Galerie, poze din anii trecuți">
-        <div class="fan-track"></div>
-      </div>
-      <div class="fan-bar">
-        <button class="fan-nav" type="button" data-fan="-1" aria-label="Poza anterioară">←</button>
-        <p class="fan-cap" id="fanCap" aria-live="polite"></p>
-        <button class="fan-nav" type="button" data-fan="1" aria-label="Poza următoare">→</button>
-      </div>
-    </div>
-  </section>
-
-  <!-- 05 VISUL: biserica, desenată din linii, se ridică sub cursor -->
-  <section class="doc doc--dream" data-sky="paper" id="visul">
-    <div class="wrap wrap--split">
-      <header class="doc-head">
-        <p class="kicker"><span class="num">05</span> Visul mare</p>
-        <h2>O biserică.</h2>
-      </header>
-      <div class="dream-text">
-        <p>Dispensarul ține de sănătate, biserica ține de tot restul: școala își primește înapoi sala, iar cele șapte sute de suflete își primesc pereții lor. E singurul lucru pe care îl lăsăm acolo și care rămâne după ce noi plecăm.</p>
-        <p class="dream-hint" id="dreamHint">Plimbă cursorul peste desen: zidurile se ridică.</p>
+      <div class="build-txt">
+        <p>Dispensarul ține de sănătate: cel mai apropiat spital e la zeci de kilometri. Biserica ține de tot restul &mdash; școala își primește înapoi sala, iar cele șapte sute de suflete își primesc pereții lor.</p>
+        <p class="build-hint" id="buildHint">Plimbă cursorul peste desen: se ridică.</p>
         <table class="cost">
-          <caption>Ce costă</caption>
+          <caption>Cât costă</caption>
           <tbody>
-            <tr><th scope="row">Biserica</th><td><span class="todo">[de completat: suprafață, materiale, cost]</span></td></tr>
+            <tr><th scope="row">Biserica</th><td><span class="todo">[de completat: suprafață și cost]</span></td></tr>
             <tr><th scope="row">Dispensarul</th><td><span class="todo">[de completat]</span></td></tr>
             <tr><th scope="row">Drumul celor 30</th><td><span class="todo">[de completat]</span></td></tr>
-            <tr class="sum"><th scope="row">Total</th><td><span class="todo">[de completat]</span></td></tr>
+            <tr class="sum"><th scope="row">Total de strâns</th><td><span class="todo">[de completat]</span></td></tr>
           </tbody>
         </table>
       </div>
-      <figure class="chapel" id="chapel" aria-label="Desen izometric al bisericii; zidurile se ridică după cursor"></figure>
+      <figure class="chapel" id="chapel" aria-label="Desen al bisericii care se ridică"></figure>
     </div>
   </section>
 
-  <!-- 06 PARTENERI -->
-  <section class="doc doc--partners" data-sky="paper" id="parteneri">
+  <!-- ACTUL V: donatia -->
+  <section class="doc doc--give" id="doneaza">
     <div class="wrap">
-      <header class="doc-head">
-        <p class="kicker"><span class="num">06</span> Parteneri</p>
-        <h2>Hai să fim parteneri.</h2>
-      </header>
-      <dl class="who-list">
-        <div><dt>Firme</dt><dd>Materiale de construcție, transport sau o sumă printr-un contract de sponsorizare. <span class="todo">[de completat: ce oferă școala partenerilor]</span></dd></div>
-        <div><dt>Părinți și prieteni</dt><dd>Orice sumă, o dată sau lunar. Și o rugăciune pentru drum.</dd></div>
-        <div><dt>Biserici</dt><dd>O colectă de sabat pentru misiune sau o seară în care venim să povestim ce facem.</dd></div>
-      </dl>
-    </div>
-  </section>
-
-  <!-- 07 DONAȚIA, pe lat: pe desktop panoul stă în dreapta ecranului -->
-  <section class="doc doc--give" data-sky="paper" id="doneaza">
-    <div class="wrap">
-      <header class="doc-head">
-        <p class="kicker"><span class="num">07</span> Donează</p>
+      <header class="dhead dhead--big">
+        <p class="eyebrow">Cum ajuți</p>
         <h2>Pune o cărămidă.</h2>
-        <p class="doc-lede">Donațiile merg prin Fundația Educatio Plena, contul publicat de școală. Cardul, Google Pay și Apple Pay trec prin Stripe-ul școlii; prin bancă e la fel de bine.</p>
+        <p class="dlede">Donația merge la Fundația Educatio Plena, prin care se fac plățile școlii. Cu cardul, Google Pay sau Apple Pay durează un minut; prin bancă e la fel de bine.</p>
       </header>
       <div class="give-cta">
-        <p>Alege o sumă în fișa <span class="give-where--wide">din dreapta</span><span class="give-where--narrow">de mai jos</span><span class="give-arrow"> →</span> și apasă Donează.
-          <small>Transferul bancar e la fel de bun: IBAN-urile sunt în aceeași fișă, sub „Prin transfer bancar”. Pentru sponsorizare prin contract, scrie-ne la secretariat.</small></p>
+        <p>Treizeci de elevi, o lună, două clădiri. Restul depinde de câți punem umărul.
+          <small>Alege o sumă în fișa <span class="gw-wide">din dreapta</span><span class="gw-narrow">de mai jos</span> și apasă Donează. Durează un minut.</small></p>
         <a class="btn btn--gold" href="#pay" data-focus-pay>Donează acum</a>
       </div>
-      <div class="give-here" id="giveHere"><!-- panoul se mută aici pe telefon --></div>
+      <div class="give-here" id="giveHere"></div>
+      <dl class="partners">
+        <div><dt>Firme</dt><dd>Materiale de construcție, transport, sau o sumă prin contract de sponsorizare. Scrie-ne la <a href="mailto:secretariat@liceulintegritas.ro">secretariat@liceulintegritas.ro</a>.</dd></div>
+        <div><dt>Biserici</dt><dd>O colectă de sabat, sau o seară în care venim să povestim ce facem.</dd></div>
+        <div><dt>Oricine</dt><dd>Orice sumă. Și o rugăciune pentru drum.</dd></div>
+      </dl>
     </div>
   </section>
 </main>
 
-<!-- panoul de plată: fișă de vărsământ prinsă pe marginea din dreapta -->
 <aside class="pay" id="pay" aria-label="Donează">
   <div class="pay-card">
-    <p class="pay-head"><span>Fișă de donație</span><span class="pay-head__who">Educatio Plena</span></p>
-
+    <p class="pay-head"><span>Donează</span><span class="pay-head__who">Educatio Plena</span></p>
     <div class="pay-amounts" role="group" aria-label="Suma">
       <button type="button" data-sum="50">50 lei</button>
       <button type="button" data-sum="150" class="is-on">150 lei</button>
@@ -282,24 +199,21 @@
         <i aria-hidden="true">lei</i>
       </label>
     </div>
-
     <a class="pay-go" id="payGo" href="#" rel="noopener">
       <b>Donează <span id="payGoSum">150</span> lei</b>
       <i>card · Google Pay · Apple Pay</i>
     </a>
     <a class="pay-paypal" id="payPaypal" href="#" rel="noopener" hidden>Donează cu PayPal</a>
     <p class="pay-note" id="payNote">Plata se face pe pagina securizată a școlii.</p>
-
     <details class="pay-bank">
       <summary>Prin transfer bancar</summary>
       <p class="pay-bank__who">Beneficiar: <strong>Fundația Educatio Plena</strong><br>Liceul Internațional Integritas, Budiu Mic, com. Crăciunești, jud. Mureș</p>
       <div class="iban"><span class="cur">RON</span><code>RO77 RZBR 0000 0600 1886 6089</code><button type="button" data-copy="RO77RZBR0000060018866089">Copiază</button></div>
       <div class="iban"><span class="cur">EUR</span><code>RO27 RZBR 0000 0600 2135 5524</code><button type="button" data-copy="RO27RZBR0000060021355524">Copiază</button></div>
       <p class="pay-bank__meta">BIC Raiffeisen Bank: RZBRROBU</p>
-      <p class="pay-bank__meta">Detaliile plății: <span class="todo">[de completat: mențiunea cerută de școală pentru misiunea din Africa]</span></p>
-      <p class="pay-bank__meta">Întrebări: Goran Teodora, secretariat · <a href="tel:+40744629359">0744 629 359</a> · <a href="mailto:secretariat@liceulintegritas.ro">secretariat@liceulintegritas.ro</a></p>
+      <p class="pay-bank__meta">La detaliile plății: <span class="todo">[de completat: mențiunea cerută de școală]</span></p>
+      <p class="pay-bank__meta">Întrebări: secretariat · <a href="tel:+40744629359">0744 629 359</a></p>
     </details>
-
     <p class="pay-social">
       <a href="https://www.instagram.com/integritashighschool" rel="noopener">Instagram</a>
       <a href="https://www.youtube.com/@LiceulIntegritas" rel="noopener">YouTube</a>
@@ -307,7 +221,6 @@
   </div>
 </aside>
 
-<!-- pe telefon: bara de jos -->
 <div class="paybar" id="paybar">
   <p><strong>Pune o cărămidă.</strong><span>Card, Google Pay, Apple Pay sau transfer</span></p>
   <a class="btn btn--gold" href="#doneaza">Donează</a>
@@ -315,21 +228,19 @@
 
 <footer class="foot">
   <div class="wrap">
-    <p class="foot-note"><strong>Aceasta e un concept, deocamdată.</strong> Nu este pagina oficială a Liceului Integritas: textele, cifrele și datele de donație se confirmă cu școala înainte de publicare.</p>
+    <p class="foot-lead">Clasa a XII-a, Liceul Internațional Integritas · Budiu Mic, com. Crăciunești, jud. Mureș</p>
     <p class="foot-social">
       <a class="btn btn--ghost" href="https://www.instagram.com/integritashighschool" rel="noopener">Instagram</a>
       <a class="btn btn--ghost" href="https://www.youtube.com/@LiceulIntegritas" rel="noopener">YouTube</a>
-      <a class="btn btn--ghost" href="https://www.facebook.com/liceulintegritas" rel="noopener">Facebook</a>
+      <a class="btn btn--ghost" href="https://liceulintegritas.ro/" rel="noopener">Site-ul școlii</a>
     </p>
     <details class="foot-src">
-      <summary>Surse și mențiuni</summary>
+      <summary>Surse</summary>
       <ul>
-        <li>Textul misiunii școlii și tradiția săptămânii de misiune: <a href="https://liceulintegritas.ro/" rel="noopener">liceulintegritas.ro</a> și articolul „Misiunea la Integritas” (Coman Lorena, Rebecca Pari).</li>
-        <li>Fotografiile din galerie: Liceul Internațional Integritas, pagina <a href="https://liceulintegritas.ro/galerie" rel="noopener">Galerie</a>, redimensionate.</li>
-        <li>Fotografia din Kenya: articolul școlii „Misiune la Pipeline Adventist Primary School”.</li>
-        <li>Siluetele: <a href="https://commons.wikimedia.org/wiki/File:A_boy_standing_front_of_a_house.jpg" rel="noopener">Kwameghana</a> (CC BY-SA 4.0), <a href="https://commons.wikimedia.org/wiki/File:286_MSS_P_24_B2_F12.jpg" rel="noopener">Charles Roscoe Savage</a> (domeniu public), <a href="https://commons.wikimedia.org/wiki/File:Outside_teacher.jpg" rel="noopener">Masako Kato</a> (CC BY-SA 4.0), toate reduse la siluetă.</li>
-        <li>Replicile din primul act sunt din scenariul clipului nostru, citite de vocile noastre. Nu sunt citate ale unor persoane din Kusekwa, iar siluetele sunt ilustrative.</li>
-        <li>IBAN-urile și contactul: pagina <a href="https://liceulintegritas.ro/donatii" rel="noopener">liceulintegritas.ro/donatii</a>.</li>
+        <li>Globul: <a href="https://visibleearth.nasa.gov/collection/1484/blue-marble" rel="noopener">Blue Marble</a> și luminile de noapte, NASA, domeniu public. Distanțele sunt calculate între coordonatele opririlor, în linie dreaptă; pe șosea sunt mai mari. Poziția școlii Kusekwa e aproximativă.</li>
+        <li>Fotografia din Kenya: Liceul Internațional Integritas, misiunea din februarie 2025.</li>
+        <li>Siluetele din actul al doilea sunt ilustrative: <a href="https://commons.wikimedia.org/wiki/File:A_boy_standing_front_of_a_house.jpg" rel="noopener">Kwameghana</a> (CC BY-SA 4.0), <a href="https://commons.wikimedia.org/wiki/File:Outside_teacher.jpg" rel="noopener">Masako Kato</a> (CC BY-SA 4.0), <a href="https://commons.wikimedia.org/wiki/File:286_MSS_P_24_B2_F12.jpg" rel="noopener">Charles Roscoe Savage</a> (domeniu public). Replicile sunt scrise de noi, pentru clipul misiunii; nu sunt citate ale unor persoane din Kusekwa.</li>
+        <li>Datele de cont: Fundația Educatio Plena, contul publicat de școală.</li>
       </ul>
     </details>
   </div>
@@ -337,9 +248,7 @@
 
 <script src="assets/vendor/gsap.min.js"></script>
 <script src="assets/vendor/ScrollTrigger.min.js"></script>
-<script src="assets/vendor/DrawSVGPlugin.min.js"></script>
-<script src="assets/vendor/MotionPathPlugin.min.js"></script>
 <script src="assets/vendor/lenis.min.js"></script>
-<script src="app.js?v=5"></script>
+<script src="app.js?v=6"></script>
 </body>
 </html>
