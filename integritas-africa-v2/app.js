@@ -19,50 +19,44 @@ const CONFIG = {
   const loaded = (img) => img.complete && img.naturalWidth ? Promise.resolve()
     : new Promise((r) => { img.addEventListener('load', r, { once: true }); img.addEventListener('error', r, { once: true }); });
 
-  /* ---------- LOADER: ca începutul unui trailer ----------
-     1. cartela distribuitorului; 2. un montaj de cadre tăiate pe ritm, cu o împingere lentă
-     a camerei pe fiecare; 3. titlul; 4. benzile negre se deschid și se vede hero-ul. */
+  /* ---------- LOADER: cartela, apoi un montaj de cadre într-o ramă rotunjită; ultimul cadru
+     e chiar prima poză din hero, iar rama se lărgește până devine hero-ul ---------- */
   async function runLoader() {
     const loader = $('#loader');
     if (!motion) { loader.remove(); html.classList.remove('is-loading'); return; }
     let seen = false; try { seen = sessionStorage.getItem('kk-seen') === '1'; } catch (e) {}
-    const shots = $$('#ldReel img'), cap = $('#ldCap'), tc = $('#ldTc'), card = $('#ldCard'), title = $('#ldTitle');
-    const heroImg = $('.hero__bg img');
+    const frame = $('#ldFrame'), shots = $$('img', frame), cap = $('#ldCap'), tc = $('#ldTc'), card = $('#ldCard');
     const fonts = document.fonts ? document.fonts.ready : Promise.resolve();
+    gsap.set(frame, { opacity: 0 });
 
     // 1. cartela
-    gsap.fromTo(card.children, { opacity: 0 }, { opacity: 1, duration: 1, stagger: .35, ease: 'power1.out' });
-    await Promise.all([wait(seen ? 700 : 1700), fonts, Promise.race([Promise.all(shots.map(loaded)), wait(3500)])]);
-    await gsap.to(card, { opacity: 0, duration: .5, ease: 'power1.in' });
+    gsap.fromTo(card.children, { opacity: 0, y: 6 }, { opacity: 1, y: 0, duration: .9, stagger: .3, ease: 'power2.out' });
+    await Promise.all([wait(seen ? 600 : 1500), fonts, Promise.race([Promise.all(shots.map(loaded)), wait(3500)])]);
+    await gsap.to(card, { opacity: 0, duration: .45, ease: 'power1.in' });
 
-    // 2. montajul: tăieturi seci, fiecare cadru cu o mișcare lentă de cameră
-    const list = seen ? shots.slice(-3) : shots;
-    const t0 = performance.now();
+    // 2. rama apare, cadrele se taie pe ritm
+    gsap.fromTo(frame, { opacity: 0, scale: .96 }, { opacity: 1, scale: 1, duration: .6, ease: 'power3.out' });
+    gsap.to('.ld-cap', { opacity: 1, duration: .5, delay: .2 });
+    const list = seen ? shots.slice(-2) : shots;
     for (const [k, img] of list.entries()) {
       shots.forEach((s) => s.classList.remove('is-on'));
       img.classList.add('is-on');
-      gsap.fromTo(img, { scale: 1.16, xPercent: k % 2 ? -2 : 2 }, { scale: 1.04, xPercent: 0, duration: 1.4, ease: 'none' });
+      const last = k === list.length - 1;
+      if (!last) gsap.fromTo(img, { scale: 1.14 }, { scale: 1.04, duration: 1.2, ease: 'none' });
       cap.textContent = img.dataset.cap;
-      const s = (performance.now() - t0) / 1000;
-      tc.textContent = `00:${String(Math.floor(s)).padStart(2, '0')}:${String(Math.floor((s % 1) * 24)).padStart(2, '0')}`;
-      await wait(k === list.length - 1 ? 520 : 360 - k * 22);
+      tc.textContent = `${String(shots.indexOf(img) + 1).padStart(2, '0')} / ${String(shots.length).padStart(2, '0')}`;
+      await wait(last ? 650 : 420);
     }
-    shots.forEach((s) => s.classList.remove('is-on'));
-    cap.textContent = ''; tc.textContent = '';
-
-    // 3. titlul, pe negru
-    await gsap.fromTo(title, { opacity: 0, letterSpacing: '.3em' }, { opacity: 1, letterSpacing: '.14em', duration: 1.1, ease: 'power3.out' });
-    await Promise.race([Promise.all([loaded(heroImg), fonts]), wait(4000)]);
+    await Promise.race([fonts, wait(2000)]);
     try { sessionStorage.setItem('kk-seen', '1'); } catch (e) {}
 
-    // 4. titlul se stinge, benzile se deschid, hero-ul intră cu o împingere de cameră
+    // 3. rama se lărgește până umple ecranul: e deja poza din hero, deci nu se vede nicio tăietură
+    gsap.to('.ld-cap', { opacity: 0, duration: .3 });
+    await gsap.to(frame, { clipPath: 'inset(0% 0% 0% 0% round 0px)', duration: 1.25, ease: 'power4.inOut' });
     loader.classList.add('is-done');
     html.classList.remove('is-loading');
-    heroIn();
-    gsap.timeline({ onComplete: () => loader.remove() })
-      .to(title, { opacity: 0, duration: .45, ease: 'power1.in' }, 0)
-      .to('.ld-bar--top', { yPercent: -100, duration: 1.2, ease: 'power4.inOut' }, .2)
-      .to('.ld-bar--bot', { yPercent: 100, duration: 1.2, ease: 'power4.inOut' }, .2);
+    heroIn(true);
+    gsap.to(loader, { opacity: 0, duration: .5, delay: .1, onComplete: () => loader.remove() });
   }
 
   /* ---------- literele urcă din spatele unei măști ---------- */
@@ -105,12 +99,12 @@ const CONFIG = {
     clearTimeout(slideT);
     slideT = setTimeout(() => showSlide((slide + 1) % imgs.length), DWELL);
   }
-  function heroIn() {
+  function heroIn(matchCut) {
     split(lines[0]);
     if (motion) {
-      gsap.fromTo('.hero__bg img.is-on', { scale: 1.2 }, { scale: 1.02, duration: 2.6, ease: 'power3.out', clearProps: 'transform' });
+      if (!matchCut) gsap.fromTo('.hero__bg img.is-on', { scale: 1.2 }, { scale: 1.02, duration: 2.6, ease: 'power3.out', clearProps: 'transform' });
       gsap.from(['.hero__kicker', '.hero__tag', '.hero__sub', '.hero__cta', '.hero__count'], { y: 24, opacity: 0, duration: 1.2, ease: 'power3.out', stagger: .1, delay: .7 });
-      gsap.from('.nav', { opacity: 0, duration: 1.2, delay: .9 });
+      gsap.from('.nav', { opacity: 0, y: -12, duration: 1, delay: .6, ease: 'power3.out' });
       rise(lines[0], .45);
     }
     if (!STILL) { runBar(); slideT = setTimeout(() => showSlide(1), DWELL); }
@@ -122,23 +116,23 @@ const CONFIG = {
     if (e.isIntersecting) slideT = setTimeout(() => showSlide((slide + 1) % imgs.length), DWELL);
   }).observe($('.hero'));
 
-  /* ---------- LANȚUL: cadrul următor urcă peste cel vechi ca o cortină;
-     cel vechi alunecă în sus și se întunecă, ca la o tăietură de montaj lentă ---------- */
+  /* ---------- LANȚUL: cadrul următor urcă de jos ca o ramă rotunjită și se lărgește până
+     umple ecranul; cel vechi se trage puțin înapoi și se întunecă ---------- */
   function chain() {
     const shots = $$('.chain__shot'), copy = $$('.chain__line'), n = $('#chainN');
     if (!motion || !window.ScrollTrigger) { copy.forEach((c) => (c.style.opacity = 1)); return; }
     copy.forEach((c) => split($('b', c)));
     gsap.set(copy.slice(1), { opacity: 0 });
-    gsap.set(shots.slice(1), { clipPath: 'inset(100% 0% 0% 0%)' });
+    gsap.set(shots.slice(1), { clipPath: 'inset(100% 6% 0% 6% round 24px)' });
     const tl = gsap.timeline({ defaults: { ease: 'none' }, scrollTrigger: {
       trigger: '.chain', start: 'top top', end: 'bottom bottom', scrub: .8,
       onUpdate: (st) => { n.textContent = String(Math.min(shots.length, Math.floor(st.progress * (shots.length - 1) + 1.5))).padStart(2, '0'); }
     } });
     for (let i = 1; i < shots.length; i++) {
       const at = i - 1;
-      tl.to(shots[i], { clipPath: 'inset(0% 0% 0% 0%)', duration: .8, ease: 'power3.inOut' }, at + .1)
-        .fromTo($('img', shots[i]), { yPercent: 14, scale: 1.18 }, { yPercent: 0, scale: 1, duration: 1, ease: 'power2.out' }, at + .1)
-        .to($('img', shots[i - 1]), { yPercent: -10, filter: 'brightness(.35) saturate(.6)', duration: .8, ease: 'power3.inOut' }, at + .1)
+      tl.fromTo(shots[i], { clipPath: 'inset(100% 6% 0% 6% round 24px)' }, { clipPath: 'inset(0% 0% 0% 0% round 0px)', duration: .85, ease: 'power3.inOut' }, at + .1)
+        .fromTo($('img', shots[i]), { yPercent: 10, scale: 1.12 }, { yPercent: 0, scale: 1, duration: 1, ease: 'power2.out' }, at + .1)
+        .to($('img', shots[i - 1]), { scale: .94, filter: 'brightness(.35) saturate(.7)', duration: .85, ease: 'power3.inOut' }, at + .1)
         .to(copy[i - 1], { opacity: 0, duration: .2 }, at + .05)
         .set(copy[i], { opacity: 1 }, at + .55)
         .fromTo($$('.ch', copy[i]), { yPercent: 105 }, { yPercent: 0, duration: .4, stagger: .006, ease: 'power3.out' }, at + .55)
@@ -218,7 +212,7 @@ const CONFIG = {
   window.gpayReady = () => {
     try {
       const client = new google.payments.api.PaymentsClient({ environment: 'TEST' });
-      const btn = client.createButton({ onClick: pay, buttonType: 'donate', buttonColor: 'white', buttonSizeMode: 'fill', buttonLocale: 'en', buttonRadius: 4 });
+      const btn = client.createButton({ onClick: pay, buttonType: 'donate', buttonColor: 'white', buttonSizeMode: 'fill', buttonLocale: 'en', buttonRadius: 10 });
       $('#googlePay').appendChild(btn);
     } catch (e) { $('#googlePay').remove(); }
   };
