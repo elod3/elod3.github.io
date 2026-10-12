@@ -1,0 +1,248 @@
+<!doctype html>
+<html lang="ro">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Africa · Liceul Integritas</title>
+<meta name="description" content="Clasa a XII-a a Liceului Internațional Integritas pleacă în Africa. O lună la Kusekwa, în Tanzania: o biserică și un dispensar. Concept de pagină, deocamdată neoficial.">
+<meta name="theme-color" content="#1a0f0b">
+<link rel="icon" href="assets/img/integritas-logo.svg">
+<link rel="preload" href="assets/fonts/lora-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/montserrat-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<meta property="og:title" content="6.737 km până la Kusekwa · Clasa a XII-a, Liceul Integritas">
+<meta property="og:description" content="O lună în Tanzania. Lăsăm acolo o biserică și un dispensar. Pune o cărămidă.">
+<meta property="og:image" content="https://elod3.github.io/integritas-africa-v1/assets/img/og.jpg">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="stylesheet" href="style.css?v=5">
+</head>
+<body class="is-loading">
+
+<!-- LOADER: drumul, ca o cartelă de titlu -->
+<div class="loader" id="loader" aria-hidden="true">
+  <div class="ld-glow"></div>
+  <div class="ld-card">
+    <p class="ld-title">Misiunea Africa · clasa a XII-a</p>
+    <div class="ld-route">
+      <span class="ld-end">Târgu Mureș</span>
+      <span class="ld-line"><i id="ldBar"></i></span>
+      <span class="ld-end">Kusekwa</span>
+    </div>
+    <p class="ld-km"><span id="ldKm">0</span> km</p>
+  </div>
+  <div class="ld-bar ld-bar--top"></div>
+  <div class="ld-bar ld-bar--bot"></div>
+</div>
+
+<!-- Cerul fix, comun tuturor scenelor -->
+<div class="sky" aria-hidden="true">
+  <div class="sky-grad"></div>
+  <div class="sky-stars"></div>
+  <div class="sky-sun"></div>
+  <svg class="sky-hills sky-hills--far" preserveAspectRatio="none"></svg>
+  <svg class="sky-hills sky-hills--near" preserveAspectRatio="none"></svg>
+</div>
+<svg class="sky-front" aria-hidden="true" preserveAspectRatio="none"></svg>
+
+<header class="top">
+  <a class="top-logo" href="https://liceulintegritas.ro/" aria-label="Liceul Internațional Integritas, site-ul școlii">
+    <img src="assets/img/integritas-logo.svg" alt="Integritas, Ready to serve" width="166" height="36">
+  </a>
+  <p class="top-note">Concept, deocamdată · nu e pagina oficială a școlii</p>
+  <a class="top-cta" href="#doneaza">Donează</a>
+</header>
+
+<nav class="chapter" aria-label="Capitolele paginii">
+  <a href="#acasa" class="chapter__now"><span class="chapter__n" id="chN">I</span><span id="chT">Savana</span></a>
+  <span class="chapter__track"><i id="chBar"></i></span>
+</nav>
+
+<main id="story">
+
+  <!-- 01 HERO -->
+  <section class="scene scene--hero" data-sky="hero" data-ch="I|Savana" id="acasa">
+    <div class="stage">
+      <div class="copy">
+        <p class="kicker">Clasa a XII-a · Liceul Internațional Integritas</p>
+        <h1>Africa pe care <span class="nw">n-o</span> arată documentarele</h1>
+        <p class="lede">Anul acesta, clasa a XII-a pleacă o lună la Kusekwa, în Tanzania, la 6.737&nbsp;km de casă. Lăsăm acolo o biserică și un dispensar. Derulează: povestea durează un minut.</p>
+      </div>
+      <figure class="actor actor--giraffe">
+        <img src="assets/img/girafa.webp" alt="O girafă care se uită direct spre tine" width="569" height="1276" fetchpriority="high">
+      </figure>
+    </div>
+  </section>
+
+  <!-- 02 LEUL -->
+  <section class="scene scene--lion" data-sky="lion" data-ch="I|Savana">
+    <div class="stage">
+      <div class="copy">
+        <h2>Leul e partea frumoasă a poveștii.</h2>
+        <p>Pe el îl filmează toată lumea. Restul se aude mai greu, așa că am coborât din mașină.</p>
+      </div>
+      <figure class="actor actor--lion">
+        <img src="assets/img/leu.webp" alt="Un leu care trece prin iarba savanei" width="1424" height="707" loading="lazy">
+      </figure>
+    </div>
+  </section>
+
+  <!-- 03 COPILUL -->
+  <section class="scene scene--voice scene--child" data-sky="child" data-ch="II|Ce se aude">
+    <div class="stage">
+      <figure class="actor actor--sil actor--child">
+        <img src="assets/img/copil.webp" alt="Silueta unui copil, în contre-jour" width="594" height="1100" loading="lazy">
+      </figure>
+      <blockquote class="voice">
+        <p>„Mamă, <span class="nw">mi-e</span> foame.”</p>
+      </blockquote>
+      <p class="fact">În februarie 2025, colegii noștri de la Pipeline Adventist Primary School, în Kenya, au pregătit pachete cu alimente pentru 50 de familii ale elevilor de acolo și le-au dus din casă în casă.</p>
+    </div>
+  </section>
+
+  <!-- 04 PASTORUL -->
+  <section class="scene scene--voice scene--pastor" data-sky="pastor" data-ch="II|Ce se aude">
+    <div class="stage">
+      <figure class="actor actor--sil actor--pastor">
+        <img src="assets/img/pastor.webp" alt="Silueta unui bărbat cu o carte în mână" width="537" height="1200" loading="lazy">
+      </figure>
+      <blockquote class="voice">
+        <p>„<span class="nw">N-avem</span> unde să ținem predica.”</p>
+      </blockquote>
+      <p class="fact">La Kusekwa, biserica se strânge în sala școlii, pe bănci mutate în fiecare sâmbătă. Anul acesta îi ridicăm pereții ei.</p>
+    </div>
+  </section>
+
+  <!-- 05 PROFESORUL -->
+  <section class="scene scene--voice scene--teacher" data-sky="teacher" data-ch="II|Ce se aude">
+    <div class="stage">
+      <figure class="actor actor--sil actor--teacher">
+        <span class="board" aria-hidden="true"></span>
+        <img src="assets/img/profesor.webp" alt="Silueta unui profesor care scrie pe o tablă" width="565" height="1100" loading="lazy">
+      </figure>
+      <blockquote class="voice">
+        <p>„<span class="nw">N-avem</span> cu ce <span class="nw">să-i</span> învățăm pe copii.”</p>
+      </blockquote>
+      <p class="fact">Cretă, caiete, o tablă care nu se șterge până la alb. Lucruri pe care la noi nu le mai numără nimeni.</p>
+    </div>
+  </section>
+
+  <!-- 06 NOI -->
+  <section class="scene scene--us" data-sky="us" data-ch="III|Noi" id="noi">
+    <div class="stage">
+      <div class="copy">
+        <h2>Aici intrăm noi în cadru.</h2>
+        <p>Suntem 30 de elevi din clasa a XII-a. Avem mâini, o lună întreagă și un an să ne pregătim. Ne lipsesc banii pentru drum și pentru materiale.</p>
+      </div>
+      <figure class="group-slot">
+        <div class="group-slot__frame">
+          <span>Aici intră poza clasei</span>
+          <small>decupată, pe fundal transparent</small>
+        </div>
+      </figure>
+    </div>
+  </section>
+
+  <!-- 07 DRUMUL -->
+  <section class="scene scene--every" data-sky="every" data-ch="IV|Drumul" id="drumul">
+    <div class="stage stage--doc">
+      <div class="copy">
+        <p class="kicker">Ready to serve</p>
+        <h2>6.737&nbsp;km, patru zile, trei granițe.</h2>
+        <p>La Integritas, fiecare clasă are o săptămână de misiune într-un oraș din România. În clasa a XII-a, săptămâna devine o lună în Africa.</p>
+      </div>
+      <figure class="proof">
+        <img src="assets/img/misiune-kenya-2025.webp" alt="Elevi Integritas alături de familii vizitate în Kenya, februarie 2025" width="1400" height="1050" loading="lazy">
+        <figcaption>Kenya, februarie 2025. Clasa dinaintea noastră a dus pachete cu alimente la 50 de familii, acasă la fiecare.</figcaption>
+      </figure>
+      <table class="log">
+        <caption>Drumul până la Kusekwa</caption>
+        <thead><tr><th scope="col">Cu ce</th><th scope="col">De unde, până unde</th><th scope="col" class="num">Distanța</th></tr></thead>
+        <tbody>
+          <tr><td>Autocarul</td><td>Târgu Mureș → Budapesta</td><td class="num">432 km</td></tr>
+          <tr><td>Avionul</td><td>Budapesta → Istanbul → Nairobi</td><td class="num">5.840 km</td></tr>
+          <tr><td>Mașina</td><td>Nairobi → Sirari → Bariadi → Kusekwa</td><td class="num">466 km</td></tr>
+          <tr class="now"><td>Am ajuns</td><td>Kusekwa, lângă Bariadi, regiunea Simiyu, Tanzania</td><td class="num">6.737 km</td></tr>
+        </tbody>
+      </table>
+      <p class="log-note">Distanțe în linie dreaptă între opriri; pe șosea sunt mai mari.</p>
+      <dl class="who who--month">
+        <div><dt>Seminare</dt><dd>Sănătate, familie, Biblie, în oraș. Ce facem acasă în săptămâna de misiune, într-o limbă pe care o învățăm din mers.</dd></div>
+        <div><dt>Din casă în casă</dt><dd>Mergem la familii și lăsăm ce ne spun ei că le lipsește: pachete, haine, încălțări.</dd></div>
+        <div><dt>La școală</dt><dd>Zidărie, vopsit, ore la clasă. Școala din Kusekwa are 700 de elevi și profesori.</dd></div>
+        <div><dt>Standul medical</dt><dd>Tensiune, saturație de oxigen, indice de masă corporală. Pentru mulți, prima măsurătoare din viață.</dd></div>
+      </dl>
+    </div>
+  </section>
+
+  <!-- 08 PARTENERI -->
+  <section class="scene scene--partners" data-sky="partners" data-ch="V|Donația" id="parteneri">
+    <div class="stage stage--doc">
+      <div class="copy">
+        <h2>Hai să fim parteneri.</h2>
+        <p>Căutăm oameni care pun umărul: cu bani, cu materiale sau cu o colectă.</p>
+      </div>
+      <dl class="who">
+        <div><dt>Firme</dt><dd>Materiale de construcție, transport sau o sumă printr-un contract de sponsorizare. Scrie-ne la <a href="mailto:secretariat@liceulintegritas.ro">secretariat@liceulintegritas.ro</a>.</dd></div>
+        <div><dt>Părinți și prieteni</dt><dd>Orice sumă, o dată sau lunar. Și o rugăciune pentru drum.</dd></div>
+        <div><dt>Biserici</dt><dd>O colectă de sabat pentru misiune sau o seară în care venim să povestim ce facem.</dd></div>
+      </dl>
+    </div>
+  </section>
+
+  <!-- 09 DONAȚIA -->
+  <section class="scene scene--give" data-sky="give" data-ch="V|Donația" id="doneaza">
+    <div class="stage stage--doc">
+      <div class="copy">
+        <h2>Pune o cărămidă.</h2>
+        <p>Donațiile merg prin Fundația Educatio Plena, contul publicat de școală.</p>
+        <table class="cost">
+          <caption>Cât costă</caption>
+          <tbody>
+            <tr><th scope="row">Biserica</th><td><span class="todo">de completat</span></td></tr>
+            <tr><th scope="row">Dispensarul</th><td><span class="todo">de completat</span></td></tr>
+            <tr><th scope="row">Drumul celor 30</th><td><span class="todo">de completat</span></td></tr>
+            <tr class="cost__sum"><th scope="row">Total</th><td><span class="todo">de completat</span></td></tr>
+          </tbody>
+        </table>
+        <div class="give-row">
+          <a class="give-btn" id="giveCard" href="https://liceulintegritas.ro/donatii" rel="noopener">Donează online</a>
+          <a class="give-alt" id="givePaypal" href="#" rel="noopener" hidden>sau cu PayPal</a>
+        </div>
+        <p class="give-how" id="giveHow">Pe site-ul școlii. Sau prin transfer, cu datele de alături.</p>
+      </div>
+      <div class="bank">
+        <p class="bank-who">Beneficiar: <strong>Fundația Educatio Plena</strong><br>Liceul Internațional Integritas, Budiu Mic, com. Crăciunești, jud. Mureș</p>
+        <div class="iban"><span class="cur">RON</span><code>RO77 RZBR 0000 0600 1886 6089</code><button type="button" data-copy="RO77RZBR0000060018866089">Copiază</button></div>
+        <div class="iban"><span class="cur">EUR</span><code>RO27 RZBR 0000 0600 2135 5524</code><button type="button" data-copy="RO27RZBR0000060021355524">Copiază</button></div>
+        <p class="bank-meta">BIC Raiffeisen Bank: RZBRROBU</p>
+        <p class="bank-note">Detaliile plății: <span class="todo">de completat: mențiunea cerută de școală</span></p>
+        <p class="bank-src">Sursa: pagina <a href="https://liceulintegritas.ro/donatii">liceulintegritas.ro/donatii</a></p>
+        <p class="bank-contact">Întrebări: Goran Teodora, secretariat · <a href="tel:+40744629359">0744 629 359</a> · <a href="mailto:secretariat@liceulintegritas.ro">secretariat@liceulintegritas.ro</a></p>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="foot">
+  <p><strong>Aceasta e un concept, deocamdată.</strong> Nu este o pagină oficială a Liceului Integritas: textele, cifrele și datele de donație se confirmă cu școala înainte să fie publicată. Versiunea în maghiară și engleză urmează după aprobare.</p>
+  <details>
+    <summary>Sursele imaginilor</summary>
+    <ul>
+      <li>Fotografia din Kenya: Liceul Internațional Integritas, articolul „Misiune la Pipeline Adventist Primary School”.</li>
+      <li>Girafa: Brocken Inaglory, <a href="https://commons.wikimedia.org/wiki/File:IMG_5537_giraff_portrait.JPG">Wikimedia Commons</a>, CC BY-SA 3.0, decupată și colorată.</li>
+      <li>Leul: Joselodos, <a href="https://commons.wikimedia.org/wiki/File:Male_lion_walking.jpg">Wikimedia Commons</a>, CC0.</li>
+      <li>Silueta copilului: Kwameghana, <a href="https://commons.wikimedia.org/wiki/File:A_boy_standing_front_of_a_house.jpg">Wikimedia Commons</a>, CC BY-SA 4.0, redusă la siluetă.</li>
+      <li>Silueta bărbatului cu cartea: Charles Roscoe Savage, <a href="https://commons.wikimedia.org/wiki/File:286_MSS_P_24_B2_F12.jpg">Wikimedia Commons</a>, domeniu public, redusă la siluetă.</li>
+      <li>Silueta profesorului: Masako Kato, <a href="https://commons.wikimedia.org/wiki/File:Outside_teacher.jpg">Wikimedia Commons</a>, CC BY-SA 4.0, redusă la siluetă.</li>
+    </ul>
+    <p>Siluetele sunt ilustrative. Replicile sunt scrise de noi, pentru clipul misiunii; nu sunt citate ale unor persoane din Kusekwa. Distanțele sunt calculate în linie dreaptă între opriri.</p>
+  </details>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
+<script src="app.js?v=5"></script>
+</body>
+</html>
