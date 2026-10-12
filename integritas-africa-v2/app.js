@@ -81,7 +81,7 @@ const CONFIG = {
         { opacity: 1, y: 0, rotate: tilt, scale: 1, duration: .55, ease: 'back.out(1.6)' });
       sw.textContent = fig.dataset.sw; ro.textContent = fig.dataset.ro;
       count.textContent = `${String(i + 1).padStart(2, '0')} / ${total}`;
-      gsap.fromTo(sw, { yPercent: 60, opacity: 0, scale: .8 }, { yPercent: 0, opacity: 1, scale: 1, duration: .45, ease: 'back.out(2.2)' });
+      gsap.fromTo(sw, { opacity: 0, letterSpacing: '.4em' }, { opacity: 1, letterSpacing: '.18em', duration: .6, ease: 'power3.out' });
       gsap.fromTo(ro, { opacity: 0 }, { opacity: 1, duration: .4, delay: .1 });
       await wait(k === list.length - 1 ? 650 : seen ? 380 : 470);
     }
@@ -106,7 +106,7 @@ const CONFIG = {
     el.textContent = '';
     words.forEach((w, wi) => {
       const word = document.createElement('span');
-      word.style.display = 'inline-block'; word.style.whiteSpace = 'nowrap';
+      word.className = 'wd'; word.style.whiteSpace = 'nowrap';
       [...w].forEach((c) => { const s = document.createElement('span'); s.className = 'ch'; s.textContent = c; word.appendChild(s); });
       el.appendChild(word);
       if (wi < words.length - 1) el.appendChild(document.createTextNode(' '));
@@ -116,8 +116,8 @@ const CONFIG = {
   function hop(el) {
     const chars = split(el);
     if (!motion) return;
-    gsap.fromTo(chars, { yPercent: 110, rotate: () => (Math.random() - .5) * 40, opacity: 0 },
-      { yPercent: 0, rotate: 0, opacity: 1, duration: .7, ease: 'back.out(2.4)', stagger: .028 });
+    // literele urcă din spatele unei măști, ca titlurile de film
+    gsap.fromTo(chars, { yPercent: 105 }, { yPercent: 0, duration: 1.1, ease: 'power4.out', stagger: .022 });
   }
 
   /* ---------- HERO ---------- */
@@ -128,7 +128,7 @@ const CONFIG = {
     const prev = slide; slide = i;
     imgs[prev].classList.remove('is-on'); imgs[i].classList.add('is-on');
     if (motion) {
-      gsap.to(split(lines[prev]), { yPercent: -80, opacity: 0, duration: .35, ease: 'power2.in', stagger: .01,
+      gsap.to(split(lines[prev]), { yPercent: -105, duration: .5, ease: 'power3.in', stagger: .008,
         onComplete: () => { lines[prev].classList.remove('is-on'); } });
     } else lines[prev].classList.remove('is-on');
     lines[i].classList.add('is-on'); hop(lines[i]);
@@ -176,7 +176,7 @@ const CONFIG = {
         .to($('img', shots[i - 1]), { filter: 'blur(14px) brightness(.55)', scale: 1.08, duration: .5 }, at)
         .to(copy[i - 1], { opacity: 0, y: -40, duration: .25 }, at + .05)
         .fromTo(copy[i], { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: .3 }, at + .55)
-        .fromTo($$('.ch', copy[i]), { yPercent: 100, rotate: (k) => (k % 2 ? 12 : -12) }, { yPercent: 0, rotate: 0, duration: .35, stagger: .006, ease: 'back.out(2)' }, at + .55);
+        .fromTo($$('.ch', copy[i]), { yPercent: 105 }, { yPercent: 0, duration: .35, stagger: .005, ease: 'power3.out' }, at + .55);
     }
     tl.to({}, { duration: .4 });
   }
@@ -196,7 +196,7 @@ const CONFIG = {
   burger.addEventListener('click', () => {
     const open = burger.getAttribute('aria-expanded') !== 'true';
     burger.setAttribute('aria-expanded', open); menu.hidden = !open;
-    if (open && motion) gsap.from($$('a, button', menu), { y: 50, opacity: 0, rotate: () => (Math.random() - .5) * 10, stagger: .06, duration: .6, ease: 'back.out(2)' });
+    if (open && motion) gsap.from($$('a, button', menu), { yPercent: 60, opacity: 0, stagger: .06, duration: .7, ease: 'power3.out' });
   });
   $$('a', menu).forEach((a) => a.addEventListener('click', () => { burger.setAttribute('aria-expanded', 'false'); menu.hidden = true; }));
 
