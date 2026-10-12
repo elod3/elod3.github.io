@@ -11,41 +11,34 @@
 <link rel="preload" href="assets/fonts/anton-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/archivo-latin-standard-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/img/scoala-2400.webp" as="image">
-<link rel="stylesheet" href="style.css?v=3">
+<link rel="stylesheet" href="style.css?v=4">
 </head>
 <body>
 
-<!-- LOADER: cartela, apoi pozele de la școală cad ca niște fotografii tipărite peste o pânză
-     tăiată în fâșii; la final pozele se strâng și fâșiile cad, ca să se vadă hero-ul -->
+<!-- LOADER: ca începutul unui trailer. Cartela, un montaj scurt de cadre de la școală
+     tăiate pe ritm, titlul, apoi benzile negre se deschid peste hero -->
 <div class="loader" id="loader" aria-hidden="true">
-  <div class="cloth" id="cloth"></div>
-  <div class="ld-presents" id="ldPresents">
-    <p>Liceul Internațional Integritas</p>
-    <p><em>prezintă</em></p>
+  <div class="ld-reel" id="ldReel">
+    <img src="assets/img/tabla-1200.webp" alt="" data-cap="Shule · școala">
+    <img src="assets/img/scoala-1200.webp" alt="" data-cap="Watoto · copiii">
+    <img src="assets/img/clasa-1200.webp" alt="" data-cap="Darasa · clasa">
+    <img src="assets/img/biserica-1200.webp" alt="" data-cap="Kanisa · biserica">
+    <img src="assets/img/sapat-1200.webp" alt="" data-cap="Kazi · munca">
+    <img src="assets/img/careu-1200.webp" alt="" data-cap="Karibu · bine ai venit">
   </div>
-  <p class="ld-place">Kusekwa · Bariadi · Tanzania</p>
-  <div class="ld-prints" id="ldPrints">
-    <figure data-sw="Shule" data-ro="școala"><img src="assets/img/tabla-1200.webp" alt=""></figure>
-    <figure data-sw="Watoto" data-ro="copiii"><img src="assets/img/scoala-1200.webp" alt=""></figure>
-    <figure data-sw="Darasa" data-ro="clasa"><img src="assets/img/clasa-1200.webp" alt=""></figure>
-    <figure data-sw="Kanisa" data-ro="biserica"><img src="assets/img/biserica-1200.webp" alt=""></figure>
-    <figure data-sw="Kazi" data-ro="munca"><img src="assets/img/sapat-1200.webp" alt=""></figure>
-    <figure data-sw="Karibu" data-ro="bine ai venit"><img src="assets/img/careu-1200.webp" alt=""></figure>
-  </div>
-  <p class="ld-word"><b id="ldSw">&nbsp;</b><span id="ldRo">&nbsp;</span></p>
-  <p class="ld-count" id="ldCount">00 / 06</p>
+  <p class="ld-card" id="ldCard"><span>Liceul Internațional Integritas</span><em>prezintă</em></p>
+  <p class="ld-title" id="ldTitle">Kusekwa</p>
+  <p class="ld-cap" id="ldCap">&nbsp;</p>
+  <p class="ld-tc" id="ldTc">00:00</p>
+  <div class="ld-bar ld-bar--top"></div>
+  <div class="ld-bar ld-bar--bot"></div>
 </div>
 
 <!-- NAVBAR -->
 <header class="nav" id="nav">
   <a class="nav__brand" href="#acasa" aria-label="Kusekwa, la începutul paginii">
-    <svg class="nav__sun" viewBox="0 0 40 40" aria-hidden="true">
-      <circle cx="20" cy="22" r="9"/>
-      <g><path d="M20 4v5M20 35v1M5 22h4M31 22h4M9.4 11.4l3 3M27.6 14.4l3-3"/></g>
-      <path class="nav__horizon" d="M2 31h36"/>
-    </svg>
     <span class="nav__word">Kusekwa</span>
-    <small class="nav__by">clasa a XII-a<br>Liceul Integritas</small>
+    <small class="nav__by">Clasa a XII-a · Liceul Integritas</small>
   </a>
   <nav class="nav__links" aria-label="Secțiuni">
     <a href="#acasa">Acasă</a>
@@ -53,15 +46,14 @@
     <a href="#drum">Drumul</a>
   </nav>
   <button class="nav__give" type="button" data-give>Donează</button>
-  <button class="nav__burger" type="button" aria-expanded="false" aria-controls="menu" aria-label="Meniu"><i></i><i></i></button>
-  <span class="nav__weave" aria-hidden="true"></span>
+  <button class="nav__burger" type="button" aria-expanded="false" aria-controls="menu"><span>Meniu</span></button>
 </header>
 
 <div class="menu" id="menu" hidden>
-  <a href="#acasa">Acasă</a>
-  <a href="#scoala">Școala</a>
-  <a href="#drum">Drumul</a>
-  <button type="button" data-give>Donează</button>
+  <a href="#acasa"><small>01</small>Acasă</a>
+  <a href="#scoala"><small>02</small>Școala</a>
+  <a href="#drum"><small>03</small>Drumul</a>
+  <button type="button" data-give><small>04</small>Donează</button>
 </div>
 
 <main>
@@ -89,7 +81,7 @@
         <a class="btn btn--line" href="#scoala">Vezi școala</a>
       </div>
     </div>
-    <ol class="hero__ticks" aria-hidden="true"><li class="is-on"><i></i></li><li><i></i></li><li><i></i></li><li><i></i></li></ol>
+    <p class="hero__count" aria-hidden="true"><b id="heroN">01</b> / 04 <span class="hero__track"><i id="heroBar"></i></span></p>
   </section>
 
   <!-- LANȚUL: la scroll, poza următoare apare în mijloc și crește până umple ecranul -->
@@ -100,6 +92,7 @@
       <figure class="chain__shot"><img src="assets/img/scena-2400.webp" srcset="assets/img/scena-1200.webp 1200w, assets/img/scena-2400.webp 2400w" sizes="100vw" alt="Copii în uniforme roz cântând pe scenă" loading="lazy"></figure>
       <figure class="chain__shot"><img src="assets/img/biserica-2400.webp" alt="Adunarea bisericii Kusekwa Memorial, în sala școlii" loading="lazy"></figure>
       <figure class="chain__shot"><img src="assets/img/sapat-2400.webp" srcset="assets/img/sapat-1200.webp 1200w, assets/img/sapat-2400.webp 2400w" sizes="100vw" alt="Oameni care sapă lângă școală" loading="lazy"></figure>
+      <p class="chain__tc" aria-hidden="true"><b id="chainN">01</b> / 05</p>
       <div class="chain__copy">
         <p class="chain__line"><b>Uite-i pe toți.</b><span>Școala secundară, într-o singură poză.</span></p>
         <p class="chain__line"><b>O tablă, o cretă, o clasă plină.</b><span>Darasa · clasa</span></p>
@@ -124,7 +117,7 @@
 <div class="give" id="give" hidden>
   <div class="give__scrim" data-close></div>
   <aside class="give__panel" role="dialog" aria-modal="true" aria-labelledby="giveTitle">
-    <button class="give__x" type="button" data-close aria-label="Închide">×</button>
+    <button class="give__x" type="button" data-close >Închide</button>
     <p class="give__kicker">Donație pentru Kusekwa</p>
     <h2 class="give__title" id="giveTitle">Pune o cărămidă.</h2>
     <p class="give__lede">Banii merg prin Fundația Educatio Plena, a Liceului Integritas, la biserica și dispensarul din Kusekwa.</p>
@@ -139,7 +132,7 @@
     </fieldset>
 
     <div class="wallets">
-      <apple-pay-button class="wallet wallet--apple" buttonstyle="black" type="donate" locale="ro-RO" id="applePay"></apple-pay-button>
+      <apple-pay-button class="wallet wallet--apple" buttonstyle="white" type="donate" locale="ro-RO" id="applePay"></apple-pay-button>
       <div class="wallet wallet--google" id="googlePay"></div>
       <button class="card-btn" type="button" id="cardPay">Donează <span id="cardAmt">100 lei</span> cu cardul</button>
     </div>
@@ -160,6 +153,6 @@
 <script src="assets/vendor/lenis.min.js"></script>
 <script src="https://applepay.cdn-apple.com/jsapi/1.latest/apple-pay-sdk.js" async crossorigin></script>
 <script src="https://pay.google.com/gp/p/js/pay.js" async onload="window.gpayReady && window.gpayReady()"></script>
-<script src="app.js?v=3"></script>
+<script src="app.js?v=4"></script>
 </body>
 </html>
