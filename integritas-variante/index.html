@@ -29,7 +29,7 @@ img { display: block; max-width: 100%; }
 .head h1 { margin: 0; font-weight: 760; font-stretch: 108%; letter-spacing: -.045em; font-size: clamp(48px, 8vw, 128px); line-height: .95; }
 .head small { font-size: 13px; color: var(--dim); text-align: right; }
 
-.list { list-style: none; margin: 0; padding: 0 var(--gut) clamp(48px, 10vh, 100px); display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(14px, 2vw, 24px); }
+.list { list-style: none; margin: 0; padding: 0 var(--gut) clamp(40px, 8vh, 80px); display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(14px, 2vw, 24px); }
 .card { display: block; border-radius: 24px; background: var(--panel); overflow: hidden; box-shadow: inset 0 0 0 1px var(--hair);
   transition: transform .5s var(--ease), box-shadow .5s var(--ease); }
 .card:hover, .card:focus-visible { transform: translateY(-4px); box-shadow: inset 0 0 0 1px rgba(242,236,227,.28), 0 30px 70px rgba(0,0,0,.45); }
@@ -45,8 +45,12 @@ img { display: block; max-width: 100%; }
 .card__tag { font-weight: 600; font-size: 12px; padding: 7px 10px; border-radius: 8px; background: rgba(242,236,227,.08); color: var(--dim); white-space: nowrap; }
 .card__tag--new { background: var(--ochre); color: var(--black); }
 
+.archive { margin: 0; padding: 0 var(--gut) 20px; font-size: 14px; color: var(--dim); }
+.archive a { color: var(--bone); text-decoration: underline; text-decoration-color: var(--hair); text-underline-offset: 4px; }
+.archive a:hover { text-decoration-color: var(--bone); }
 .foot { padding: 0 var(--gut) 40px; font-size: 13px; color: var(--dim); }
 
+@media (max-width: 1100px) { .list { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 @media (max-width: 760px) {
   .head { grid-template-columns: 1fr; }
   .head small { text-align: left; }
@@ -62,51 +66,43 @@ img { display: block; max-width: 100%; }
     <p>Kusekwa · clasa a XII-a · Liceul Integritas</p>
     <h1>Alegem una.</h1>
   </div>
-  <small>4 variante · 12 oct. 2026</small>
+  <small>3 candidate · 12 oct. 2026</small>
 </header>
 
 <ul class="list">
   <li>
-    <a class="card" href="https://elod3.github.io/integritas-africa-v3/">
-      <div class="card__pic"><img src="assets/img/savana-animata.webp" alt="Savana animată: textul în dreapta, poza clasei în stânga, girafa pe deal" loading="lazy"></div>
+    <a class="card" href="https://elod3.github.io/integritas-africa-v2/">
+      <div class="card__pic"><img src="assets/img/cinematic.webp" alt="Hero cinematic: Karibu la Kusekwa, peste poza școlii" loading="lazy"></div>
       <div class="card__meta">
         <span class="card__n">01</span>
-        <div><h2 class="card__name">Savana animată</h2><span class="card__line">De la apus la zori, cât cobori.</span></div>
+        <div><h2 class="card__name">Cinematic</h2><span class="card__line">Cadrele urcă unul peste altul.</span></div>
+        <span class="card__tag">favorită</span>
+      </div>
+    </a>
+  </li>
+  <li>
+    <a class="card" href="https://elod3.github.io/integritas-africa-v3/">
+      <div class="card__pic"><img src="assets/img/film-fundal.webp" alt="Text și poză peste filmarea de la școală, întunecată" loading="lazy"></div>
+      <div class="card__meta">
+        <span class="card__n">02</span>
+        <div><h2 class="card__name">Film în fundal</h2><span class="card__line">Filmările de acolo, în spate.</span></div>
         <span class="card__tag card__tag--new">nouă</span>
       </div>
     </a>
   </li>
   <li>
-    <a class="card" href="https://elod3.github.io/integritas-africa-v2/">
-      <div class="card__pic"><img src="assets/img/cinematic.webp" alt="Hero cinematic: Karibu la Kusekwa, peste poza școlii" loading="lazy"></div>
-      <div class="card__meta">
-        <span class="card__n">02</span>
-        <div><h2 class="card__name">Cinematic</h2><span class="card__line">Poze pe tot ecranul, cadre care urcă.</span></div>
-        <span class="card__tag">rotunjit</span>
-      </div>
-    </a>
-  </li>
-  <li>
-    <a class="card" href="https://elod3.github.io/integritas-africa-v1/">
-      <div class="card__pic"><img src="assets/img/savana-trailer.webp" alt="Girafa la apus, titlul Africa pe care n-o arată documentarele" loading="lazy"><img src="assets/img/savana-trailer-2.webp" alt="" loading="lazy"></div>
+    <a class="card" href="https://elod3.github.io/integritas-africa-v4/">
+      <div class="card__pic"><img src="assets/img/poze-ecran.webp" alt="Poza clasei pe tot ecranul, cu textul mare în dreapta" loading="lazy"></div>
       <div class="card__meta">
         <span class="card__n">03</span>
-        <div><h2 class="card__name">Trailer cu girafa</h2><span class="card__line">Girafa, leul, apoi filmările de acolo.</span></div>
-        <span class="card__tag">video</span>
-      </div>
-    </a>
-  </li>
-  <li>
-    <a class="card" href="https://elod3.github.io/integritas-africa/">
-      <div class="card__pic"><img src="assets/img/kanga.webp" alt="Kanga tipărită pentru misiune, cu biserica în medalion" loading="lazy"></div>
-      <div class="card__meta">
-        <span class="card__n">04</span>
-        <div><h2 class="card__name">Kanga</h2><span class="card__line">Pagina e o pânză tipărită.</span></div>
-        <span class="card__tag">online acum</span>
+        <div><h2 class="card__name">Poze pe tot ecranul</h2><span class="card__line">O poză, o frază. Apoi următoarea.</span></div>
+        <span class="card__tag card__tag--new">nouă</span>
       </div>
     </a>
   </li>
 </ul>
+
+<p class="archive">Arhivă: <a href="https://elod3.github.io/integritas-africa-v1/">Trailer cu girafa</a> · <a href="https://elod3.github.io/integritas-africa/">Kanga</a></p>
 
 <p class="foot">Concepte, deocamdată. Niciuna nu e pagina oficială a școlii.</p>
 

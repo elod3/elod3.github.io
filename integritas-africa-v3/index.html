@@ -10,7 +10,7 @@
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 40 40%22%3E%3Crect width=%2240%22 height=%2240%22 rx=%229%22 fill=%22%231d140f%22/%3E%3Ccircle cx=%2220%22 cy=%2222%22 r=%229%22 fill=%22%23e0a032%22/%3E%3Cpath d=%22M4 31h32%22 stroke=%22%23fff%22 stroke-width=%223%22/%3E%3C/svg%3E">
 <link rel="preload" href="assets/fonts/archivo-latin-standard-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/img/scoala-2400.webp" as="image">
-<link rel="stylesheet" href="style.css?v=1">
+<link rel="stylesheet" href="style.css?v=2">
 </head>
 <body>
 
@@ -81,43 +81,40 @@
 
   </main>
 
-<!-- SAVANA: fundalul animat de după hero. Cerul trece de la apus la noapte cât cobori,
-     dealurile cu salcâmi trec încet prin cadru, ca la drum -->
-<div class="savanna" id="savanna" aria-hidden="true">
-  <div class="sv-sky"></div>
-  <div class="sv-stars"></div>
-  <div class="sv-sun"></div>
-  <svg class="sv-layer sv-far" preserveAspectRatio="none"></svg>
-  <img class="sv-giraffe" src="assets/img/girafa-fuga.webp" alt="">
-  <svg class="sv-layer sv-mid" preserveAspectRatio="none"></svg>
-  <img class="sv-lion" src="assets/img/leu-sil.webp" alt="">
-  <svg class="sv-layer sv-near" preserveAspectRatio="none"></svg>
-  <canvas class="sv-dust"></canvas>
+<!-- FILMUL DIN SPATE: filmările de la școală, încetinite și întunecate; se schimbă
+     de la o secțiune la alta, ca planurile de fundal dintr-un documentar -->
+<div class="film" id="film" aria-hidden="true">
+  <video muted playsinline loop preload="none" poster="assets/film/curte.jpg" data-src="assets/film/curte.mp4"></video>
+  <video muted playsinline loop preload="none" poster="assets/film/clasa.jpg" data-src="assets/film/clasa.mp4"></video>
+  <video muted playsinline loop preload="none" poster="assets/film/cor.jpg" data-src="assets/film/cor.mp4"></video>
+  <video muted playsinline loop preload="none" poster="assets/film/drum.jpg" data-src="assets/film/drum.mp4"></video>
+  <video muted playsinline loop preload="none" poster="assets/film/careu.jpg" data-src="assets/film/careu.mp4"></video>
+  <video muted playsinline loop preload="none" poster="assets/film/sapat.jpg" data-src="assets/film/sapat.mp4"></video>
 </div>
 
 <div class="story" id="scoala">
-  <section class="beat">
+  <section data-film="0" class="beat">
     <div class="beat__text"><p class="beat__k">Kusekwa · Tanzania</p><h2 class="beat__h">700 de oameni.<br>O școală.</h2></div>
     <figure class="beat__pic"><img src="assets/img/careu-1200.webp" srcset="assets/img/careu-1200.webp 1200w, assets/img/careu-2400.webp 2400w" sizes="(min-width: 900px) 46vw, 92vw" alt="Elevii școlii Kusekwa, aliniați în curte" loading="lazy"></figure>
   </section>
-  <section class="beat beat--flip">
+  <section data-film="1" class="beat beat--flip">
     <div class="beat__text"><p class="beat__k">Darasa · clasa</p><h2 class="beat__h">O tablă.<br>O clasă plină.</h2></div>
-    <figure class="beat__pic"><img src="assets/img/tabla-neagra-1200.webp" srcset="assets/img/tabla-neagra-1200.webp 1200w, assets/img/tabla-neagra-2400.webp 2400w" sizes="(min-width: 900px) 46vw, 92vw" alt="Profesorul la tabla neagră, clasa plină" loading="lazy"></figure>
+    <figure class="beat__pic"><img src="assets/img/clasa-1200.webp" srcset="assets/img/clasa-1200.webp 1200w, assets/img/clasa-2400.webp 2400w" sizes="(min-width: 900px) 46vw, 92vw" alt="Elevi în bănci, într-o clasă plină" loading="lazy"></figure>
   </section>
-  <section class="beat">
+  <section data-film="2" class="beat">
     <div class="beat__text"><p class="beat__k">Kanisa · biserica</p><h2 class="beat__h">Biserica se strânge<br>în sala școlii.</h2></div>
     <figure class="beat__pic"><img src="assets/img/biserica-2400.webp" alt="Adunarea bisericii Kusekwa Memorial, în sala școlii" loading="lazy"></figure>
   </section>
-  <section class="beat beat--flip" id="drum">
+  <section data-film="3" class="beat beat--flip" id="drum">
     <div class="beat__text"><p class="beat__k">Safari · drumul</p><h2 class="beat__h">6.737 km.</h2><p class="beat__s">Târgu Mureș → Kusekwa</p></div>
-    <figure class="beat__pic"><img src="assets/img/nori-1200.webp" srcset="assets/img/nori-1200.webp 1200w, assets/img/nori-2400.webp 2400w" sizes="(min-width: 900px) 46vw, 92vw" alt="Drumul de lângă școală, sub nori" loading="lazy"></figure>
+    <figure class="beat__pic"><img src="assets/img/tabla-1200.webp" srcset="assets/img/tabla-1200.webp 1200w, assets/img/tabla-2400.webp 2400w" sizes="(min-width: 900px) 46vw, 92vw" alt="Tăblița de la intrare: Kusekwa Memorial Schools" loading="lazy"></figure>
   </section>
-  <section class="beat">
+  <section data-film="4" class="beat">
     <div class="beat__text"><p class="beat__k">Kazi · munca</p><h2 class="beat__h">30 de elevi.<br>O lună.</h2><p class="beat__s">O biserică și un dispensar.</p></div>
     <figure class="beat__pic"><img src="assets/img/sapat-1200.webp" srcset="assets/img/sapat-1200.webp 1200w, assets/img/sapat-2400.webp 2400w" sizes="(min-width: 900px) 46vw, 92vw" alt="Oameni care sapă lângă școală" loading="lazy"></figure>
   </section>
 
-  <section class="donate" id="doneaza" aria-labelledby="giveTitle">
+  <section data-film="5" class="donate" id="doneaza" aria-labelledby="giveTitle">
     <div class="donate__head">
       <p class="beat__k">Haba na haba hujaza kibaba</p>
       <h2 class="beat__h" id="giveTitle">Pune o cărămidă.</h2>
@@ -152,7 +149,7 @@
 </div>
 
 <footer class="foot">
-  <p><strong>Concept, deocamdată.</strong> Nu e pagina oficială a Liceului Integritas. Pozele sunt de la școala Kusekwa Memorial, primite de la ei. Siluetele: girafa de GTBacchus (CC BY-SA 3.0), leul de Joselodos (CC0), Wikimedia Commons.</p>
+  <p><strong>Concept, deocamdată.</strong> Nu e pagina oficială a Liceului Integritas. Pozele sunt de la școala Kusekwa Memorial, primite de la ei.</p>
 </footer>
 
 <script src="assets/vendor/gsap.min.js"></script>
@@ -160,6 +157,6 @@
 <script src="assets/vendor/lenis.min.js"></script>
 <script src="https://applepay.cdn-apple.com/jsapi/1.latest/apple-pay-sdk.js" async crossorigin></script>
 <script src="https://pay.google.com/gp/p/js/pay.js" async onload="window.gpayReady && window.gpayReady()"></script>
-<script src="app.js?v=1"></script>
+<script src="app.js?v=2"></script>
 </body>
 </html>

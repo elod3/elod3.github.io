@@ -1,4 +1,4 @@
-/* Karibu Kusekwa — concept, varianta cu savana.
+/* Karibu Kusekwa — concept, varianta cu filmul de la școală în spate.
    CONFIG e singurul loc de schimbat când vin datele de plată de la școală. */
 const CONFIG = {
   stripeLink: '',                          /* Stripe Payment Link cu „clientul alege suma” */
@@ -22,7 +22,7 @@ const CONFIG = {
   async function runLoader() {
     const loader = $('#loader');
     if (!motion) { loader.remove(); html.classList.remove('is-loading'); return; }
-    let seen = false; try { seen = sessionStorage.getItem('kk3-seen') === '1'; } catch (e) {}
+    let seen = false; try { seen = sessionStorage.getItem('kk3b-seen') === '1'; } catch (e) {}
     const frame = $('#ldFrame'), shots = $$('img', frame), cap = $('#ldCap'), tc = $('#ldTc'), card = $('#ldCard');
     const fonts = document.fonts ? document.fonts.ready : Promise.resolve();
     gsap.set(frame, { opacity: 0 });
@@ -41,7 +41,7 @@ const CONFIG = {
       tc.textContent = `${String(shots.indexOf(img) + 1).padStart(2, '0')} / ${String(shots.length).padStart(2, '0')}`;
       await wait(last ? 650 : 420);
     }
-    try { sessionStorage.setItem('kk3-seen', '1'); } catch (e) {}
+    try { sessionStorage.setItem('kk3b-seen', '1'); } catch (e) {}
     gsap.to('.ld-cap', { opacity: 0, duration: .3 });
     await gsap.to(frame, { clipPath: 'inset(0% 0% 0% 0% round 0px)', duration: 1.25, ease: 'power4.inOut' });
     loader.classList.add('is-done');
@@ -109,130 +109,40 @@ const CONFIG = {
     if (e.isIntersecting) slideT = setTimeout(() => showSlide((slide + 1) % imgs.length), DWELL);
   }).observe($('.hero'));
 
-  /* ---------- SAVANA: dealuri cu salcâmi desenate în cod, repetate fără cusătură ---------- */
-  const sv = $('#savanna');
-  const rng = (seed) => () => ((seed = (seed * 16807) % 2147483647) / 2147483647);
-  function ridge(W, H, base, amp, harm, r) {
-    const ph = harm.map(() => r() * Math.PI * 2), pts = [];
-    for (let x = 0; x <= W; x += Math.max(4, W / 220)) {
-      let y = 0;
-      harm.forEach((k, i) => { y += Math.sin((x / W) * Math.PI * 2 * k + ph[i]) / (i + 1); });
-      pts.push([x, H * base - y * amp]);
-    }
-    return `M0 ${H} L${pts.map((p) => p[0].toFixed(1) + ' ' + p[1].toFixed(1)).join(' L')} L${W} ${H} Z`;
-  }
-  function acacia(x, y, h, r) {
-    // trunchi bifurcat și coroană plată, ca o umbrelă
-    const w = h * (1.5 + r() * .7), fork = y - h * (.42 + r() * .1), top = y - h, t = Math.max(1.5, h * .035);
-    const d = `M${x - t} ${y} L${x - t * .6} ${fork} L${x - w * .28} ${top + h * .12} L${x - w * .28 + t * 1.4} ${top + h * .12} L${x} ${fork - h * .06} L${x + w * .22 - t} ${top + h * .1} L${x + w * .22 + t * .6} ${top + h * .1} L${x + t * .8} ${fork} L${x + t} ${y} Z`;
-    let c = '';
-    const n = 12 + Math.floor(r() * 6);
-    for (let i = 0; i < n; i++) {
-      const cx = x - w / 2 + (w * (i + .5)) / n + (r() - .5) * w * .08, edge = Math.abs((i + .5) / n - .5) * 2;
-      const cy = top + h * .04 + edge * h * .07 + r() * h * .04, rx = (w / n) * (.8 + r() * .9), ry = h * (.04 + r() * .06) * (1 - edge * .45);
-      c += `<ellipse cx="${cx.toFixed(1)}" cy="${cy.toFixed(1)}" rx="${rx.toFixed(1)}" ry="${ry.toFixed(1)}"/>`;
-    }
-    return `<path d="${d}"/>${c}`;
-  }
-  function grass(W, H, y, r, dens, hmax) {
-    let d = '';
-    for (let x = 0; x < W; x += dens * (.5 + r())) {
-      const h = hmax * (.3 + r() * .7), lean = (r() - .5) * h * .6;
-      d += `M${(x - 2).toFixed(1)} ${y} Q${(x + lean * .4).toFixed(1)} ${(y - h * .6).toFixed(1)} ${(x + lean).toFixed(1)} ${(y - h).toFixed(1)} Q${(x + lean * .3 + 1).toFixed(1)} ${(y - h * .5).toFixed(1)} ${(x + 2).toFixed(1)} ${y} Z`;
-    }
-    return `<path d="${d}"/>`;
-  }
-  function paint(svg, kind, seed) {
-    const W = innerWidth, H = svg.getBoundingClientRect().height || innerHeight * .3, r = rng(seed);
-    let g = '';
-    if (kind === 'far') {
-      g += `<path d="${ridge(W, H, .6, H * .1, [1, 2, 5], r)}"/>`;
-      for (let i = 0; i < 4; i++) g += acacia(r() * W, H * .64, H * (.12 + r() * .1), r);
-    } else if (kind === 'mid') {
-      g += `<path d="${ridge(W, H, .72, H * .07, [2, 3, 7], r)}"/>`;
-      const n = W < 700 ? 1 : 2;
-      for (let i = 0; i < n; i++) g += acacia(W * (i + .25 + r() * .5) / n, H * .76, H * (.5 + r() * .25), r);
-    } else {
-      g += `<path d="${ridge(W, H, .62, H * .1, [1, 3, 4], r)}"/>`;
-      g += grass(W, H, H * .66, r, 8, H * .45);
-    }
-    svg.setAttribute('viewBox', `0 0 ${W * 3} ${H}`);
-    svg.innerHTML = `<g id="sv-${kind}">${g}</g><use href="#sv-${kind}" x="${W}"/><use href="#sv-${kind}" x="${W * 2}"/>`;
-  }
-  const paintAll = () => { paint($('.sv-far'), 'far', 11); paint($('.sv-mid'), 'mid', 23); paint($('.sv-near'), 'near', 37); };
-  paintAll();
-  let rz; addEventListener('resize', () => { clearTimeout(rz); rz = setTimeout(paintAll, 200); });
-
-  // cerul, de la apus la noapte și înapoi la zori, cât cobori prin poveste
-  const SKY = [
-    ['#3e1c14', '#b04a24', '#f0a04a', '#ffe2a6', 62, 1, 0, '#4a2114', '#1c0c08'],
-    ['#25120d', '#6e2a17', '#c0612b', '#ffb262', 82, .9, .25, '#2c140c', '#120806'],
-    ['#0b0a12', '#191626', '#2c2030', '#ff9050', 112, 0, 1, '#120c0e', '#070505'],
-    ['#0e0d16', '#231b2c', '#3d2a33', '#ff9050', 112, 0, .8, '#16100f', '#090606'],
-    ['#2f3340', '#9a6a4c', '#eeb170', '#fff0c8', 74, 1, .1, '#4a2c1c', '#241510']
-  ];
-  const hex = (h) => [1, 3, 5].map((i) => parseInt(h.slice(i, i + 2), 16));
-  const mix = (a, b, t) => { const A = hex(a), B = hex(b); return `rgb(${A.map((v, i) => Math.round(v + (B[i] - v) * t)).join(',')})`; };
-  const lerp = (a, b, t) => a + (b - a) * t;
-  function sky(p) {
-    const f = Math.max(0, Math.min(.9999, p)) * (SKY.length - 1), i = Math.floor(f);
-    let t = f - i; t = t * t * (3 - 2 * t);
-    const A = SKY[i], B = SKY[i + 1], st = sv.style;
-    ['--sky-top', '--sky-mid', '--sky-low', '--sun'].forEach((k, j) => st.setProperty(k, mix(A[j], B[j], t)));
-    st.setProperty('--sun-y', lerp(A[4], B[4], t) + 'vh');
-    st.setProperty('--sun-o', lerp(A[5], B[5], t).toFixed(3));
-    st.setProperty('--stars', lerp(A[6], B[6], t).toFixed(3));
-    st.setProperty('--hill-far', mix(A[7], B[7], t));
-    st.setProperty('--hill-near', mix(A[8], B[8], t));
-  }
-  sky(0);
-
-  // praful din aer, câteva fire care plutesc în lumina de apus
-  const cvs = $('.sv-dust'), ctx = cvs.getContext('2d');
-  const motes = [];
-  const sizeDust = () => { cvs.width = innerWidth; cvs.height = innerHeight; };
-  sizeDust(); addEventListener('resize', sizeDust);
-  for (let i = 0; i < 46; i++) motes.push({ x: Math.random(), y: .35 + Math.random() * .6, r: .6 + Math.random() * 1.8, v: .00004 + Math.random() * .00012, ph: Math.random() * 6 });
-  let dustOn = false;
-  function dust(t) {
-    if (!dustOn) return;
-    ctx.clearRect(0, 0, cvs.width, cvs.height);
-    for (const m of motes) {
-      m.x -= m.v * 16; if (m.x < -.02) m.x = 1.02;
-      const y = (m.y + Math.sin(t / 2400 + m.ph) * .01) * cvs.height;
-      ctx.fillStyle = `rgba(255,214,150,${.18 + .22 * Math.sin(t / 900 + m.ph) ** 2})`;
-      ctx.beginPath(); ctx.arc(m.x * cvs.width, y, m.r, 0, 7); ctx.fill();
-    }
-    requestAnimationFrame(dust);
+  /* ---------- FILMUL DIN SPATE: clipurile se încarcă abia când e nevoie de ele ---------- */
+  const film = $('#film'), clips = $$('video', film);
+  let clipOn = -1;
+  const load = (v) => { if (v && !v.src) { v.src = v.dataset.src; v.load(); } };
+  function show(i) {
+    if (i === clipOn || !clips[i]) return;
+    if (clipOn >= 0) { clips[clipOn].classList.remove('is-on'); const old = clips[clipOn]; setTimeout(() => old.pause(), 1700); }
+    clipOn = i;
+    const v = clips[i]; load(v); load(clips[i + 1]);
+    v.classList.add('is-on'); v.play().catch(() => {});
   }
 
-  /* ---------- HERO → SAVANA: hero-ul se strânge într-o ramă rotunjită și se stinge,
-     iar în spatele lui se aprinde savana ---------- */
+  /* ---------- HERO → FILM: hero-ul se strânge într-o ramă rotunjită și se stinge,
+     iar în spatele lui pornește filmul de la școală ---------- */
   function story() {
-    if (!motion || !window.ScrollTrigger) { sv.style.opacity = 1; return; }
+    if (!motion || !window.ScrollTrigger) { film.style.opacity = 1; show(0); return; }
     const hero = $('.hero');
-    gsap.timeline({ scrollTrigger: { trigger: hero, start: 'top top', end: '+=90%', scrub: .8, pin: true, pinSpacing: true } })
+    gsap.timeline({ scrollTrigger: { trigger: hero, start: 'top top', end: '+=90%', scrub: .8, pin: true, pinSpacing: true,
+        onEnter: () => show(0) } })
       .to('.hero__copy, .hero__count', { opacity: 0, y: -30, duration: .3 }, 0)
       .to(hero, { clipPath: 'inset(16% 12% 22% 12% round 28px)', duration: .7, ease: 'power2.inOut' }, 0)
       .to('.hero__bg', { scale: .92, duration: .7, ease: 'power2.inOut' }, 0)
-      .to(sv, { opacity: 1, duration: .5 }, .25)
+      .to(film, { opacity: 1, duration: .5 }, .25)
       .to(hero, { opacity: 0, y: -60, duration: .3 }, .7);
-    ScrollTrigger.create({ trigger: '.story', start: 'top bottom', end: 'bottom top',
-      onToggle: (st) => { dustOn = st.isActive; if (dustOn) requestAnimationFrame(dust); } });
+    load(clips[0]);
 
-    // cerul, dealurile și animalele merg odată cu toată povestea
-    const sto = $('.story');
-    ScrollTrigger.create({ trigger: sto, start: 'top bottom', end: 'bottom bottom', scrub: true,
-      onUpdate: (st) => {
-        const p = st.progress, vw = innerWidth;
-        sky(p);
-        gsap.set('.sv-far', { x: -(p * vw * .6) % vw });
-        gsap.set('.sv-mid', { x: -(p * vw * 1.4) % vw });
-        gsap.set('.sv-near', { x: -(p * vw * 2.6) % vw });
-        gsap.set('.sv-giraffe', { x: -p * (vw * 1.35), y: Math.abs(Math.sin(p * 90)) * -4 });
-        const lp = Math.max(0, Math.min(1, (p - .3) / .45));
-        gsap.set('.sv-lion', { x: -lp * (vw * 1.5), y: Math.max(0, Math.sin(p * 160)) * -6 });
-      } });
+    // fiecare secțiune își aduce planul ei de fundal
+    $$('[data-film]').forEach((sec) => {
+      const i = +sec.dataset.film;
+      ScrollTrigger.create({ trigger: sec, start: 'top 55%', end: 'bottom 55%', onEnter: () => show(i), onEnterBack: () => show(i) });
+    });
+    // când ieși cu totul din poveste, filmul stă
+    ScrollTrigger.create({ trigger: '.story', start: 'top bottom', end: 'bottom top',
+      onLeave: () => clips[clipOn] && clips[clipOn].pause(), onEnterBack: () => clips[clipOn] && clips[clipOn].play().catch(() => {}) });
 
     // fiecare bătaie: textul urcă din mască, poza se descoperă dintr-o ramă mai mică
     $$('.beat, .donate').forEach((b) => {
