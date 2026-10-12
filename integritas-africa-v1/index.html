@@ -15,22 +15,17 @@
 <meta property="og:image" content="https://elod3.github.io/integritas-africa-v1/assets/img/og.jpg">
 <meta property="og:type" content="website">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="stylesheet" href="style.css?v=5">
+<link rel="stylesheet" href="style.css?v=6">
 </head>
 <body class="is-loading">
 
-<!-- LOADER: drumul, ca o cartelă de titlu -->
+<!-- LOADER: cartela distribuitorului, ca înainte de trailer -->
 <div class="loader" id="loader" aria-hidden="true">
-  <div class="ld-glow"></div>
   <div class="ld-card">
-    <p class="ld-title">Misiunea Africa · clasa a XII-a</p>
-    <div class="ld-route">
-      <span class="ld-end">Târgu Mureș</span>
-      <span class="ld-line"><i id="ldBar"></i></span>
-      <span class="ld-end">Kusekwa</span>
-    </div>
-    <p class="ld-km"><span id="ldKm">0</span> km</p>
+    <p class="ld-house">Liceul Internațional Integritas</p>
+    <p class="ld-presents">prezintă</p>
   </div>
+  <span class="ld-line"><i id="ldBar"></i></span>
   <div class="ld-bar ld-bar--top"></div>
   <div class="ld-bar ld-bar--bot"></div>
 </div>
@@ -87,8 +82,34 @@
     </div>
   </section>
 
-  <!-- 03 COPILUL -->
-  <section class="scene scene--voice scene--child" data-sky="child" data-ch="II|Ce se aude">
+  <!-- 03 KUSEKWA: secvența de trailer, filmată acolo -->
+  <section class="scene scene--reel" data-sky="reel" data-ch="II|Kusekwa" id="kusekwa" aria-label="Kusekwa, în imagini filmate la școală">
+    <div class="reel">
+      <div class="reel__frame">
+        <div class="shot shot--card is-on"><p class="card"><small>Ce urmează e filmat la Kusekwa, anul acesta.</small>Fără leu.</p></div>
+        <div class="shot"><video muted playsinline loop preload="none" poster="assets/film/drum.jpg"><source src="assets/film/drum.mp4" type="video/mp4"></video>
+          <p class="card">Bariadi · regiunea Simiyu · Tanzania</p></div>
+        <div class="shot shot--still"><img src="assets/film/tabla.webp" alt="Tăblița de la intrare: Kusekwa Memorial Schools" loading="lazy" width="1600" height="901">
+          <p class="card">Kusekwa Memorial Schools</p></div>
+        <div class="shot"><video muted playsinline loop preload="none" poster="assets/film/careu.jpg"><source src="assets/film/careu.mp4" type="video/mp4"></video>
+          <p class="card">Șapte sute de elevi și profesori</p></div>
+        <div class="shot"><video muted playsinline loop preload="none" poster="assets/film/clasa.jpg"><source src="assets/film/clasa.mp4" type="video/mp4"></video>
+          <p class="card">O tablă. O cretă. O clasă plină.</p></div>
+        <div class="shot"><video muted playsinline loop preload="none" poster="assets/film/pranz.jpg"><source src="assets/film/pranz.mp4" type="video/mp4"></video></div>
+        <div class="shot shot--card"><p class="card card--big">Biserica nu are încă pereții ei.</p></div>
+        <div class="shot shot--still"><img src="assets/film/biserica.webp" alt="Adunarea bisericii Kusekwa Memorial, într-o sală a școlii" loading="lazy" width="1008" height="756">
+          <p class="card">Se strânge în sala școlii, pe bănci mutate în fiecare sâmbătă</p></div>
+        <div class="shot"><video muted playsinline loop preload="none" poster="assets/film/sapat.jpg"><source src="assets/film/sapat.mp4" type="video/mp4"></video>
+          <p class="card">Anul acesta venim și noi.</p></div>
+        <div class="shot"><video muted playsinline loop preload="none" poster="assets/film/cor.jpg"><source src="assets/film/cor.mp4" type="video/mp4"></video>
+          <p class="card card--title">Kusekwa<small>clasa a XII-a · Liceul Integritas</small></p></div>
+      </div>
+      <p class="reel__tc" aria-hidden="true"><span id="reelN">01</span> / 10</p>
+    </div>
+  </section>
+
+  <!-- 04 COPILUL -->
+  <section class="scene scene--voice scene--child" data-sky="child" data-ch="III|Ce se aude">
     <div class="stage">
       <figure class="actor actor--sil actor--child">
         <img src="assets/img/copil.webp" alt="Silueta unui copil, în contre-jour" width="594" height="1100" loading="lazy">
@@ -100,8 +121,8 @@
     </div>
   </section>
 
-  <!-- 04 PASTORUL -->
-  <section class="scene scene--voice scene--pastor" data-sky="pastor" data-ch="II|Ce se aude">
+  <!-- 05 PASTORUL -->
+  <section class="scene scene--voice scene--pastor" data-sky="pastor" data-ch="III|Ce se aude">
     <div class="stage">
       <figure class="actor actor--sil actor--pastor">
         <img src="assets/img/pastor.webp" alt="Silueta unui bărbat cu o carte în mână" width="537" height="1200" loading="lazy">
@@ -113,8 +134,8 @@
     </div>
   </section>
 
-  <!-- 05 PROFESORUL -->
-  <section class="scene scene--voice scene--teacher" data-sky="teacher" data-ch="II|Ce se aude">
+  <!-- 06 PROFESORUL -->
+  <section class="scene scene--voice scene--teacher" data-sky="teacher" data-ch="III|Ce se aude">
     <div class="stage">
       <figure class="actor actor--sil actor--teacher">
         <span class="board" aria-hidden="true"></span>
@@ -128,7 +149,7 @@
   </section>
 
   <!-- 06 NOI -->
-  <section class="scene scene--us" data-sky="us" data-ch="III|Noi" id="noi">
+  <section class="scene scene--us" data-sky="us" data-ch="IV|Noi" id="noi">
     <div class="stage">
       <div class="copy">
         <h2>Aici intrăm noi în cadru.</h2>
@@ -144,7 +165,7 @@
   </section>
 
   <!-- 07 DRUMUL -->
-  <section class="scene scene--every" data-sky="every" data-ch="IV|Drumul" id="drumul">
+  <section class="scene scene--every" data-sky="every" data-ch="V|Drumul" id="drumul">
     <div class="stage stage--doc">
       <div class="copy">
         <p class="kicker">Ready to serve</p>
@@ -176,7 +197,7 @@
   </section>
 
   <!-- 08 PARTENERI -->
-  <section class="scene scene--partners" data-sky="partners" data-ch="V|Donația" id="parteneri">
+  <section class="scene scene--partners" data-sky="partners" data-ch="VI|Donația" id="parteneri">
     <div class="stage stage--doc">
       <div class="copy">
         <h2>Hai să fim parteneri.</h2>
@@ -191,7 +212,7 @@
   </section>
 
   <!-- 09 DONAȚIA -->
-  <section class="scene scene--give" data-sky="give" data-ch="V|Donația" id="doneaza">
+  <section class="scene scene--give" data-sky="give" data-ch="VI|Donația" id="doneaza">
     <div class="stage stage--doc">
       <div class="copy">
         <h2>Pune o cărămidă.</h2>
@@ -224,6 +245,14 @@
   </section>
 </main>
 
+<section class="billing" aria-label="Genericul">
+  <p class="billing__top">Liceul Internațional Integritas prezintă</p>
+  <p class="billing__title">Kusekwa</p>
+  <p class="billing__block">o misiune a clasei a XII-a · treizeci de elevi · o lună în Tanzania · 6.737&nbsp;km · o biserică · un dispensar
+  · filmat la Kusekwa Memorial Schools, Bariadi · donațiile prin Fundația Educatio Plena · <b>și cu tine</b></p>
+  <a class="billing__cta" href="#doneaza">Pune o cărămidă</a>
+</section>
+
 <footer class="foot">
   <p><strong>Aceasta e un concept, deocamdată.</strong> Nu este o pagină oficială a Liceului Integritas: textele, cifrele și datele de donație se confirmă cu școala înainte să fie publicată. Versiunea în maghiară și engleză urmează după aprobare.</p>
   <details>
@@ -236,13 +265,13 @@
       <li>Silueta bărbatului cu cartea: Charles Roscoe Savage, <a href="https://commons.wikimedia.org/wiki/File:286_MSS_P_24_B2_F12.jpg">Wikimedia Commons</a>, domeniu public, redusă la siluetă.</li>
       <li>Silueta profesorului: Masako Kato, <a href="https://commons.wikimedia.org/wiki/File:Outside_teacher.jpg">Wikimedia Commons</a>, CC BY-SA 4.0, redusă la siluetă.</li>
     </ul>
-    <p>Siluetele sunt ilustrative. Replicile sunt scrise de noi, pentru clipul misiunii; nu sunt citate ale unor persoane din Kusekwa. Distanțele sunt calculate în linie dreaptă între opriri.</p>
+    <p>Imaginile din secvența „Kusekwa” sunt filmate la școala de acolo și primite de la ei. Siluetele sunt ilustrative. Replicile sunt scrise de noi, pentru clipul misiunii; nu sunt citate ale unor persoane din Kusekwa. Distanțele sunt calculate în linie dreaptă între opriri.</p>
   </details>
 </footer>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
-<script src="app.js?v=5"></script>
+<script src="app.js?v=6"></script>
 </body>
 </html>

@@ -18,6 +18,19 @@
   src: url(assets/fonts/montserrat-latin-ext-wght-normal.woff2) format("woff2");
   unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF; }
 
+@font-face { font-family: "Cinzel"; font-style: normal; font-weight: 400 900; font-display: swap;
+  src: url(assets/fonts/cinzel-latin-wght-normal.woff2) format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+20AC, U+2122, U+2212; }
+@font-face { font-family: "Cinzel"; font-style: normal; font-weight: 400 900; font-display: swap;
+  src: url(assets/fonts/cinzel-latin-ext-wght-normal.woff2) format("woff2");
+  unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF; }
+@font-face { font-family: "League Gothic"; font-style: normal; font-weight: 400; font-stretch: 75% 100%; font-display: swap;
+  src: url(assets/fonts/league-gothic-latin-wdth-normal.woff2) format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+20AC, U+2122, U+2212; }
+@font-face { font-family: "League Gothic"; font-style: normal; font-weight: 400; font-stretch: 75% 100%; font-display: swap;
+  src: url(assets/fonts/league-gothic-latin-ext-wdth-normal.woff2) format("woff2");
+  unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF; }
+
 :root {
   /* identitatea școlii, din CSS-ul live liceulintegritas.ro */
   --gold: #a18854;
@@ -42,6 +55,8 @@
   --text: #f6ead2;
   --serif: "Lora", Georgia, serif;
   --sans: "Montserrat", "Helvetica Neue", sans-serif;
+  --title: "Cinzel", "Trajan Pro", Georgia, serif;
+  --gothic: "League Gothic", "Oswald", sans-serif;
   --ease: cubic-bezier(.2, .7, .1, 1);
 }
 
@@ -59,22 +74,15 @@ img { display: block; max-width: 100%; height: auto; }
 a { color: inherit; }
 ::selection { background: var(--gold); color: var(--dusk); }
 
-/* ---------- LOADER: cartela de titlu, drumul se umple cât se încarcă pagina ---------- */
-.loader { position: fixed; inset: 0; z-index: 100; overflow: hidden; background: #0d0705;
-  display: grid; place-items: center; --p: 0; }
-.ld-glow { position: absolute; left: 50%; bottom: -70vmax; width: 150vmax; height: 90vmax; border-radius: 50%;
-  transform: translate(-50%, calc((1 - var(--p)) * 14vmax)); opacity: calc(.25 + var(--p) * .75);
-  background: radial-gradient(closest-side, rgba(240, 150, 70, .95), rgba(176, 74, 36, .55) 38%, rgba(114, 56, 55, .2) 66%, rgba(13, 7, 5, 0) 100%); }
-.ld-card { position: relative; width: min(640px, calc(100vw - 32px)); text-align: center; }
-.ld-title { margin: 0 0 34px; font: italic 400 clamp(17px, 2vw, 21px)/1.3 var(--serif); color: var(--cream); letter-spacing: .01em; }
-.ld-route { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 16px;
-  font: 500 12px/1 var(--sans); letter-spacing: .04em; color: rgba(242, 225, 189, .62); }
-.ld-line { position: relative; height: 1px; background: rgba(161, 136, 84, .28); }
-.ld-line i { position: absolute; left: 0; top: 0; height: 1px; width: 0; background: var(--gold); }
-.ld-line i::after { content: ""; position: absolute; right: -3px; top: -3px; width: 7px; height: 7px; border-radius: 50%; background: var(--cream);
-  box-shadow: 0 0 12px 2px rgba(240, 160, 76, .6); }
-.ld-km { margin: 22px 0 0; font: 500 13px/1 var(--sans); font-variant-numeric: tabular-nums; color: var(--gold); letter-spacing: .03em; }
-.ld-bar { position: absolute; left: 0; right: 0; height: 9vh; background: #050302; }
+/* ---------- LOADER: cartela distribuitorului ---------- */
+.loader { position: fixed; inset: 0; z-index: 100; overflow: hidden; background: #070403; display: grid; place-items: center; }
+.ld-card { text-align: center; color: var(--cream); animation: ld-breathe 6s var(--ease) both; }
+.ld-house { margin: 0; font: 500 clamp(18px, 2.4vw, 30px)/1.2 var(--title); letter-spacing: .22em; text-transform: uppercase; padding-left: .22em; }
+.ld-presents { margin: 14px 0 0; font: italic 400 clamp(14px, 1.3vw, 17px)/1 var(--serif); color: var(--gold); letter-spacing: .04em; }
+@keyframes ld-breathe { from { opacity: 0; transform: scale(.97); letter-spacing: .3em; } 30% { opacity: 1; } to { opacity: 1; transform: scale(1.02); } }
+.ld-line { position: absolute; left: 50%; bottom: calc(9vh + 28px); width: 120px; height: 1px; transform: translateX(-50%); background: rgba(161,136,84,.2); }
+.ld-line i { display: block; height: 100%; width: 0; background: var(--gold); }
+.ld-bar { position: absolute; left: 0; right: 0; height: 9vh; background: #000; }
 .ld-bar--top { top: 0; } .ld-bar--bot { bottom: 0; }
 .loader.is-done { pointer-events: none; }
 
@@ -243,6 +251,47 @@ h2 { font-size: clamp(2.1rem, 4.6vw, 4rem); line-height: 1.02; }
 .bank-meta { margin-top: 14px !important; }
 .bank-src, .bank-contact { font-size: 13px; color: rgba(42,26,18,.7); }
 
+/* ---------- KUSEKWA: secvența de trailer ---------- */
+.scene--reel { min-height: 0; height: 1000vh; background: #000; z-index: 5; }
+.reel { position: sticky; top: 0; height: 100vh; height: 100svh; display: grid; place-items: center; overflow: hidden; background: #000; }
+.reel__frame { position: relative; width: 100%; aspect-ratio: 2.39 / 1; max-height: 100%; overflow: hidden; background: #000; }
+.shot { position: absolute; inset: 0; visibility: hidden; }
+.shot.is-on { visibility: visible; }
+.shot video, .shot img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.shot--still img { transform: scale(1.02); transition: transform 7s linear; filter: saturate(.86) contrast(1.06) sepia(.08); }
+.shot--still.is-on img { transform: scale(1.12); }
+.shot::after { content: ""; position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(180deg, rgba(0,0,0,.35), rgba(0,0,0,0) 30%, rgba(0,0,0,0) 55%, rgba(0,0,0,.6)); }
+.shot--card::after { display: none; }
+.card { position: absolute; z-index: 2; left: 6%; right: 6%; bottom: 11%; margin: 0; text-align: center; color: #f4e9d4;
+  font: 500 clamp(15px, 2vw, 30px)/1.25 var(--title); letter-spacing: .2em; text-transform: uppercase; text-wrap: balance;
+  opacity: 0; transition: opacity .9s ease, letter-spacing 2.4s var(--ease); }
+.shot.is-on .card { opacity: 1; letter-spacing: .14em; }
+.shot--card .card { top: 50%; bottom: auto; transform: translateY(-50%); }
+.card small { display: block; margin-bottom: 1.4em; font: italic 400 clamp(13px, 1.1vw, 16px)/1.4 var(--serif); letter-spacing: .02em; text-transform: none; color: var(--gold); }
+.card--big { font-size: clamp(22px, 3.4vw, 54px); line-height: 1.15; }
+.card--title { font-size: clamp(44px, 9vw, 150px); letter-spacing: .3em !important; bottom: 18%; }
+.card--title small { margin: .7em 0 0; font: 500 clamp(11px, 1vw, 15px)/1 var(--title); letter-spacing: .28em; text-transform: uppercase; color: #f4e9d4; }
+.reel::after { content: ""; position: absolute; inset: -50%; pointer-events: none; z-index: 3; opacity: .09; mix-blend-mode: overlay;
+  background: url(assets/img/grain.png); animation: grain .5s steps(4) infinite; }
+@keyframes grain { 25% { transform: translate(-3%, 2%); } 50% { transform: translate(2%, -3%); } 75% { transform: translate(-1%, 3%); } }
+.reel__tc { position: absolute; right: clamp(16px, 4vw, 48px); bottom: 22px; margin: 0; z-index: 4;
+  font: 500 11px/1 var(--sans); letter-spacing: .14em; font-variant-numeric: tabular-nums; color: rgba(244,233,212,.5); }
+body.in-reel .sky-front { opacity: 0; }
+body.in-reel .top-note { opacity: 0; }
+
+/* ---------- GENERICUL: billing block de afiș ---------- */
+.billing { position: relative; z-index: 1; background: #070403; color: #efe2c8; text-align: center;
+  padding: clamp(80px, 16vh, 160px) clamp(16px, 6vw, 96px) clamp(60px, 10vh, 110px); }
+.billing__top { margin: 0; font: 500 clamp(12px, 1.2vw, 15px)/1 var(--title); letter-spacing: .3em; text-transform: uppercase; color: var(--gold); }
+.billing__title { margin: .25em 0 .3em; font: 500 clamp(56px, 13vw, 210px)/.9 var(--title); letter-spacing: .16em; padding-left: .16em; text-transform: uppercase; }
+.billing__block { max-width: 46rem; margin: 0 auto; font: 400 clamp(17px, 2vw, 26px)/1.08 var(--gothic); font-stretch: 75%;
+  letter-spacing: .06em; text-transform: uppercase; color: rgba(239,226,200,.7); text-wrap: balance; }
+.billing__block b { font-weight: 400; color: #efe2c8; }
+.billing__cta { display: inline-block; margin-top: 44px; font: 600 14px/1 var(--sans); letter-spacing: .08em; color: #070403; background: var(--cream);
+  padding: 18px 28px; text-decoration: none; border-radius: 2px; transition: background-color .25s var(--ease); }
+.billing__cta:hover, .billing__cta:focus-visible { background: var(--gold); }
+
 /* ---------- FOOTER ---------- */
 .foot { position: relative; z-index: 1; background: var(--dusk); color: rgba(246,234,210,.75); padding: 48px clamp(16px, 6vw, 96px) 64px; font-size: 13.5px; }
 .foot p { max-width: 52rem; margin: 0 0 16px; }
@@ -275,6 +324,9 @@ h2 { font-size: clamp(2.1rem, 4.6vw, 4rem); line-height: 1.02; }
   .log td { border: 0; padding: 2px 0; width: auto !important; }
   .iban { grid-template-columns: 3rem 1fr; }
   .iban button { grid-column: 2; justify-self: start; }
+  .reel__frame { aspect-ratio: auto; height: 64vh; }
+  .card { bottom: 8%; letter-spacing: .14em; }
+  .shot.is-on .card { letter-spacing: .1em; }
   .top-note { display: none; }
   .chapter { bottom: 18px; width: 150px; }
   .who--month { grid-template-columns: 1fr; }
@@ -289,6 +341,12 @@ h2 { font-size: clamp(2.1rem, 4.6vw, 4rem); line-height: 1.02; }
 @media (prefers-reduced-motion: reduce) {
   .scene { min-height: 100vh; }
   .stage { position: relative; }
+  .scene--reel { height: auto; }
+  .reel { position: relative; height: auto; display: block; }
+  .reel__frame { aspect-ratio: auto; height: auto; display: grid; gap: 2px; }
+  .shot { position: relative; visibility: visible; aspect-ratio: 16 / 9; }
+  .card { opacity: 1; }
+  .reel::after, .ld-card { animation: none; }
   .scroll-hint i { animation: none; }
   * { transition-duration: .01ms !important; }
 }

@@ -92,12 +92,11 @@ const CONFIG = {
   paintAll();
   let rz; addEventListener('resize', () => { clearTimeout(rz); rz = setTimeout(paintAll, 200); });
 
-  /* ---------- LOADER: drumul Târgu Mureș → Kusekwa se umple cât se încarcă pagina ---------- */
+  /* ---------- LOADER: cartela distribuitorului, ține cât se încarcă primul ecran ---------- */
   const loader = $('#loader');
-  const barEl = $('#ldBar'), kmEl = $('#ldKm');
-  const KM = 6737;
+  const barEl = $('#ldBar');
   let seen = false; try { seen = sessionStorage.getItem('ia-seen') === '1'; } catch (e) {}
-  const MIN = STILL ? 0 : RM ? 300 : seen ? 500 : 1700;
+  const MIN = STILL ? 0 : RM ? 300 : seen ? 600 : 2200;
   const t0 = performance.now();
   let loaded = 0, total = 0, ready = false;
 
@@ -113,8 +112,6 @@ const CONFIG = {
     // progres: cel mai mic dintre timp și încărcare, ca să nu sară
     const p = MIN ? Math.min(loaded / total, easeOut(Math.min(1, (now - t0) / MIN))) : loaded / total;
     barEl.style.width = (p * 100).toFixed(2) + '%';
-    kmEl.textContent = Math.round(p * KM).toLocaleString('ro-RO');
-    loader.style.setProperty('--p', p.toFixed(3));
     if (p >= 1 && !ready) { ready = true; outro(); return; }
     requestAnimationFrame(frame);
   }
@@ -127,8 +124,7 @@ const CONFIG = {
     if (RM || !window.gsap) { loader.style.transition = 'opacity .4s'; loader.style.opacity = 0; setTimeout(done, 450); heroIn(); return; }
     loader.classList.add('is-done');
     const tl = gsap.timeline({ onComplete: done });
-    tl.to('.ld-card', { opacity: 0, y: -12, duration: 0.5, ease: 'power2.in' }, 0.25)
-      .to('.ld-glow', { yPercent: -18, scale: 1.25, duration: 1.1, ease: 'power2.inOut' }, 0.2)
+    tl.to('.ld-card, .ld-line', { opacity: 0, duration: 0.6, ease: 'power2.in' }, 0.1)
       .to('.ld-bar--top', { yPercent: -100, duration: 0.9, ease: 'power3.inOut' }, 0.45)
       .to('.ld-bar--bot', { yPercent: 100, duration: 0.9, ease: 'power3.inOut' }, 0.45)
       .to(loader, { opacity: 0, duration: 0.6, ease: 'power1.in' }, 0.7)
@@ -141,6 +137,7 @@ const CONFIG = {
   const SKY = {
     hero:     ['#3e1c14', '#b04a24', '#f0a04a', '#ffe2a6', 70, 1, 0, '#4a2114', '#1c0c08'],
     lion:     ['#34170f', '#93391c', '#e0813a', '#ffcb7c', 79, 1, 0, '#3d1a10', '#170a06'],
+    reel:     ['#1f0f0b', '#5c2416', '#b8572a', '#ffb262', 88, 0.9, 0.2, '#2a120b', '#110705'],
     child:    ['#1f0f0b', '#5c2416', '#b8572a', '#ffb262', 88, 0.9, 0.2, '#2a120b', '#110705'],
     pastor:   ['#140a09', '#331612', '#7a3219', '#ff9a50', 97, 0.55, 0.55, '#1c0d08', '#0b0504'],
     teacher:  ['#0b0708', '#1a100e', '#3d1d13', '#ff9050', 110, 0, 1, '#120907', '#070303'],
@@ -246,7 +243,7 @@ const CONFIG = {
     btn.addEventListener('mouseenter', hop);
 
     // fiecare cadru se stinge înainte să se dezlipească, ca să nu se vadă marginea scenei
-    $$('.scene:not(.scene--every):not(.scene--partners):not(.scene--give)').forEach((s) => {
+    $$('.scene:not(.scene--every):not(.scene--partners):not(.scene--give):not(.scene--reel)').forEach((s) => {
       gsap.to($('.stage', s), { opacity: 0, ease: 'power1.in', scrollTrigger: { trigger: s, start: 'bottom 122%', end: 'bottom 100%', scrub: 0.3 } });
     });
     addEventListener('load', () => ScrollTrigger.refresh());
@@ -266,6 +263,34 @@ const CONFIG = {
   };
   chapterAt(scrollY);
   addEventListener('scroll', () => chapterAt(scrollY), { passive: true });
+
+  /* ---------- KUSEKWA: tăieturi pe scroll, ca într-un trailer ---------- */
+  const reelSec = $('.scene--reel'), shots = $$('.shot'), reelN = $('#reelN');
+  let shotOn = 0;
+  const cut = (i) => {
+    if (i === shotOn) return;
+    const prev = shots[shotOn], next = shots[i];
+    prev.classList.remove('is-on'); const pv = $('video', prev); if (pv) pv.pause();
+    next.classList.add('is-on'); const nv = $('video', next);
+    if (nv) { if (nv.preload !== 'auto') { nv.preload = 'auto'; } nv.currentTime = 0; nv.play().catch(() => {}); }
+    // următorul cadru se încarcă din timp
+    const after = shots[i + 1] && $('video', shots[i + 1]); if (after && after.preload === 'none') { after.preload = 'auto'; after.load(); }
+    reelN.textContent = String(i + 1).padStart(2, '0');
+    shotOn = i;
+  };
+  const reelAt = (y) => {
+    const top = reelSec.offsetTop, len = reelSec.offsetHeight - innerHeight;
+    const inside = y >= top - innerHeight * 0.2 && y <= top + len + innerHeight * 0.2;
+    document.body.classList.toggle('in-reel', inside);
+    if (RM) return;
+    const p = Math.max(0, Math.min(0.9999, (y - top) / len));
+    cut(Math.floor(p * shots.length));
+    const v = $('video', shots[shotOn]);
+    if (v) { if (inside && v.paused) v.play().catch(() => {}); if (!inside && !v.paused) v.pause(); }
+  };
+  if (RM) shots.forEach((s) => { s.classList.add('is-on'); const v = $('video', s); if (v) v.preload = 'metadata'; });
+  reelAt(scrollY);
+  addEventListener('scroll', () => reelAt(scrollY), { passive: true });
 
   /* ---------- plata ---------- */
   if (CONFIG.stripeLink) {
