@@ -1,12 +1,6 @@
-/* Karibu Kusekwa — o singură pagină: genericul cu drumul, școala, galeria, donația.
-   CONFIG e singurul loc de schimbat când vine linkul de plată online. */
-const CONFIG = {
-  stripeLink: '',                          /* Stripe Payment Link cu „clientul alege suma”; gol = butoanele duc la pagina școlii */
-  fallbackLink: 'https://liceulintegritas.ro/donatii',
-  stripeAmountParam: '__prefilled_amount', /* Stripe primește suma în bani (lei × 100) */
-  stripeTag: 'africa-kusekwa',            /* ajunge în Stripe la fiecare plată (client_reference_id): secretara vede că e pentru Africa */
-};
-
+/* Karibu Kusekwa — o singură pagină: genericul cu drumul, școala, galeria, donația prin transfer.
+   Stilul e numai Tailwind; JS-ul se agață de id-uri și de atribute data-*, iar clasele pe care le
+   pune singur (literele, vizorul) sunt tot clase Tailwind. */
 (() => {
   const $ = (s, r = document) => r.querySelector(s);
   const $$ = (s, r = document) => [...r.querySelectorAll(s)];
@@ -33,7 +27,7 @@ const CONFIG = {
     const pause = (ms) => wait(ms / speed);
     const frame = $('#ldFrame'), card = $('#ldCard'), route = $('#ldRoute'), city = $('#ldCity'), kmEl = $('#ldKm'), line = $('#ldLine');
     const fonts = document.fonts ? document.fonts.ready : Promise.resolve();
-    // rama în pixeli (aceleași valori ca în CSS), ca GSAP să poată anima clip-path-ul fără salturi
+    // rama în pixeli, ca GSAP să poată anima clip-path-ul fără salturi
     const vw = innerWidth / 100, vh = innerHeight / 100, narrow = innerWidth <= 820;
     const ty = narrow ? innerHeight / 2 - 30 * vw : innerHeight / 2 - Math.min(17 * vw, 19 * vh);
     const tx = narrow ? 8 * vw : innerWidth / 2 - Math.min(30 * vw, 34 * vh);
@@ -54,7 +48,7 @@ const CONFIG = {
       if (k < ROUTE.length - 1) await gsap.to(split(city), { yPercent: -105, duration: .25, ease: 'power3.in', stagger: .008 });
     }
     await gsap.to(route, { opacity: 0, duration: .4 });
-    gsap.to('.ld-skip', { opacity: 0, duration: .3 });
+    gsap.to('#ldSkip', { opacity: 0, duration: .3 });
 
     // școala apare în ramă, apoi rama se lărgește și devine hero-ul (același cadru: match cut)
     await gsap.fromTo(frame, { opacity: 0, scale: .94 }, { opacity: 1, scale: 1, duration: .8, ease: 'power3.out' });
@@ -70,9 +64,10 @@ const CONFIG = {
     return true;
   }
 
-  /* ---------- literele urcă din spatele unei măști ---------- */
+  /* ---------- literele urcă din spatele unei măști (cuvântul taie ce iese; padding jos pentru Ș/Ț) ---------- */
+  const WORD = 'inline-block overflow-hidden whitespace-nowrap align-bottom pt-[.2em] pb-[.14em] -mt-[.12em] -mb-[.14em]';
   function split(el, again) {
-    if (el.dataset.split && !again) return $$('.ch', el);
+    if (el.dataset.split && !again) return $$('[data-ch]', el);
     el.dataset.split = '1';
     const parts = el.innerHTML.split(/<br\s*\/?>/i);
     el.textContent = '';
@@ -81,14 +76,14 @@ const CONFIG = {
       const words = tmp.textContent.trim().split(/\s+/).filter(Boolean);
       words.forEach((w, wi) => {
         const word = document.createElement('span');
-        word.className = 'wd'; word.style.whiteSpace = 'nowrap';
-        [...w].forEach((c) => { const s = document.createElement('span'); s.className = 'ch'; s.textContent = c; word.appendChild(s); });
+        word.className = WORD;
+        [...w].forEach((c) => { const s = document.createElement('span'); s.className = 'inline-block will-change-transform'; s.dataset.ch = ''; s.textContent = c; word.appendChild(s); });
         el.appendChild(word);
         if (wi < words.length - 1) el.appendChild(document.createTextNode(' '));
       });
       if (pi < parts.length - 1) el.appendChild(document.createElement('br'));
     });
-    return $$('.ch', el);
+    return $$('[data-ch]', el);
   }
   function rise(el, delay = 0) {
     const chars = split(el);
@@ -117,7 +112,7 @@ const CONFIG = {
     if (y < lastY - 4 || !solid) nav.classList.remove('is-hidden');
     lastY = y;
   }, { passive: true });
-  const burger = $('.nav__burger'), menu = $('#menu');
+  const burger = $('#burger'), menu = $('#menu');
   burger.addEventListener('click', () => {
     const open = burger.getAttribute('aria-expanded') !== 'true';
     burger.setAttribute('aria-expanded', open); menu.hidden = !open;
@@ -141,7 +136,7 @@ const CONFIG = {
   /* =================== ȘCOALA: hero + povestea peste film =================== */
   function acasa() {
     /* ---------- HERO ---------- */
-    const lines = $$('.hero__line'), imgs = $$('.hero__bg img'), tag = $('#heroTag'), heroN = $('#heroN'), heroBar = $('#heroBar');
+    const lines = $$('[data-line]'), imgs = $$('[data-hero] img'), tag = $('#heroTag'), heroN = $('#heroN'), heroBar = $('#heroBar');
     let slide = 0, slideT = null;
     const DWELL = 6000;
     const runBar = () => { if (motion) gsap.fromTo(heroBar, { width: '0%' }, { width: '100%', duration: DWELL / 1000, ease: 'none' }); };
@@ -161,10 +156,11 @@ const CONFIG = {
     function heroIn(matchCut) {
       split(lines[0]);
       if (motion) {
-        if (matchCut) gsap.from('.hero__shade', { opacity: 0, duration: 1.4, ease: 'power2.out' });
-        if (!matchCut) gsap.fromTo('.hero__bg img.is-on', { scale: 1.2 }, { scale: 1.02, duration: 2.6, ease: 'power3.out', clearProps: 'transform' });
-        gsap.from(['.hero__kicker', '.hero__tag', '.hero__sub', '.hero__cta', '.hero__count'], { y: 24, opacity: 0, duration: 1.2, ease: 'power3.out', stagger: .1, delay: .7 });
-        gsap.from('.nav', { opacity: 0, y: -12, duration: 1, delay: .6, ease: 'power3.out' });
+        if (matchCut) gsap.from('[data-shade]', { opacity: 0, duration: 1.4, ease: 'power2.out' });
+        // poza are deja scale 1.02 din CSS; transformul GSAP vine peste ea și se șterge la final
+        else gsap.fromTo('[data-hero] img.is-on', { scale: 1.18 }, { scale: 1, duration: 2.6, ease: 'power3.out', clearProps: 'transform' });
+        gsap.from('[data-hero-in]', { y: 24, opacity: 0, duration: 1.2, ease: 'power3.out', stagger: .1, delay: .7 });
+        gsap.from('#nav', { opacity: 0, y: -12, duration: 1, delay: .6, ease: 'power3.out' });
         rise(lines[0], .45);
       }
       if (!STILL) { runBar(); slideT = setTimeout(() => showSlide(1), DWELL); }
@@ -173,15 +169,15 @@ const CONFIG = {
       if (STILL || html.classList.contains('is-loading')) return;
       clearTimeout(slideT);
       if (e.isIntersecting) slideT = setTimeout(() => showSlide((slide + 1) % imgs.length), DWELL);
-    }).observe($('.hero'));
+    }).observe($('#acasa'));
     /* hero-ul se strânge într-o ramă rotunjită și se stinge, iar în spate pornește filmul */
     function story() {
       if (!motion || !window.ScrollTrigger) { film.style.opacity = 1; show(0); return; }
-      const heroEl = $('.hero');
+      const heroEl = $('#acasa');
       gsap.timeline({ scrollTrigger: { trigger: heroEl, start: 'top top', end: '+=90%', scrub: .8, pin: true, pinSpacing: true, onEnter: () => show(0) } })
-        .to('.hero__copy, .hero__count', { opacity: 0, y: -30, duration: .3 }, 0)
+        .to('[data-hero-copy], [data-hero-count]', { opacity: 0, y: -30, duration: .3 }, 0)
         .to(heroEl, { clipPath: 'inset(16% 12% 22% 12% round 28px)', duration: .7, ease: 'power2.inOut' }, 0)
-        .to('.hero__bg', { scale: .92, duration: .7, ease: 'power2.inOut' }, 0)
+        .to('[data-hero]', { scale: .92, duration: .7, ease: 'power2.inOut' }, 0)
         .to(film, { opacity: 1, duration: .5 }, .25)
         .to(heroEl, { opacity: 0, y: -60, duration: .3 }, .7);
       load(clips[0]);
@@ -189,10 +185,10 @@ const CONFIG = {
         const i = +sec.dataset.film;
         ScrollTrigger.create({ trigger: sec, start: 'top 55%', end: 'bottom 55%', onEnter: () => show(i), onEnterBack: () => show(i) });
       });
-      ScrollTrigger.create({ trigger: '.story', start: 'top bottom', end: 'bottom top',
+      ScrollTrigger.create({ trigger: '#scoala', start: 'top bottom', end: 'bottom top',
         onLeave: () => clips[clipOn] && clips[clipOn].pause(), onEnterBack: () => clips[clipOn] && clips[clipOn].play().catch(() => {}) });
-      $$('.beat').forEach((b) => {
-        const h = $('.beat__h', b), pic = $('.beat__pic', b), rest = $$('.beat__k, .beat__s', b);
+      $$('[data-beat]').forEach((b) => {
+        const h = $('h2', b), pic = $('figure', b), rest = $$('[data-rest]', b);
         const tl = gsap.timeline({ scrollTrigger: { trigger: b, start: 'top 70%', toggleActions: 'play none none reverse' } });
         tl.fromTo(split(h), { yPercent: 105 }, { yPercent: 0, duration: 1.1, ease: 'power4.out', stagger: .015 }, 0)
           .fromTo(rest, { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: .9, ease: 'power3.out', stagger: .1 }, .2);
@@ -209,7 +205,7 @@ const CONFIG = {
 
   /* =================== GALERIA =================== */
   function galerie() {
-    const frames = $$('.fr'), track = $('#reel'), capEl = $('#reelCap'), nEl = $('#reelN');
+    const frames = $$('#reel > li'), track = $('#reel'), capEl = $('#reelCap'), nEl = $('#reelN');
     const amb = [$('#ambA'), $('#ambB')]; let ambI = 0;
     const total = String(frames.length).padStart(2, '0');
     const poster = (fr) => { const m = $('img, video', fr); return m.tagName === 'VIDEO' ? m.poster : m.currentSrc || m.src; };
@@ -245,7 +241,7 @@ const CONFIG = {
       gsap.set(track, { x: -min() });
       const tween = gsap.fromTo(track, { x: () => -min() }, { x: () => -max(), ease: 'none' });
       st = ScrollTrigger.create({
-        trigger: '.reel', start: 'top top', end: () => '+=' + (max() - min()) * 1.1, pin: true, scrub: .6, animation: tween, invalidateOnRefresh: true,
+        trigger: '#galerie', start: 'top top', end: () => '+=' + (max() - min()) * 1.1, pin: true, scrub: .6, animation: tween, invalidateOnRefresh: true,
         snap: { snapTo: (p) => { const c = frames.map((f) => (centerOf(f) - min()) / (max() - min())); return c.reduce((a, b) => Math.abs(b - p) < Math.abs(a - p) ? b : a); },
           duration: { min: .25, max: .7 }, ease: 'power2.inOut', delay: .08 },
         onUpdate: () => {
@@ -256,7 +252,7 @@ const CONFIG = {
         }
       });
       // imaginile au lățimea abia după încărcare: recalculăm
-      Promise.all($$('.fr img').map(loaded)).then(() => ScrollTrigger.refresh());
+      Promise.all($$('#reel img').map(loaded)).then(() => ScrollTrigger.refresh());
       frames.forEach((f) => { const v = $('video', f); if (v) v.addEventListener('loadedmetadata', () => ScrollTrigger.refresh(), { once: true }); });
     } else {
       const io = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) activate(frames.indexOf(e.target)); }), { root: track, threshold: .6 });
@@ -273,6 +269,7 @@ const CONFIG = {
     frames.forEach((fr, i) => fr.addEventListener('click', () => { if (i === active) openLb(i); else goTo(i); }));
 
     /* ---------- vizorul ---------- */
+    const LB_MEDIA = 'max-h-full max-w-full rounded-card object-contain';
     const lb = $('#lb'), lbMedia = $('#lbMedia');
     let lbI = 0;
     function lbShow(i) {
@@ -280,10 +277,10 @@ const CONFIG = {
       const src = mediaOf(frames[lbI]);
       let el;
       if (src.tagName === 'VIDEO') {
-        el = document.createElement('video');
+        el = document.createElement('video'); el.className = LB_MEDIA;
         Object.assign(el, { src: src.dataset.src, poster: src.poster, muted: true, loop: true, playsInline: true, autoplay: true, controls: true });
       } else {
-        el = document.createElement('img'); el.src = src.dataset.full; el.alt = src.alt;
+        el = document.createElement('img'); el.className = LB_MEDIA; el.src = src.dataset.full; el.alt = src.alt;
       }
       lbMedia.replaceChildren(el);
       $('#lbCap').textContent = frames[lbI].dataset.cap;
@@ -310,48 +307,27 @@ const CONFIG = {
     });
   }
 
-  /* =================== DONEAZĂ =================== */
+  /* =================== DONEAZĂ: transfer bancar =================== */
   function doneaza() {
-    const amount = () => {
-      const other = parseInt($('#amtOther').value, 10);
-      if (other >= 5) return other;
-      const r = $('input[name=amt]:checked'); return r ? +r.value : 100;
+    const ALL = ['Către: Fundația Educatio Plena', 'IBAN lei: RO77 RZBR 0000 0600 1886 6089', 'IBAN euro: RO27 RZBR 0000 0600 2135 5524',
+      'Banca: Raiffeisen Bank, BIC RZBRROBU', 'Mențiune: Africa Kusekwa'].join('\n');
+    const copy = async (b, text, label) => {
+      try { await navigator.clipboard.writeText(text); b.textContent = 'Copiat'; b.classList.add('ok'); }
+      catch (e) { b.textContent = 'Selectează manual'; }
+      setTimeout(() => { b.textContent = label; b.classList.remove('ok'); }, 2000);
     };
-    const pay = () => {
-      if (!CONFIG.stripeLink) { open(CONFIG.fallbackLink, '_blank', 'noopener'); return; }
-      const u = new URL(CONFIG.stripeLink); u.searchParams.set(CONFIG.stripeAmountParam, amount() * 100);
-      u.searchParams.set('client_reference_id', CONFIG.stripeTag); location.href = u.toString();
-    };
-    const refresh = () => { $('#cardAmt').textContent = `${amount()} lei`; };
-    $$('input[name=amt]').forEach((r) => r.addEventListener('change', () => { $('#amtOther').value = ''; refresh(); }));
-    $('#amtOther').addEventListener('input', () => { if (parseInt($('#amtOther').value, 10) >= 5) $$('input[name=amt]').forEach((r) => (r.checked = false)); refresh(); });
-    $('#cardPay').addEventListener('click', pay);
-    $('#applePay').addEventListener('click', pay);
-    // butoanele oficiale Apple Pay și Google Pay; plata propriu-zisă e pe pagina Stripe (sau a școlii)
-    const add = (src, extra) => { const s = document.createElement('script'); s.src = src; s.async = true; Object.assign(s, extra); document.body.appendChild(s); };
-    const gpay = () => {
-      try {
-        const client = new google.payments.api.PaymentsClient({ environment: 'TEST' });
-        $('#googlePay').appendChild(client.createButton({ onClick: pay, buttonType: 'donate', buttonColor: 'white', buttonSizeMode: 'fill', buttonLocale: 'en', buttonRadius: 10 }));
-      } catch (e) { $('#googlePay').remove(); }
-    };
-    add('https://applepay.cdn-apple.com/jsapi/1.latest/apple-pay-sdk.js', { crossOrigin: 'anonymous' });
-    add('https://pay.google.com/gp/p/js/pay.js', { onload: gpay, onerror: () => $('#googlePay').remove() });
+    $$('[data-copy]').forEach((b) => b.addEventListener('click', () => copy(b, b.dataset.copy, 'Copiază')));
+    const all = $('#copyAll'); all.addEventListener('click', () => copy(all, ALL, 'Copiază toate datele'));
 
-    // foaia albă urcă peste galerie și se lărgește
+    // rama urcă peste galerie și se lărgește; titlul urcă din mască
     if (motion) {
-      gsap.fromTo('.give', { clipPath: 'inset(6% 5% 0% 5% round 24px)' }, { clipPath: 'inset(0% 0% 0% 0% round 24px)', ease: 'none',
-        scrollTrigger: { trigger: '.give', start: 'top bottom', end: 'top 30%', scrub: true } });
-      const t = $('.give__t');
-      gsap.timeline({ scrollTrigger: { trigger: '.give', start: 'top 60%', toggleActions: 'play none none reverse' } })
-        .fromTo(split(t), { yPercent: 105 }, { yPercent: 0, duration: 1.2, ease: 'power4.out', stagger: .02 }, 0)
-        .fromTo('.give__k, .give__s, .give .donate__card', { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: 1, ease: 'power3.out', stagger: .1 }, .2);
+      const give = $('#doneaza');
+      gsap.fromTo(give, { clipPath: 'inset(6% 5% 0% 5% round 24px)' }, { clipPath: 'inset(0% 0% 0% 0% round 24px)', ease: 'none',
+        scrollTrigger: { trigger: give, start: 'top bottom', end: 'top 30%', scrub: true } });
+      gsap.timeline({ scrollTrigger: { trigger: give, start: 'top 60%', toggleActions: 'play none none reverse' } })
+        .fromTo(split($('#giveTitle')), { yPercent: 105 }, { yPercent: 0, duration: 1.2, ease: 'power4.out', stagger: .02 }, 0)
+        .fromTo($$('[data-rest]', give), { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: 1, ease: 'power3.out', stagger: .1 }, .2);
     }
-    $$('[data-copy]').forEach((b) => b.addEventListener('click', async () => {
-      try { await navigator.clipboard.writeText(b.dataset.copy); b.textContent = 'Copiat'; b.classList.add('ok'); }
-      catch (e) { b.textContent = 'Selectează'; }
-      setTimeout(() => { b.textContent = 'Copiază'; b.classList.remove('ok'); }, 2000);
-    }));
   }
 
   acasa();
