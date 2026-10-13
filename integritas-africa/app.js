@@ -4,6 +4,7 @@ const CONFIG = {
   stripeLink: '',                          /* Stripe Payment Link cu „clientul alege suma”; gol = butoanele duc la pagina școlii */
   fallbackLink: 'https://liceulintegritas.ro/donatii',
   stripeAmountParam: '__prefilled_amount', /* Stripe primește suma în bani (lei × 100) */
+  stripeTag: 'africa-kusekwa',            /* ajunge în Stripe la fiecare plată (client_reference_id): secretara vede că e pentru Africa */
 };
 
 (() => {
@@ -318,7 +319,8 @@ const CONFIG = {
     };
     const pay = () => {
       if (!CONFIG.stripeLink) { open(CONFIG.fallbackLink, '_blank', 'noopener'); return; }
-      const u = new URL(CONFIG.stripeLink); u.searchParams.set(CONFIG.stripeAmountParam, amount() * 100); location.href = u.toString();
+      const u = new URL(CONFIG.stripeLink); u.searchParams.set(CONFIG.stripeAmountParam, amount() * 100);
+      u.searchParams.set('client_reference_id', CONFIG.stripeTag); location.href = u.toString();
     };
     const refresh = () => { $('#cardAmt').textContent = `${amount()} lei`; };
     $$('input[name=amt]').forEach((r) => r.addEventListener('change', () => { $('#amtOther').value = ''; refresh(); }));
