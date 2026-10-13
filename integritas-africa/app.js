@@ -24,11 +24,12 @@ const CONFIG = {
   async function runLoader(onDone) {
     const loader = $('#loader');
     let seen = false; try { seen = sessionStorage.getItem('kk5-seen') === '1'; } catch (e) {}
-    // o dată pe vizită; la reîncărcare hero-ul apare direct
-    if (!motion || seen) { loader.remove(); html.classList.remove('is-loading'); return false; }
-    let fast = false;
-    loader.addEventListener('click', () => { fast = true; gsap.globalTimeline.timeScale(4); });
-    const pause = (ms) => wait(fast ? ms / 6 : ms);
+    if (!motion) { loader.remove(); html.classList.remove('is-loading'); return false; }
+    // la fiecare intrare; a doua oară în aceeași vizită merge mai repede, iar un click îl sare
+    let speed = seen ? 1.8 : 1;
+    gsap.globalTimeline.timeScale(speed);
+    loader.addEventListener('click', () => { speed = 6; gsap.globalTimeline.timeScale(6); });
+    const pause = (ms) => wait(ms / speed);
     const frame = $('#ldFrame'), card = $('#ldCard'), route = $('#ldRoute'), city = $('#ldCity'), kmEl = $('#ldKm'), line = $('#ldLine');
     const fonts = document.fonts ? document.fonts.ready : Promise.resolve();
     // rama în pixeli (aceleași valori ca în CSS), ca GSAP să poată anima clip-path-ul fără salturi
@@ -60,10 +61,11 @@ const CONFIG = {
     try { sessionStorage.setItem('kk5-seen', '1'); } catch (e) {}
     await gsap.to(frame, { clipPath: 'inset(0px 0px 0px 0px round 0px)', duration: 1.25, ease: 'power4.inOut' });
     gsap.globalTimeline.timeScale(1);
-    loader.classList.add('is-done');
+    // rama are acum exact cadrul hero-ului (aceeași poză, aceeași scară): loaderul dispare dintr-o dată,
+    // fără fade, ca să nu se vadă două poze una peste alta; umbra și textul hero-ului vin după
     html.classList.remove('is-loading');
     onDone();
-    gsap.to(loader, { opacity: 0, duration: .5, delay: .1, onComplete: () => loader.remove() });
+    loader.remove();
     return true;
   }
 
@@ -158,6 +160,7 @@ const CONFIG = {
     function heroIn(matchCut) {
       split(lines[0]);
       if (motion) {
+        if (matchCut) gsap.from('.hero__shade', { opacity: 0, duration: 1.4, ease: 'power2.out' });
         if (!matchCut) gsap.fromTo('.hero__bg img.is-on', { scale: 1.2 }, { scale: 1.02, duration: 2.6, ease: 'power3.out', clearProps: 'transform' });
         gsap.from(['.hero__kicker', '.hero__tag', '.hero__sub', '.hero__cta', '.hero__count'], { y: 24, opacity: 0, duration: 1.2, ease: 'power3.out', stagger: .1, delay: .7 });
         gsap.from('.nav', { opacity: 0, y: -12, duration: 1, delay: .6, ease: 'power3.out' });
@@ -327,7 +330,7 @@ const CONFIG = {
     const gpay = () => {
       try {
         const client = new google.payments.api.PaymentsClient({ environment: 'TEST' });
-        $('#googlePay').appendChild(client.createButton({ onClick: pay, buttonType: 'donate', buttonColor: 'black', buttonSizeMode: 'fill', buttonLocale: 'en', buttonRadius: 10 }));
+        $('#googlePay').appendChild(client.createButton({ onClick: pay, buttonType: 'donate', buttonColor: 'white', buttonSizeMode: 'fill', buttonLocale: 'en', buttonRadius: 10 }));
       } catch (e) { $('#googlePay').remove(); }
     };
     add('https://applepay.cdn-apple.com/jsapi/1.latest/apple-pay-sdk.js', { crossOrigin: 'anonymous' });
