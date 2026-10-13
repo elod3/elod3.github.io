@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://elod3.github.io/integritas-africa/sitemap.xml

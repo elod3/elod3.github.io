@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="ro" class="is-loading">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Donează · Pune o cărămidă la Kusekwa</title>
+<meta name="description" content="Haba na haba hujaza kibaba: puțin și puțin umple măsura. Transfer bancar către Fundația Educatio Plena.">
+<link rel="canonical" href="https://elod3.github.io/integritas-africa/doneaza.html">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="ro_RO">
+<meta property="og:title" content="Donează · Pune o cărămidă la Kusekwa">
+<meta property="og:description" content="Haba na haba hujaza kibaba: puțin și puțin umple măsura. Transfer bancar către Fundația Educatio Plena.">
+<meta property="og:url" content="https://elod3.github.io/integritas-africa/doneaza.html">
+<meta property="og:image" content="https://elod3.github.io/integritas-africa/og.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#0b0908">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="preload" href="assets/fonts/archivo-latin-standard-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/film/sapat.jpg" as="image">
+<link rel="stylesheet" href="style.css?v=4">
+<script src="vt.js?v=4"></script>
+</head>
+<body data-page="doneaza">
+<header class="nav" id="nav">
+  <a class="nav__brand" href="./" aria-label="Kusekwa, acasă">
+    <span class="nav__word">Kusekwa</span>
+    <small class="nav__by">Clasa a XII-a · Liceul Integritas</small>
+  </a>
+  <nav class="nav__links" aria-label="Pagini">
+    <a href="./" data-nav="acasa">Acasă</a>
+    <a href="drum.html" data-nav="drum">Drumul</a>
+    <a href="galerie.html" data-nav="galerie">Galerie</a>
+  </nav>
+  <a class="nav__give" href="doneaza.html" data-nav="doneaza">Donează</a>
+  <button class="nav__burger" type="button" aria-expanded="false" aria-controls="menu"><span>Meniu</span></button>
+</header>
+
+<div class="menu" id="menu" hidden>
+  <a href="./"><small>01</small>Acasă</a>
+  <a href="drum.html"><small>02</small>Drumul</a>
+  <a href="galerie.html"><small>03</small>Galerie</a>
+  <a href="doneaza.html"><small>04</small>Donează</a>
+</div>
+
+<main>
+  <section class="give-pg" aria-labelledby="giveTitle">
+    <div class="ph__media" data-hero>
+      <video muted playsinline loop autoplay preload="auto" poster="assets/film/sapat.jpg" src="assets/film/sapat.mp4"></video>
+    </div>
+    <div class="ph__shade ph__shade--side"></div>
+
+    <div class="give-pg__head">
+      <p class="ph__k">Haba na haba hujaza kibaba</p>
+      <h1 class="ph__t" id="giveTitle">Pune o<br>cărămidă.</h1>
+      <p class="ph__s">Puțin și puțin umple măsura.</p>
+    </div>
+
+    <div class="donate__card">
+      <div class="online" id="online">
+        <fieldset class="amounts">
+          <legend>Alege suma</legend>
+          <label><input type="radio" name="amt" value="50"><span>50 lei</span></label>
+          <label><input type="radio" name="amt" value="100" checked><span>100 lei</span></label>
+          <label><input type="radio" name="amt" value="250"><span>250 lei</span></label>
+          <label><input type="radio" name="amt" value="500"><span>500 lei</span></label>
+          <label class="amounts__other"><span>Altă sumă</span><input type="number" inputmode="numeric" min="5" step="1" id="amtOther" placeholder="lei" aria-label="Altă sumă, în lei"></label>
+        </fieldset>
+        <div class="wallets">
+          <apple-pay-button class="wallet wallet--apple" buttonstyle="white" type="donate" locale="ro-RO" id="applePay"></apple-pay-button>
+          <div class="wallet wallet--google" id="googlePay"></div>
+          <button class="card-btn" type="button" id="cardPay">Donează <span id="cardAmt">100 lei</span> cu cardul</button>
+        </div>
+      </div>
+
+      <div class="bank">
+        <p class="bank__title">Transfer bancar</p>
+        <p class="bank__who">Fundația Educatio Plena</p>
+        <p class="bank__row"><span>RON</span><code>RO77 RZBR 0000 0600 1886 6089</code><button type="button" data-copy="RO77RZBR0000060018866089">Copiază</button></p>
+        <p class="bank__row"><span>EUR</span><code>RO27 RZBR 0000 0600 2135 5524</code><button type="button" data-copy="RO27RZBR0000060021355524">Copiază</button></p>
+        <p class="bank__row bank__row--note"><span>Detalii</span><code>Kusekwa</code><button type="button" data-copy="Kusekwa">Copiază</button></p>
+        <p class="bank__meta">BIC RZBRROBU · Raiffeisen Bank</p>
+      </div>
+      <a class="card-btn card-btn--link" id="schoolLink" href="https://liceulintegritas.ro/donatii" target="_blank" rel="noopener">Pagina de donații a școlii</a>
+    </div>
+  </section>
+</main>
+
+<a class="next" href="./">
+  <img class="next__img" src="assets/img/scoala-1200.webp" alt="" loading="lazy" width="1200" height="676">
+  <span class="next__k">01 · De la început</span>
+  <span class="next__t">Karibu</span>
+</a>
+
+<footer class="foot">
+  <p><strong>Liceul Internațional Integritas</strong> · Fundația Educatio Plena · Kusekwa Memorial Schools, Bariadi, Tanzania</p>
+</footer>
+
+<script src="assets/vendor/gsap.min.js"></script>
+<script src="assets/vendor/ScrollTrigger.min.js"></script>
+<script src="assets/vendor/lenis.min.js"></script>
+<script src="app.js?v=4"></script>
+</body>
+</html>
