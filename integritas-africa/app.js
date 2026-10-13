@@ -1,6 +1,15 @@
-/* Karibu Kusekwa — o singură pagină: genericul cu drumul, școala, galeria, donația prin transfer.
+/* Karibu Kusekwa — o singură pagină: genericul cu drumul, școala, galeria, donația (Stripe sau transfer).
    Stilul e numai Tailwind; JS-ul se agață de id-uri și de atribute data-*, iar clasele pe care le
    pune singur (literele, vizorul) sunt tot clase Tailwind. */
+/* PLATA ONLINE — singurul loc de schimbat. Cine are contul Stripe al fundației face un Payment Link
+   („Customers choose what to pay”) și pune adresa lui în stripeLink. Până atunci, butoanele duc la transfer. */
+const CONFIG = {
+  stripeLink: '',                          // ex.: 'https://buy.stripe.com/...'
+  stripeAmountParam: '__prefilled_amount', // Stripe primește suma în bani (lei × 100)
+  stripeTag: 'africa-kusekwa',            // client_reference_id: în Stripe, fiecare plată poartă eticheta asta
+  googlePayEnv: 'TEST',                   // butonul Google Pay doar redirecționează; 'PRODUCTION' când e live
+};
+
 (() => {
   const $ = (s, r = document) => r.querySelector(s);
   const $$ = (s, r = document) => [...r.querySelectorAll(s)];
@@ -31,7 +40,10 @@
     const vw = innerWidth / 100, vh = innerHeight / 100, narrow = innerWidth <= 820;
     const ty = narrow ? innerHeight / 2 - 30 * vw : innerHeight / 2 - Math.min(17 * vw, 19 * vh);
     const tx = narrow ? 8 * vw : innerWidth / 2 - Math.min(30 * vw, 34 * vh);
-    gsap.set(frame, { opacity: 0, clipPath: `inset(${ty}px ${tx}px ${ty}px ${tx}px round 24px)` });
+    // start și final dați amândoi, cu câte 4 valori: Firefox scurtează inset(a b a b) la inset(a b), iar dacă GSAP
+    // citește valoarea din pagină, perechile nu se mai potrivesc și rama crește din colțul stânga-jos
+    const ramaMica = `inset(${ty}px ${tx}px ${ty}px ${tx}px round 24px)`;
+    gsap.set(frame, { opacity: 0, clipPath: ramaMica });
     gsap.fromTo(card.children, { opacity: 0, y: 6 }, { opacity: 1, y: 0, duration: .9, stagger: .3, ease: 'power2.out' });
     await Promise.all([pause(1500), fonts, Promise.race([loaded($('img', frame)), wait(3500)])]);
     await gsap.to(card, { opacity: 0, duration: .45, ease: 'power1.in' });
@@ -54,7 +66,7 @@
     await gsap.fromTo(frame, { opacity: 0, scale: .94 }, { opacity: 1, scale: 1, duration: .8, ease: 'power3.out' });
     await pause(350);
     try { sessionStorage.setItem('kk5-seen', '1'); } catch (e) {}
-    await gsap.to(frame, { clipPath: 'inset(0px 0px 0px 0px round 0px)', duration: 1.25, ease: 'power4.inOut' });
+    await gsap.fromTo(frame, { clipPath: ramaMica }, { clipPath: 'inset(0px 0px 0px 0px round 0px)', duration: 1.25, ease: 'power4.inOut' });
     gsap.globalTimeline.timeScale(1);
     // rama are acum exact cadrul hero-ului (aceeași poză, aceeași scară): loaderul dispare dintr-o dată,
     // fără fade, ca să nu se vadă două poze una peste alta; umbra și textul hero-ului vin după
@@ -176,7 +188,7 @@
       const heroEl = $('#acasa');
       gsap.timeline({ scrollTrigger: { trigger: heroEl, start: 'top top', end: '+=90%', scrub: .8, pin: true, pinSpacing: true, onEnter: () => show(0) } })
         .to('[data-hero-copy], [data-hero-count]', { opacity: 0, y: -30, duration: .3 }, 0)
-        .to(heroEl, { clipPath: 'inset(16% 12% 22% 12% round 28px)', duration: .7, ease: 'power2.inOut' }, 0)
+        .fromTo(heroEl, { clipPath: 'inset(0.01% 0.02% 0.03% 0.04% round 0px)' }, { clipPath: 'inset(16% 12% 22% 12% round 28px)', duration: .7, ease: 'power2.inOut' }, 0)
         .to('[data-hero]', { scale: .92, duration: .7, ease: 'power2.inOut' }, 0)
         .to(film, { opacity: 1, duration: .5 }, .25)
         .to(heroEl, { opacity: 0, y: -60, duration: .3 }, .7);
@@ -205,7 +217,7 @@
 
   /* =================== GALERIA =================== */
   function galerie() {
-    const frames = $$('#reel > li'), track = $('#reel'), capEl = $('#reelCap'), nEl = $('#reelN');
+    const frames = $$('#reel > li'), track = $('#reel'), nEl = $('#reelN');
     const amb = [$('#ambA'), $('#ambB')]; let ambI = 0;
     const total = String(frames.length).padStart(2, '0');
     const poster = (fr) => { const m = $('img, video', fr); return m.tagName === 'VIDEO' ? m.poster : m.currentSrc || m.src; };
@@ -227,7 +239,6 @@
         if (!v) return;
         if (j === i) { if (!v.src) v.src = v.dataset.src; v.play().catch(() => {}); } else v.pause();
       });
-      capEl.textContent = frames[i].dataset.cap;
       nEl.textContent = `${String(i + 1).padStart(2, '0')} / ${total}`;
       ambI ^= 1; amb[ambI].src = poster(frames[i]); amb[ambI].classList.add('is-on'); amb[ambI ^ 1].classList.remove('is-on');
     }
@@ -283,7 +294,6 @@
         el = document.createElement('img'); el.className = LB_MEDIA; el.src = src.dataset.full; el.alt = src.alt;
       }
       lbMedia.replaceChildren(el);
-      $('#lbCap').textContent = frames[lbI].dataset.cap;
       $('#lbN').textContent = `${String(lbI + 1).padStart(2, '0')} / ${total}`;
       if (motion) gsap.fromTo(el, { opacity: 0, scale: .96 }, { opacity: 1, scale: 1, duration: .6, ease: 'power3.out' });
     }
@@ -307,8 +317,44 @@
     });
   }
 
-  /* =================== DONEAZĂ: transfer bancar =================== */
+  /* =================== DONEAZĂ: Stripe (card, Apple Pay, Google Pay) sau transfer bancar =================== */
   function doneaza() {
+    const amount = () => {
+      const other = parseInt($('#amtOther').value, 10);
+      if (other >= 5) return other;
+      const r = $('input[name=amt]:checked'); return r ? +r.value : 100;
+    };
+    const transfer = $('#transfer');
+    const pay = () => {
+      if (!CONFIG.stripeLink) {
+        // fără link de plată încă: ducem omul la transfer și îl arătăm
+        transfer.open = true; go(transfer);
+        if (motion) gsap.fromTo(transfer, { boxShadow: 'inset 0 0 0 2px rgba(224,160,64,1)' }, { boxShadow: 'inset 0 0 0 2px rgba(224,160,64,0)', duration: 2, delay: .8 });
+        return;
+      }
+      const u = new URL(CONFIG.stripeLink);
+      u.searchParams.set(CONFIG.stripeAmountParam, amount() * 100);
+      u.searchParams.set('client_reference_id', CONFIG.stripeTag);
+      location.href = u.toString();
+    };
+    const refresh = () => { $('#cardAmt').textContent = `${amount()} lei`; };
+    $$('input[name=amt]').forEach((r) => r.addEventListener('change', () => { $('#amtOther').value = ''; refresh(); }));
+    $('#amtOther').addEventListener('input', () => { if (parseInt($('#amtOther').value, 10) >= 5) $$('input[name=amt]').forEach((r) => (r.checked = false)); refresh(); });
+    $('#cardPay').addEventListener('click', pay);
+    $('#applePay').addEventListener('click', pay);
+    // butoanele oficiale Apple Pay și Google Pay; plata propriu-zisă se face pe pagina Stripe
+    const add = (src, extra) => { const sc = document.createElement('script'); sc.src = src; sc.async = true; Object.assign(sc, extra); document.body.appendChild(sc); };
+    add('https://applepay.cdn-apple.com/jsapi/1.latest/apple-pay-sdk.js', { crossOrigin: 'anonymous' });
+    add('https://pay.google.com/gp/p/js/pay.js', {
+      onload: () => {
+        try {
+          const client = new google.payments.api.PaymentsClient({ environment: CONFIG.googlePayEnv });
+          $('#googlePay').appendChild(client.createButton({ onClick: pay, buttonType: 'donate', buttonColor: 'white', buttonSizeMode: 'fill', buttonLocale: 'en', buttonRadius: 10 }));
+        } catch (e) { $('#googlePay').remove(); }
+      },
+      onerror: () => $('#googlePay').remove(),
+    });
+
     const ALL = ['Către: Fundația Educatio Plena', 'IBAN lei: RO77 RZBR 0000 0600 1886 6089', 'IBAN euro: RO27 RZBR 0000 0600 2135 5524',
       'Banca: Raiffeisen Bank, BIC RZBRROBU', 'Mențiune: Africa Kusekwa'].join('\n');
     const copy = async (b, text, label) => {
