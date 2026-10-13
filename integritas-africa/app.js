@@ -1,17 +1,15 @@
-/* Karibu Kusekwa — patru pagini: Acasă, Drumul, Galerie, Donează.
+/* Karibu Kusekwa — o singură pagină: genericul cu drumul, școala, galeria, donația.
    CONFIG e singurul loc de schimbat când vine linkul de plată online. */
 const CONFIG = {
-  stripeLink: '',                          /* Stripe Payment Link cu „clientul alege suma”; gol = doar transfer bancar */
+  stripeLink: '',                          /* Stripe Payment Link cu „clientul alege suma”; gol = butoanele duc la pagina școlii */
+  fallbackLink: 'https://liceulintegritas.ro/donatii',
   stripeAmountParam: '__prefilled_amount', /* Stripe primește suma în bani (lei × 100) */
-  departure: '2027-01-12',
-  arrival: '2027-02-10'
 };
 
 (() => {
   const $ = (s, r = document) => r.querySelector(s);
   const $$ = (s, r = document) => [...r.querySelectorAll(s)];
   const html = document.documentElement;
-  const page = document.body.dataset.page;
   const STILL = new URLSearchParams(location.search).has('still');
   const RM = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const motion = !RM && !STILL && window.gsap;
@@ -21,33 +19,47 @@ const CONFIG = {
     : new Promise((r) => { img.addEventListener('load', r, { once: true }); img.addEventListener('error', r, { once: true }); });
   const fmt = (n) => Math.round(n).toLocaleString('ro-RO');
 
-  /* ---------- LOADER: cartela, apoi montaj într-o ramă rotunjită care devine hero-ul ---------- */
+  /* ---------- LOADER: cartela, drumul oraș cu oraș, apoi școala într-o ramă care devine hero-ul ---------- */
+  const ROUTE = [['Târgu Mureș', 0], ['Budapesta', 432], ['Istanbul', 1497], ['Nairobi', 6272], ['Bariadi', 6737]];
   async function runLoader(onDone) {
     const loader = $('#loader');
-    let seen = false; try { seen = sessionStorage.getItem('kk4-seen') === '1'; } catch (e) {}
-    // o dată pe vizită: la întoarcerea de pe altă pagină, hero-ul apare direct
-    if (!motion || seen || window.__vt) { loader.remove(); html.classList.remove('is-loading'); return false; }
-    const frame = $('#ldFrame'), shots = $$('img', frame), cap = $('#ldCap'), tc = $('#ldTc'), card = $('#ldCard');
+    let seen = false; try { seen = sessionStorage.getItem('kk5-seen') === '1'; } catch (e) {}
+    // o dată pe vizită; la reîncărcare hero-ul apare direct
+    if (!motion || seen) { loader.remove(); html.classList.remove('is-loading'); return false; }
+    let fast = false;
+    loader.addEventListener('click', () => { fast = true; gsap.globalTimeline.timeScale(4); });
+    const pause = (ms) => wait(fast ? ms / 6 : ms);
+    const frame = $('#ldFrame'), card = $('#ldCard'), route = $('#ldRoute'), city = $('#ldCity'), kmEl = $('#ldKm'), line = $('#ldLine');
     const fonts = document.fonts ? document.fonts.ready : Promise.resolve();
-    gsap.set(frame, { opacity: 0 });
+    // rama în pixeli (aceleași valori ca în CSS), ca GSAP să poată anima clip-path-ul fără salturi
+    const vw = innerWidth / 100, vh = innerHeight / 100, narrow = innerWidth <= 820;
+    const ty = narrow ? innerHeight / 2 - 30 * vw : innerHeight / 2 - Math.min(17 * vw, 19 * vh);
+    const tx = narrow ? 8 * vw : innerWidth / 2 - Math.min(30 * vw, 34 * vh);
+    gsap.set(frame, { opacity: 0, clipPath: `inset(${ty}px ${tx}px ${ty}px ${tx}px round 24px)` });
     gsap.fromTo(card.children, { opacity: 0, y: 6 }, { opacity: 1, y: 0, duration: .9, stagger: .3, ease: 'power2.out' });
-    await Promise.all([wait(1500), fonts, Promise.race([Promise.all(shots.map(loaded)), wait(3500)])]);
+    await Promise.all([pause(1500), fonts, Promise.race([loaded($('img', frame)), wait(3500)])]);
     await gsap.to(card, { opacity: 0, duration: .45, ease: 'power1.in' });
-    gsap.fromTo(frame, { opacity: 0, scale: .96 }, { opacity: 1, scale: 1, duration: .6, ease: 'power3.out' });
-    gsap.to('.ld-cap', { opacity: 1, duration: .5, delay: .2 });
-    const list = shots;
-    for (const [k, img] of list.entries()) {
-      shots.forEach((s) => s.classList.remove('is-on'));
-      img.classList.add('is-on');
-      const last = k === list.length - 1;
-      if (!last) gsap.fromTo(img, { scale: 1.14 }, { scale: 1.04, duration: 1.2, ease: 'none' });
-      cap.textContent = img.dataset.cap;
-      tc.textContent = `${String(shots.indexOf(img) + 1).padStart(2, '0')} / ${String(shots.length).padStart(2, '0')}`;
-      await wait(last ? 650 : 420);
+
+    // drumul: fiecare oraș urcă din mască, kilometrii se adună până la el
+    gsap.set(route, { opacity: 1 });
+    const km = { v: 0 };
+    for (const [k, [name, dist]] of ROUTE.entries()) {
+      city.textContent = name;
+      gsap.fromTo(split(city, true), { yPercent: 105 }, { yPercent: 0, duration: .7, ease: 'power4.out', stagger: .018 });
+      gsap.to(km, { v: dist, duration: .6, ease: 'power2.out', onUpdate: () => (kmEl.textContent = fmt(km.v)) });
+      gsap.to(line, { width: `${(k / (ROUTE.length - 1)) * 100}%`, duration: .6, ease: 'power2.out' });
+      await pause(k === ROUTE.length - 1 ? 1000 : 720);
+      if (k < ROUTE.length - 1) await gsap.to(split(city), { yPercent: -105, duration: .25, ease: 'power3.in', stagger: .008 });
     }
-    try { sessionStorage.setItem('kk4-seen', '1'); } catch (e) {}
-    gsap.to('.ld-cap', { opacity: 0, duration: .3 });
-    await gsap.to(frame, { clipPath: 'inset(0% 0% 0% 0% round 0px)', duration: 1.25, ease: 'power4.inOut' });
+    await gsap.to(route, { opacity: 0, duration: .4 });
+    gsap.to('.ld-skip', { opacity: 0, duration: .3 });
+
+    // școala apare în ramă, apoi rama se lărgește și devine hero-ul (același cadru: match cut)
+    await gsap.fromTo(frame, { opacity: 0, scale: .94 }, { opacity: 1, scale: 1, duration: .8, ease: 'power3.out' });
+    await pause(350);
+    try { sessionStorage.setItem('kk5-seen', '1'); } catch (e) {}
+    await gsap.to(frame, { clipPath: 'inset(0px 0px 0px 0px round 0px)', duration: 1.25, ease: 'power4.inOut' });
+    gsap.globalTimeline.timeScale(1);
     loader.classList.add('is-done');
     html.classList.remove('is-loading');
     onDone();
@@ -56,8 +68,8 @@ const CONFIG = {
   }
 
   /* ---------- literele urcă din spatele unei măști ---------- */
-  function split(el) {
-    if (el.dataset.split) return $$('.ch', el);
+  function split(el, again) {
+    if (el.dataset.split && !again) return $$('.ch', el);
     el.dataset.split = '1';
     const parts = el.innerHTML.split(/<br\s*\/?>/i);
     el.textContent = '';
@@ -94,11 +106,6 @@ const CONFIG = {
 
   /* ---------- NAVBAR ---------- */
   const nav = $('#nav');
-  const here = $(`.nav [data-nav="${page}"]`);
-  if (here) {
-    here.setAttribute('aria-current', 'page');
-    $$('#menu a').forEach((a) => { if (a.getAttribute('href') === here.getAttribute('href')) a.setAttribute('aria-current', 'page'); });
-  }
   let lastY = scrollY;
   addEventListener('scroll', () => {
     const y = scrollY, solid = y > innerHeight * .85;
@@ -122,35 +129,13 @@ const CONFIG = {
     lenis.on('scroll', ScrollTrigger.update);
     gsap.ticker.add((t) => lenis.raf(t * 1000)); gsap.ticker.lagSmoothing(0);
   }
-  const go = (y) => { if (lenis) lenis.scrollTo(y, { duration: 1.4 }); else scrollTo({ top: typeof y === 'number' ? y : y.offsetTop, behavior: RM ? 'auto' : 'smooth' }); };
+  const go = (y) => { if (lenis) lenis.scrollTo(y, { duration: 1.6 }); else if (typeof y === 'number') scrollTo({ top: y }); else y.scrollIntoView(); };
+  $$('a[href^="#"]').forEach((a) => a.addEventListener('click', (e) => {
+    const el = $(a.getAttribute('href')); if (!el) return;
+    e.preventDefault(); if (!menu.hidden) burger.click(); go(el);
+  }));
 
-  /* ---------- „Următorul”: rama se lărgește cât cobori; la click, cadrul devine pagina următoare ---------- */
-  const next = $('.next');
-  if (next) {
-    next.addEventListener('click', () => next.classList.add('is-going'));
-    addEventListener('pageshow', () => next.classList.remove('is-going'));
-    if (motion) {
-      gsap.fromTo(next, { clipPath: 'inset(10% 8% 10% 8% round 24px)' }, { clipPath: 'inset(0% 0% 0% 0% round 24px)', ease: 'none',
-        scrollTrigger: { trigger: next, start: 'top bottom', end: 'top 25%', scrub: true } });
-      const t = $('.next__t', next);
-      gsap.fromTo(split(t), { yPercent: 105 }, { yPercent: 0, duration: 1.2, ease: 'power4.out', stagger: .03,
-        scrollTrigger: { trigger: next, start: 'top 55%', toggleActions: 'play none none reverse' } });
-    }
-  }
-
-  /* ---------- capul paginilor interioare: titlul urcă din mască, poza se apropie ---------- */
-  function pageHead() {
-    html.classList.remove('is-loading');
-    if (!motion) return;
-    const t = $('.ph__t');
-    if (t) gsap.fromTo(split(t), { yPercent: 105 }, { yPercent: 0, duration: 1.3, ease: 'power4.out', stagger: .035, delay: window.__vt ? .5 : .15 });
-    gsap.from($$('.ph__k, .ph__s, .ph__chip, .give-pg .donate__card'), { y: 24, opacity: 0, duration: 1.1, ease: 'power3.out', stagger: .1, delay: .6 });
-    gsap.from('.nav', { opacity: 0, y: -12, duration: 1, delay: .4, ease: 'power3.out' });
-    const media = $('.ph .ph__media');
-    if (media) gsap.to(media, { scale: 1.1, yPercent: 8, ease: 'none', scrollTrigger: { trigger: '.ph', start: 'top top', end: 'bottom top', scrub: true } });
-  }
-
-  /* =================== ACASĂ =================== */
+  /* =================== ȘCOALA: hero + povestea peste film =================== */
   function acasa() {
     /* ---------- HERO ---------- */
     const lines = $$('.hero__line'), imgs = $$('.hero__bg img'), tag = $('#heroTag'), heroN = $('#heroN'), heroBar = $('#heroBar');
@@ -218,53 +203,8 @@ const CONFIG = {
     runLoader(() => heroIn(true)).then((played) => { if (!played) heroIn(false); });
   }
 
-  /* =================== DRUMUL =================== */
-  function drum() {
-    pageHead();
-    // numărătoarea: până la plecare, ziua din misiune, apoi întoarcerea
-    const day = 864e5, today = new Date(new Date().toDateString());
-    const dep = new Date(CONFIG.departure + 'T00:00'), arr = new Date(CONFIG.arrival + 'T00:00');
-    const left = Math.round((dep - today) / day);
-    $('#countdown').textContent = left > 1 ? `Plecăm în ${left} de zile` : left === 1 ? 'Plecăm mâine'
-      : today <= arr ? `Ziua ${Math.round((today - dep) / day) + 1} din 30` : 'Ne-am întors';
-
-    const legs = $$('.leg'), km = $('#km'), bar = $('#legsBar');
-    const kms = [432, 6272, 6737, 6737];   // kilometrii adunați la capătul fiecărei etape
-    film.style.opacity = 1;
-    if (!motion) { show(0); legs.forEach((l) => l.style.opacity = 1); km.textContent = fmt(6737); bar.style.width = '100%'; return; }
-
-    gsap.to(film, { opacity: 1, duration: .1 });
-    show(0);
-    const mm = gsap.matchMedia();
-    mm.add('(min-width: 821px)', () => {
-      // pe ecran lat: etapele trec pe orizontală, kilometrii se adună cu ele
-      const track = $('.legs__track'), stage = $('.legs__stage');
-      const dist = () => legs[0].offsetWidth * (legs.length - 1);   // fiecare etapă se oprește exact la margine
-      const state = { p: 0 };
-      gsap.timeline({ scrollTrigger: { trigger: stage, start: 'top top', end: () => '+=' + dist() * 1.2, pin: true, scrub: .8, invalidateOnRefresh: true,
-          snap: { snapTo: 1 / (legs.length - 1), duration: { min: .3, max: .8 }, ease: 'power2.inOut', delay: .08 },
-          onUpdate: (st) => {
-            const p = st.progress, f = p * (legs.length - 1), i = Math.min(legs.length - 1, Math.round(f));
-            show(i);
-            const k = Math.floor(f), t = f - k;
-            km.textContent = fmt(kms[k] + (kms[Math.min(k + 1, kms.length - 1)] - kms[k]) * t);
-            bar.style.width = (p * 100).toFixed(2) + '%';
-            legs.forEach((l, j) => l.style.opacity = j === i ? 1 : .28);
-          } } })
-        .to(track, { x: () => -dist(), ease: 'none' });
-      return () => legs.forEach((l) => (l.style.opacity = ''));
-    });
-    mm.add('(max-width: 820px)', () => {
-      legs.forEach((l, i) => {
-        ScrollTrigger.create({ trigger: l, start: 'top 60%', end: 'bottom 40%', onEnter: () => show(i), onEnterBack: () => show(i) });
-        gsap.from(l.children, { y: 30, opacity: 0, duration: 1, ease: 'power3.out', stagger: .1, scrollTrigger: { trigger: l, start: 'top 75%' } });
-      });
-    });
-  }
-
   /* =================== GALERIA =================== */
   function galerie() {
-    pageHead();
     const frames = $$('.fr'), track = $('#reel'), capEl = $('#reelCap'), nEl = $('#reelN');
     const amb = [$('#ambA'), $('#ambB')]; let ambI = 0;
     const total = String(frames.length).padStart(2, '0');
@@ -368,31 +308,39 @@ const CONFIG = {
 
   /* =================== DONEAZĂ =================== */
   function doneaza() {
-    pageHead();
-    const online = $('#online');
-    if (!CONFIG.stripeLink) { online.hidden = true; }
-    else {
-      $('#schoolLink').remove();
-      const add = (src, extra) => { const s = document.createElement('script'); s.src = src; s.async = true; Object.assign(s, extra); document.body.appendChild(s); };
-      const amount = () => {
-        const other = parseInt($('#amtOther').value, 10);
-        if (other >= 5) return other;
-        const r = $('input[name=amt]:checked'); return r ? +r.value : 100;
-      };
-      const pay = () => { const u = new URL(CONFIG.stripeLink); u.searchParams.set(CONFIG.stripeAmountParam, amount() * 100); location.href = u.toString(); };
-      const refresh = () => { $('#cardAmt').textContent = `${amount()} lei`; };
-      $$('input[name=amt]').forEach((r) => r.addEventListener('change', () => { $('#amtOther').value = ''; refresh(); }));
-      $('#amtOther').addEventListener('input', () => { if (parseInt($('#amtOther').value, 10) >= 5) $$('input[name=amt]').forEach((r) => (r.checked = false)); refresh(); });
-      $('#cardPay').addEventListener('click', pay);
-      $('#applePay').addEventListener('click', pay);
-      window.gpayReady = () => {
-        try {
-          const client = new google.payments.api.PaymentsClient({ environment: 'PRODUCTION' });
-          $('#googlePay').appendChild(client.createButton({ onClick: pay, buttonType: 'donate', buttonColor: 'white', buttonSizeMode: 'fill', buttonLocale: 'en', buttonRadius: 10 }));
-        } catch (e) { $('#googlePay').remove(); }
-      };
-      add('https://applepay.cdn-apple.com/jsapi/1.latest/apple-pay-sdk.js', { crossOrigin: 'anonymous' });
-      add('https://pay.google.com/gp/p/js/pay.js', { onload: () => window.gpayReady() });
+    const amount = () => {
+      const other = parseInt($('#amtOther').value, 10);
+      if (other >= 5) return other;
+      const r = $('input[name=amt]:checked'); return r ? +r.value : 100;
+    };
+    const pay = () => {
+      if (!CONFIG.stripeLink) { open(CONFIG.fallbackLink, '_blank', 'noopener'); return; }
+      const u = new URL(CONFIG.stripeLink); u.searchParams.set(CONFIG.stripeAmountParam, amount() * 100); location.href = u.toString();
+    };
+    const refresh = () => { $('#cardAmt').textContent = `${amount()} lei`; };
+    $$('input[name=amt]').forEach((r) => r.addEventListener('change', () => { $('#amtOther').value = ''; refresh(); }));
+    $('#amtOther').addEventListener('input', () => { if (parseInt($('#amtOther').value, 10) >= 5) $$('input[name=amt]').forEach((r) => (r.checked = false)); refresh(); });
+    $('#cardPay').addEventListener('click', pay);
+    $('#applePay').addEventListener('click', pay);
+    // butoanele oficiale Apple Pay și Google Pay; plata propriu-zisă e pe pagina Stripe (sau a școlii)
+    const add = (src, extra) => { const s = document.createElement('script'); s.src = src; s.async = true; Object.assign(s, extra); document.body.appendChild(s); };
+    const gpay = () => {
+      try {
+        const client = new google.payments.api.PaymentsClient({ environment: 'TEST' });
+        $('#googlePay').appendChild(client.createButton({ onClick: pay, buttonType: 'donate', buttonColor: 'black', buttonSizeMode: 'fill', buttonLocale: 'en', buttonRadius: 10 }));
+      } catch (e) { $('#googlePay').remove(); }
+    };
+    add('https://applepay.cdn-apple.com/jsapi/1.latest/apple-pay-sdk.js', { crossOrigin: 'anonymous' });
+    add('https://pay.google.com/gp/p/js/pay.js', { onload: gpay, onerror: () => $('#googlePay').remove() });
+
+    // foaia albă urcă peste galerie și se lărgește
+    if (motion) {
+      gsap.fromTo('.give', { clipPath: 'inset(6% 5% 0% 5% round 24px)' }, { clipPath: 'inset(0% 0% 0% 0% round 24px)', ease: 'none',
+        scrollTrigger: { trigger: '.give', start: 'top bottom', end: 'top 30%', scrub: true } });
+      const t = $('.give__t');
+      gsap.timeline({ scrollTrigger: { trigger: '.give', start: 'top 60%', toggleActions: 'play none none reverse' } })
+        .fromTo(split(t), { yPercent: 105 }, { yPercent: 0, duration: 1.2, ease: 'power4.out', stagger: .02 }, 0)
+        .fromTo('.give__k, .give__s, .give .donate__card', { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: 1, ease: 'power3.out', stagger: .1 }, .2);
     }
     $$('[data-copy]').forEach((b) => b.addEventListener('click', async () => {
       try { await navigator.clipboard.writeText(b.dataset.copy); b.textContent = 'Copiat'; b.classList.add('ok'); }
@@ -401,5 +349,7 @@ const CONFIG = {
     }));
   }
 
-  ({ acasa, drum, galerie, doneaza })[page]?.();
+  acasa();
+  galerie();
+  doneaza();
 })();
